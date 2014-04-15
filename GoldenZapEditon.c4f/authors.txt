@@ -1,0 +1,34 @@
+- crow: from western pack
+- ropepack: Günther + many authors (see ropepack authors.txt)
+
+from Clonk Infinity Pack:
+  - flower
+  - granite+coal texture
+  
+  
+
+
+
+
+sounds:
+https://www.freesound.org/people/Leandros.Ntounis/sounds/163607/
+https://www.freesound.org/people/Benboncan/sounds/84111/
+https://www.freesound.org/people/iampagan/sounds/177031/
+https://www.freesound.org/people/Taira%20Komori/sounds/213703/
+
+http://www.freesound.org/people/avakas/sounds/187115/
+http://www.freesound.org/people/Audionautics/sounds/133901/
+http://www.freesound.org/people/Efecto%20Fundador/sounds/192566/
+
+http://www.freesound.org/people/oceanictrancer/sounds/187523/
+http://www.freesound.org/people/LDNsoundproduction/sounds/160905/
+http://www.freesound.org/people/oceanictrancer/sounds/187517/
+http://www.freesound.org/people/Vegemyte/sounds/84547/
+http://www.freesound.org/people/TypOnNegatywny/sounds/128521/
+http://www.freesound.org/people/oceanictrancer/sounds/197467/
+http://www.freesound.org/people/crazyrecordergirl/sounds/141118/
+
+http://www.freesound.org/people/Trebblofang/sounds/177766/
+
+
+- gray sky: http://layerzero.deviantart.com/art/seamless-cloud-texture-pattern-52944918

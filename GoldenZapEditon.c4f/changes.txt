@@ -1,0 +1,20 @@
+Steuerung:
+- Richtung kann auch im Springen verändert werden
+- Zeug kann auch im Springen geworfen werden
+
+
+Landschaft:
+- Neue Materialien: Lehm, Flint, Gras
+- "Biome" - Himmelsinseln, Gemäßigt, Höhlensystem, Hölle
+- Umweltobjekt Bessere Vegetation
+
+
+- Umweltobjekt "Dekorator" - Haufenweise Umweltobjekte auf einmal
+
+- Explosionen auf Erde, Sand, Asche generiert wesentlich mehr PXS
+
+
+Wirtschaft:
+- Bausatz kostet 2 Holz, 2 Stein anstatt 2 Holz, 1 Metall
+- Sägewerke sind obsolet, heutzutage werden Bäume schon vor ort zerhackt!
+- Aufzug benötigt doppelt Energie

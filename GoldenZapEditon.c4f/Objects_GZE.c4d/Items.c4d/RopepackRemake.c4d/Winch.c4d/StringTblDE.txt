@@ -1,0 +1,3 @@
+TxtCoil=Aufwickeln
+TxtUncoil=Abwickeln
+TxtHold=Festhalten

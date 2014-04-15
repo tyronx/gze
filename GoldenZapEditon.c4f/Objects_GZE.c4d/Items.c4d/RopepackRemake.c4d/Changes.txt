@@ -1,0 +1,24 @@
+Version 1.1 (CR, Release 13.04.2010)
+
+13.04.2010 + Pfahl hinzugefügt, in 2 Szenarien integriert
+13.04.2010 ! War die Seilwinde an einem Seil das 2te ActionTarget, konnten mehrere Seile gleichzeitig an eine Winch geknotet werden
+11.04.2010 + Szenario "Seiltanz ums Gold" hinzugefügt
+07.04.2010 * Szenario "Seilrennen": Keine mehrfachen Seilverbindungen zwischen gleichen Bäumen in der Anfangsverteilung mehr möglich
+07.04.2010 * Keine Lücken mehr in der Seil-Partikellinie
+07.04.2010 ! ClonkRopeDiv.c: bei allen _inherited() werden Parameter nun korrekt weitergegeben
+07.04.2010 * Hemmende Wirkung von getragenen Seilrollen beim Abspringen etwas gemindert
+07.04.2010 ! Seil als unsichtbares Hintergrund-Hilfsobjekt am oberen linken Bildschirmrand kann nicht eingesammelt werden
+06.04.2010 * angeseilte Objekte werden aus dem eigenen Grafikbereich heraus nicht mehr angezogen (führte nur zu komischen Wechselwirkungen)
+06.04.2010 ! Startverteilte Seile im Szenario "Seilrennen" können nicht mehr durch kleine Materialvorsprünge gehen
+06.04.2010 ! RopeLength.c: erstes _inherited() gibt zu betretendes Objekt wieder korrekt weiter (erzeugte z.B. Errors mit angeseilten Fischen)
+06.04.2010 * Enterhaken kann auch im Schwimmen benutzt (versenkt) werden
+06.04.2010 ! Keine Seilabnahme mehr, wenn angeknotetes Objekt nicht mehr in der Nähe ist
+05.04.2010 ! Seile können nur noch an fertiggestellte Gebäude (z.B. Seilwinden) geknüpft werden
+05.04.2010 ! Enterhaken werden in Menüs nicht mehr getrennt aufgeführt, wenn sie neu bzw. schon einmal geworfen wurden
+05.04.2010 * Enterhaken kann unter Wasser nicht so weit geworfen werden
+05.04.2010 ! In Wasser findet keine Objektdrehung bei angebundenen Objekten mehr statt (frei schwimmende angebundene Objekte drehten sich immer schneller)
+05.04.2010 * Besseres Zugverhalten in Situationen mit abgewinkeltem Seil, z.B. an Landschaftskanten
+29.01.2010 ! Infofenster für Spielregeln können im Tutorial wieder aufgerufen werden, vorher Fehler durch Überladung von MessageWindow im Szenarioscript
+
+
+Version 1.0 (CR, Release 29.01.2010)

@@ -1,0 +1,1 @@
+An heavy anchor that pulls connected objects under into water. It also makes sure that ships doesn't drift away if the anchor is droped.

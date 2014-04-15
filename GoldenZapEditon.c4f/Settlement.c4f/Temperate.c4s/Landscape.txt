@@ -1,0 +1,103 @@
+
+map Tyron {
+
+   // The SkyDots ;-)
+   overlay { mat=Earth; tex=Smooth; algo=random; a=500; turbulence=5000; zoomX=100; zoomY=100; loosebounds=1; oy = 5; hgt=38; 
+      overlay { algo=border; mat=Grass; tex=Grassy; a=1; b=1; zoomX=-100; zoomY=-100;};
+   };
+
+
+   // The Skylands
+   overlay { mat=Earth; tex=Smooth;  algo=rndchecker; a=3; turbulence=5000; zoomX=-50; zoomY=-50; loosebounds=1; oy = 5; 
+   
+      // Skyland Grass and an occasional Boulder
+     overlay { algo=border; mat=Grass; tex=Grassy; a=1; b=1; zoomX=-100; zoomY=-100;
+          overlay { algo=random; mat=Rock; tex=Rough; a=18; zoomX=100; zoomY=100; };
+     };
+     
+     // Skyland Resources
+     overlay SmallOre { mat=Ore; tex=Rough; algo=random; a=17; turbulence=1000; zoomX=100; zoomY=100; };
+     SmallOre { mat=Rock; };
+     SmallOre { mat=Coal; tex=Coal; };
+     SmallOre { mat=Loam; tex=Smooth2; };
+     SmallOre { mat=Gold; a=50; };
+   };
+   
+   // Remove Skylands below y=35 (hgt messes up Grass border)
+   overlay { x=-20; wdt=140; algo=sin; a=-20 - 20; b=20 - 60; turbulence=1000; y=35; loosebounds=1; }; 
+   
+   
+
+   // The Surface 
+   overlay { mat=Water; tex=Liquid; algo=solid; y=58; sub=0; }; // Waterlevel
+   overlay { mat=Earth; tex=Smooth; algo=sin; ox=-20 - 20; oy=50; turbulence=100; loosebounds=1; zoomX=60; x=-20; wdt=140;
+      overlay { mat=Rock; tex=Ridge; algo=sin; turbulence=5000; loosebounds=1; a=0 - 20; oy=70; zoomY=-50; };
+   
+      // Underground - Rocky Baselayer
+      overlay Rock { algo=random; a=6; y=75; tex=Rough; mat=Rock; turbulence=500; loosebounds=1; zoomX=100; zoomY=100; };
+      Rock { y=85; };
+      Rock { mat=Earth; tex=Smooth; y=95; };
+
+
+      // Underground - Resources
+      overlay SmallOre { algo=random; a=40; y=60; tex=Rough; mat=Ore; turbulence=1000; zoomX=100; zoomY=100; };
+      SmallOre { mat=Flint; tex=Sponge; a=80; y=50; hgt=30; };
+          
+      SmallOre { mat=Rock; a=80; };
+      SmallOre { mat=Coal; tex=Coal; y=30; };
+      SmallOre { mat=Gold; y=80; a=30;  };
+  
+  	  SmallOre { mat=Loam; tex=Smooth2; a=40; y=0; hgt=70; };
+
+      // Even Deeper: Diamonds
+      SmallOre { mat=Crystal; a=60; tex=Flare3; y=83; zoomX=-100; zoomY=-100; };
+
+      
+      overlay { algo=rndchecker; a=3; turbulence=1000; }
+      & overlay { algo=bozo; a=4; turbulence=100; }
+      ^ overlay { mat=Tunnel; tex=Smooth;
+        algo=lines; a=4 - 6; b=10 - 20; turbulence=1000; rotate=90; };
+
+      // Underground - Cave System
+     /* overlay { algo=rndchecker; a=1; turbulence=500; zoomX=50; zoomY=100; } 
+      & overlay { algo=bozo; a=4; turbulence=100; zoomX=100; } 
+      & overlay { algo=lines; a=10; b=10; mat=Tunnel; tex=Smooth; turbulence=400; rotate=90;
+        overlay { algo=random; a=18; zoomX=100; zoomY=100; } & overlay { algo=border; mat=Coal; tex=Coal; a=1; b=1; zoomX=100; zoomY=100; };
+        overlay { algo=random; a=18;  zoomX=100; zoomY=100; } & overlay { algo=border; mat=Ore; tex=Rough; a=1; b=1; zoomX=100; zoomY=100; };
+
+      };*/
+
+
+      // Overworld - Grass and an occasional Boulder
+      overlay { algo=border; mat=Earth; tex=Smooth; a=1; b=3; zoomX=-100; zoomY=-100; };
+        overlay { algo=border; mat=Grass; tex=Grassy; a=1; b=1; zoomX=-100; zoomY=-100; 
+            overlay { algo=random; mat=Rock; tex=Rough; a=18; zoomX=100; zoomY=100; };
+        };
+                
+      // Overworld - Sand Border at Water Level
+      overlay { algo=border; mat=Sand; tex=Smooth; y=58; a=1; b=1; zoomX=-100; zoomY=-100; 
+          overlay { algo=random; mat=Rock; tex=Rough; a=18; zoomX=100; zoomY=100; };
+      };
+
+    };
+
+
+
+
+
+
+    // Underworld    
+    overlay { mat=Granite; tex=Granite; algo=sin; b=0 - 60; oy=84; turbulence=90; loosebounds=1; x=-20; wdt=140; zoomY=-100; zoomX=100;
+      overlay { mat=Rock; tex=Smooth; algo=border; a=2; b=2; };
+      overlay { mat=Crystal; tex=Flare3; algo=random; a=50; zoomX=-100; zoomY=-100; };
+            
+      overlay { mat=Tunnel; tex=Rough; algo=sin; ox=20; b=0 - 40; oy=89; turbulence=90; loosebounds=1; x=-20; wdt=140; zoomY=-100; zoomX=100; 
+        overlay { mat=Ashes; tex=Smooth3; algo=border; a=1; b=1; };
+      };
+      overlay { mat=DuroLava; tex=Smooth; algo=solid; y=98; };
+	    overlay { mat=Granite; tex=Granite; algo=sin; oy=97; turbulence=9000; loosebounds=0; x=-20; wdt=140; zoomY=-100; zoomX=-50; 
+	      overlay { mat=Sulphur; tex=Swirl; algo=border; a=4; b=5; };
+	    };
+    };
+
+};

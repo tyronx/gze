@@ -1,0 +1,1 @@
+Clonks können mit einem Seil gefesselt werden. Sie können dann nur noch von anderen Clonks befreit werden oder sich selbst befreien, wenn sie in den Besitz des anderen Seilendes gelangen.

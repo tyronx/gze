@@ -1,0 +1,5 @@
+Liest die Tiere Sektion des Szenarios aus um eine bessere Tierwelt zu generieren
+
+- Dieses Umweltobjekt behebt den Fehler dass Fische in allen Flüssigkeiten (auch Lava) platziert wird, anstatt nur Wasser
+- Hat viele Objektspezifische Aufrufe für individuelle platzierung: GetAnimalPlacementBalance, GetAnimalPlacement, GetAnimalPlacementLineTop, GetAnimalPlacementLineBottom, GetAnimalPlacementMaterial
+- Erlaubt 2 neue Platzierungsarten: 3 für Untergrund, 4 für Kaninchenbau (Clonk3-Style Wipfplatzierung)

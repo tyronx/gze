@@ -1,0 +1,7 @@
+Reads out the "Objects in Earth Types" Section of the Scenario and uses this info to use a better generator for In-Earth Objects.
+
+- Places objects in all Materials with Soil=1, not just Earth
+- Many callbacks for custom placement: GetEarthObjPlacementBalance, GetEarthObjLineTop, GetEarthObjLineBottom, GetEarthObjMaterials
+- Makes sure that objects are actually stuck inside the target materials
+
+Warning: This object first removes all the engine places In-Earth Objects which are inside Material Earth or Freely falling. If you want to script create objects of the same id inside earth, do it 1-2 frames later!

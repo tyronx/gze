@@ -1,0 +1,43 @@
+Um dieses Spielziel zu meistern, müssen nacheinander mehrere kleinere Aufgaben (Quests) gelöst werden. Diese Aufgaben werden zufällig ausgewählt und sollten eine standard Clonkrunde interessanter gestalten. Erfüllte Quests werden mit Clunkern belohnt. Die Anzahl der eingestellten Objekte bestimmt, wie viele Aufgaben gelöst werden sollen.
+
+Das Objekt stellt die Quests weitgehend intelligent und prüft vorher, ob diese überhaupt lösbar sind. Es wird nicht die Aufgabe stellen, 25 Stahl herzustellen, obwohl es nicht genügend Eisenerz gibt.
+
+Auch Überschneidungen mit anderen Spielzielen werden vermieden. Man wird nicht auf Monsterjagd geschickt, wenn das sowieso ein Spielziel ist.
+
+Bei einer Aufgabe bei der man Objekte sammeln muss, reicht es, sie an einer Stelle in der Karte gesammelt abzulegen. Sie können aber auch verkauft oder sonst irgendwie vernichtet werden.
+
+Fehlermeldungen und interessante Vorschläge für weitere Quests bitte an sulaiborg@freenet.de
+
+----
+
+Folgende 24 Quests sind derzeit möglich:
+
+Objekte sammeln/entfernen/töten
+	Muscheln
+	Monster
+	Feuermonster
+	Monstereier
+	Feuermonstereier
+	Zapnester
+	Schlangen
+	Fische
+	Wipfe
+Objekte herstellen
+	Terraflint
+	Brandbombe
+	Dampfmaschine
+	Wagon
+	Luftschiff
+	kleine Burg
+	Burg
+	Schloss
+Lorenladungen (25 Objekte)
+	Kristall
+	Gold
+	Schwefel
+	Kohle
+	Eisen
+	Metall
+	Holz
+
+Bei Typ 1 und 3 errechnet sich die Belohnung nach Kartengröße und Anzahl der Vorkommen. Bei Typ 2 beträgt die Belohnung die Hälfte des Objektwertes.

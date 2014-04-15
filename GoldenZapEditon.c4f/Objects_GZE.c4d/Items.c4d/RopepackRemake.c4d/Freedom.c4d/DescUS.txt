@@ -1,0 +1,3 @@
+A player will be eliminated if his crew doesn't contain enough free clonks anymore. Captured clonks are also counted knocked out.
+
+The adjusted number of goal objects declares the number of free clonks your crew at least have to contain.
