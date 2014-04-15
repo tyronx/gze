@@ -2,8 +2,18 @@
 
 #strict 2
 
+global func ConcatString(string str1, string str2) {
+	return Format("%s%s", str1, str2);
+}
+
+// end may be ommitted
+// start may be negative to cut out from the end of the string. e.g. Substring("test.", -1) will return '.'
 global func Substring(string str, int start, int end) {
 	var result = "";
+	
+	if (start < 0) {
+		start = GetLength(str) + start;
+	}
 	
 	if (!end) end = GetLength(str);
 	else end = Min(end, GetLength(str));

@@ -26,7 +26,7 @@ private func SetEarthObjectsLevel() {
 public func RemoveEnginePlacedAnimals() {
 	var idx=0, objectid;
 	while (GetScenarioVal ("Animal", "Animals", idx) != 0) {
-		RemoveObjects(Find_OCF(OCF_NotContained()), Find_ID(GetScenarioVal ("Animal", "Animals", idx)));
+		RemoveObjects(Find_OCF(OCF_NotContained), Find_ID(GetScenarioVal("Animal", "Animals", idx)));
 		idx+=2;
 	}
 	

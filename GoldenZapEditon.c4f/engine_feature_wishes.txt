@@ -1,8 +1,9 @@
 Bugfixes:
 - Scenario properties error on Landscape.txt + Custom Materials
 - Network game: maxfileload size much higher and show appropriate error if too low
+- Please play sounds centered to the active clonk, not centered to the current screen. It makes sounds awkardly silent when playing e.g. in big resolutions and at the edge of the screen
 
-
+Features:
 - 100 Eur to the one who builds a clonk frontend like CE has (player mode / developer mode) but for CR, including lobby functionality. No joke!
 - Load Script files inside System.c4g/Subfolder - would be extremly useful to help organise code (e.g. one file for each function)
 
