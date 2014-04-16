@@ -10,6 +10,7 @@ Origin=Races.c4f\GlowingPeak.c4s
 Definition1=Objects.c4d
 Definition2=Knights.c4d
 Definition3=Fantasy.c4d
+Definition4=gze/Objects_GZE.c4d
 
 [Game]
 StructNeedEnergy=0

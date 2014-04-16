@@ -1,7 +1,0 @@
-Liest die Erdobjekte Sektion des Szenarios aus um bessere Objekte in der Erde zu generieren.
-
-- Plaziert object in alle Materialien mit Soil=1 nicht nur Erde
-- Viele Objektspezifische eigenschaften für individuelle platzierung: GetEarthObjPlacementBalance, GetEarthObjLineTop, GetEarthObjLineBottom, GetEarthObjMaterials
-- Stellt sicher, dass platzierte objekte auch in der Erde fixiert sind
-
-Vorsicht: Diese Umweltobjekt entfernt zuerst alle Engineplatzieren objekte die in der Erde oder frei fallend sind. Falls solche objekte auch per Script generiert werden, dann erst 1-2 Frames später machen!

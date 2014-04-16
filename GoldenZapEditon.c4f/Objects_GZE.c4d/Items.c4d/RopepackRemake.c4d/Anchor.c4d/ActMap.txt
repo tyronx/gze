@@ -1,5 +1,0 @@
-[Action]
-Name=AttachGround
-FacetBase=1
-Attach=8
-NextAction=AttachGround

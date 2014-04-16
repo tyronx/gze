@@ -1,8 +1,0 @@
-[DefCore]
-id=BEEO
-Version=4,9,8
-Name=Better Earth Objects
-Category=C4D_StaticBack|C4D_Environment
-MaxUserSelect=1
-Timer=200
-Picture=0,0,64,64

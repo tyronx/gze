@@ -1,5 +1,0 @@
-[DefCore]
-id=AMBH
-Name=Ambient Helper
-Version=4,9,5
-Category=C4D_StaticBack

@@ -1,1 +1,0 @@
-Very fragile. Releases zaps when dropped.

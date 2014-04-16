@@ -1,1 +1,0 @@
-Makes night follow day. The placement factor determines the speed.

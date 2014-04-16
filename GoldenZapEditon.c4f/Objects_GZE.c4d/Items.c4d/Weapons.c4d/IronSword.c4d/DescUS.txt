@@ -1,1 +1,0 @@
-Only knights can use the sword.

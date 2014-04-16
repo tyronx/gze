@@ -1,2 +1,0 @@
-DE:Ablegen
-US:Drop

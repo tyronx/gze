@@ -1,7 +1,0 @@
-[Action]
-Name=Evaporate
-Delay=1
-Facet=0,0,10,10
-NextAction=Evaporate
-StartCall=SmokeTrail
-InLiquidAction=Hit

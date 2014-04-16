@@ -1,2 +1,0 @@
-DE:Respawn
-US:Respawn

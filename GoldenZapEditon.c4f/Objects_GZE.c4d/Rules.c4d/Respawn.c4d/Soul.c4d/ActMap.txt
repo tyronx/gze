@@ -1,8 +1,0 @@
-[Action]
-Name=Static
-Procedure=FLOAT
-Length=1
-Delay=10
-FacetBase=1
-EndCall=CheckRespawn
-NextAction=Static

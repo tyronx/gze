@@ -25,6 +25,8 @@ Features:
 
 - We got SetSkyAdjust() and SetMatAdjust() but no SetObjAdjust() :(
 
+- Allow ingame transitions for Skies (Awesome for Day/Night sky, Weather dependent Sky)
+
 to document:
 
 - Scenario.txt  Min,Max,Random Values (e.g. landscape width)

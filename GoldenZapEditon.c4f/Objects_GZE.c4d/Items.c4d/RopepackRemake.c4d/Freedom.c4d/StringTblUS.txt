@@ -1,1 +1,0 @@
-MsgPlayerElimnated=%s hasn't enough free clonks anymore!

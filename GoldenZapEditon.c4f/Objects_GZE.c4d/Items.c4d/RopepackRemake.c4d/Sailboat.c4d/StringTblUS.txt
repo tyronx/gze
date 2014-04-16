@@ -1,4 +1,0 @@
-TxtLeft=Left
-TxtRight=Right
-TxtLand=Land
-TxtAnchor=Anchoring

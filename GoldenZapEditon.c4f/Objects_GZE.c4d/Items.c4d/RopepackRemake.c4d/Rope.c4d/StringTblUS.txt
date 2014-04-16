@@ -1,3 +1,0 @@
-TxtConnect=Knot rope to %s
-TxtTieUp=Tie up %s
-TxtWinch=There is already a rope on the winch!

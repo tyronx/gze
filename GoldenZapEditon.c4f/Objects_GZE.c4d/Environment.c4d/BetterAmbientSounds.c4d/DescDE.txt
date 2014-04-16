@@ -1,7 +1,0 @@
-Verbessert die Geräuchkulisse von Clonk
-
-- Alle Umgebungsgeräuche werden zusammengefasst von einem Umweltobjekt abgespielt (nicht von dreien wie bisher)
-- Umgebungsgeräuche sind für jeden Spieler individuell
-- Umgebungsgeräuche spielen nur ab wenn sich der Spieler auch in der jeweils richtigen befindet. So wird man z.b. keine Vögel zwitschern hören wenn man sich tief im Untergrund befindet
-
-- Dieses Umweltobjekt ist per Script frei konfigurierbar! Mittels AddAmbient() und RemoveAmbient() können sehr individuelle Geräuschkulissen für Szenarien geschaffen werden.

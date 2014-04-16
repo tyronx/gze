@@ -8,6 +8,7 @@ Difficulty=20
 
 [Definitions]
 Definition1=Objects.c4d
+Definition2=gze/Objects_GZE.c4d
 
 [Game]
 StructNeedEnergy=0

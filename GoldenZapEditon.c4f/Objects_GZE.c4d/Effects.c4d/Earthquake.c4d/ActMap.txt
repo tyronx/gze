@@ -1,9 +1,0 @@
-[Action]
-Name=Quake
-Procedure=NONE
-Length=1
-Delay=3
-EndCall=ShakeEarth
-NextAction=Quake
-Sound=Earthquake
- 

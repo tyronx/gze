@@ -1,5 +1,0 @@
-The rope pack allows to do many things that were formerly impossible.
-
-Ropes can be connected to any objects, whose can so be connected to other objects. The grappling hook lets you surpass many obstacles and reach places which normally would be unaccessable. The electric driven winch is a great help for dealing with ropes in many ways.
-
-Clonks can also rappel from high spots and even swing.
