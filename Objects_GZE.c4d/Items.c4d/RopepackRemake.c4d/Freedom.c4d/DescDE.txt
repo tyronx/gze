@@ -1,0 +1,3 @@
+Hat ein Spieler nicht mehr genug Clonks seiner Crew zur freien Verfügung, hat er verloren. Dabei zählen auch gefesselte Clonks als außer Gefecht gesetzt.
+
+Die Anzahl der eingestellten Spielziele gibt die Anzahl der Clonks an, die sich noch mindestens frei bewegen können müssen.

@@ -1,0 +1,1 @@
+MsgPlayerElimnated=%s hat nicht mehr genug Clonks in Freiheit!

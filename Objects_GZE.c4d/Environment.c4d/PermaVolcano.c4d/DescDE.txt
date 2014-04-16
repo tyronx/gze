@@ -1,0 +1,5 @@
+Platziert permanente Lavaausbrüche an in DuroLava Seen. Sorgt auch dafür, dass er Flüssigkeitsstand nicht ansteigt.
+
+Der Plazierungsfaktor bestimmt die Anzahl und Größe der platzierten Perma-Vulkane.
+
+Für Steigende Lava in Szenarien-Script.c folgende funktion definieren: func PermaVolcanoRisingLava() { return(1); }

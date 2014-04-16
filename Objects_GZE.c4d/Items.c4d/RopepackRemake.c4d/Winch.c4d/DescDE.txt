@@ -1,0 +1,1 @@
+Wickelt Seile mit elektrischer Kraft auf und ab. 'Hoch' wickelt das Seil auf, mit 'Runter' kann es abgerollt werden. 'Links' und 'Rechts' stoppen die Seilwinde und halten das Seil fest.

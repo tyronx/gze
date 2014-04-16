@@ -1,0 +1,5 @@
+Places permanently erupting Volcanoes at DuroLava lakes. Also takes care that the lava level doesn't rise above the original level
+
+The placement factor determines the amount and size of permanent volcanoes.
+
+For rising lava levels write the following function in the Scenario Script.c: func PermaVolcanoRisingLava() { return(1); }

@@ -1,0 +1,3 @@
+TxtCoil=Coiling
+TxtUncoil=Uncoiling
+TxtHold=Hold

@@ -1,0 +1,1 @@
+Coils ropes with electric energy. 'Up' for coiling a rope, 'Down' for uncoiling. 'Left' and 'Right' to stop the winch and hold the rope.

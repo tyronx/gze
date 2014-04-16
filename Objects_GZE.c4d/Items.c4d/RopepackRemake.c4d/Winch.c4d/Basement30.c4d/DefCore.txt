@@ -1,0 +1,17 @@
+[DefCore]
+id=CU5P
+Version=4,9,10,2
+Name=Basement
+Category=C4D_Structure
+Width=30
+Height=8
+Offset=-15,-4
+Vertices=2
+VertexX=-12,12
+VertexY=-5,-5
+VertexFriction=100,100
+Value=1
+Mass=10
+Components=ROCK=2
+SolidMask=0,0,30,8,0,0
+Construction=1

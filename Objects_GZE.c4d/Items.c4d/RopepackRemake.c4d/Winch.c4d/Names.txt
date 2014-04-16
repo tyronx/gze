@@ -1,0 +1,2 @@
+DE:Seilwinde
+US:Winch

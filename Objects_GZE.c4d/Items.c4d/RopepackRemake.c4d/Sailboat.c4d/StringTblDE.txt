@@ -1,0 +1,4 @@
+TxtLeft=Links
+TxtRight=Rechts
+TxtLand=Anlanden
+TxtAnchor=Ankern

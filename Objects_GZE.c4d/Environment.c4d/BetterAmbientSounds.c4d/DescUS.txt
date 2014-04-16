@@ -1,0 +1,8 @@
+Improves ambient sounds in clonk.
+
+
+- All ambient sounds play from one enviroment object (not 3 like in CR)
+- Ambient sounds play for each player individually
+- Ambient sounds play only if the player is in the right enviroment. So you will not hear birds deep underground etc. 
+
+- This enviroment object is freely configurable! With the function AddAmbient() and RemoveAmbient() you can build your very own ambient sounds for your scenario.

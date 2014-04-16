@@ -1,0 +1,2 @@
+DE:Ambient Hilfsobjekt
+US:Ambient Helper

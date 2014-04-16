@@ -1,0 +1,5 @@
+Reads out the "Animals" Section of the Scenario and uses this info to use for a better generator for Animal placement.
+
+- This rule fixes that fish are incorrectly placed in all liquids, not water alone.
+- Has many object specific callbacks for individual placement: GetAnimalPlacementBalance, GetAnimalPlacement, GetAnimalPlacementLineTop, GetAnimalPlacementLineBottom, GetAnimalPlacementMaterial
+- Allows 2 new placement types: 3 for Underground, 4 for Burrow (Clonk3-Style Wipf placement)
