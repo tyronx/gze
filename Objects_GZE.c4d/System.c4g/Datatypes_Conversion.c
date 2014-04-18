@@ -1,4 +1,4 @@
-#strict
+#strict 2
 
 /* Turns e.g. "-23a15" into -2315 */
 global func StringToInt(string strNumber) {

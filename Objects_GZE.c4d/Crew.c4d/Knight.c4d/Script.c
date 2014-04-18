@@ -1,6 +1,6 @@
 /*-- Ritter --*/
 
-#strict
+#strict 2
 
 #include CLNK
 
@@ -25,7 +25,7 @@ public func Recruitment(int player)
   var portrait = GetPortrait(this(), 0, 1);
   var portrait_id = GetPortrait(this(), 1, 1);
   // Ist es ein eigenes Portrait? Dann lassen wir es.
-  if(portrait S= "custom") return(_inherited() );
+  if(portrait == "custom") return(_inherited() );
   // Ist eine ID angegeben?
   if(portrait_id && portrait_id != NONE)
   {
@@ -44,7 +44,6 @@ public func Recruitment(int player)
   }
   return(_inherited(player) );
 }
-
 
 public func ExecuteOrder() {
 }
@@ -97,19 +96,19 @@ private func IsRiding()
 //! Zielt der Clonk gerade mit dem Bogen? 
 private func IsAiming() 
 { 
-  return (GetAction() eq "AimBow" || GetAction() eq "RideAimBow"); 
+  return (GetAction() == "AimBow" || GetAction() == "RideAimBow"); 
 } 
  
 //! L‰dt der Clonk gerade den Bogen nach? 
 private func IsLoading() 
 { 
-  return (GetAction() eq "LoadBow" || GetAction() eq "RideLoadBow"); 
+  return (GetAction() == "LoadBow" || GetAction() == "RideLoadBow"); 
 } 
  
 //! Legt der Clonk gerade eine R¸stung an? 
 private func IsPuttingOnArmor() 
 { 
-  return (GetAction() eq "PutOnArmor"); 
+  return (GetAction() == "PutOnArmor"); 
 } 
  
 //! Der Clonk gilt als bewaffnet, wenn er mindestens ein Schild oder eine R¸stung nebst einer Handwaffe tr‰gt.
@@ -167,7 +166,6 @@ public func HasShield(pObj)
   return (FindObject(0,0,0,0,0,0, "Shield", pObj));  
 }
 
- 
 //! Pr¸ft ob pObj (oder dieser Clonk) eine R¸stung tr‰gt. 
 public func HasArmor(pObj)  
 { 
@@ -209,7 +207,7 @@ public func GetFightWeapon(pClonk)
 public func ReadyToFire() 
 { 
   // Nur beim Laufen - und neu auch beim Reiten... 
-  if (GetAction() eq "Walk" || GetAction() eq "Ride" || GetAction() eq "RideStill") return(1); 
+  if (GetAction() == "Walk" || GetAction() == "Ride" || GetAction() == "RideStill") return(1); 
   return(0); 
 } 
  
@@ -218,10 +216,7 @@ public func NeedSaddle()
 {  
   return(1);  
 } 
- 
-
- 
- 
+  
 /*------------------------------------------- Steuerung ------------------------------------------------*/   
  
 /* An Inhalt weitergeben, sonst internen Befehl ausf¸hren. */ 
@@ -376,9 +371,9 @@ private func PrayingAllowed()
 public func ContextPray()
 {
   [$CtxPrayDesc$|Image=CHCS|Condition=PrayingAllowed]
-  if(GetAction() eq "Walk")
+  if(GetAction() == "Walk")
   SetAction("Pray");
-  else if(GetAction() eq "Pray")
+  else if(GetAction() == "Pray")
   SetAction("KneelUp");
   return(1);
 }
@@ -399,7 +394,7 @@ protected func StopPraying()
   // Wenn das Objektpaket nicht geladen ist, einfach nicht einmischen
   if(!GetName(0,CHCS) || !GetName(0,KRME))return(false);
   
-  if(GetAction()S="Pray") return();
+  if(GetAction()=="Pray") return;
   MMStopPraying();
 }
  
@@ -408,19 +403,19 @@ protected func StopPraying()
 protected func ControlCommand(szCommand, pTarget, iTx, iTy, pTarget2, Data) 
 { 
   // Context -> Keine Sonderbehandlung 
-  if(szCommand eq "Context") return(0); 
+  if(szCommand == "Context") return(0); 
   
   // Kommando MoveTo an Pferd weiterleiten. 
   if (IsRiding()) 
     { 
-    if (szCommand eq "MoveTo") 
+    if (szCommand == "MoveTo") 
       return(ObjectCall(GetActionTarget(), "ControlCommand", szCommand, pTarget, iTx, iTy)); 
     // Anderes Kommando beim Reiten: absteigen 
-    SetComDir(COMD_Stop(), GetActionTarget()); 
-    ObjectCall(GetActionTarget(), "ControlDownDouble", this()); 
+    SetComDir(COMD_Stop, GetActionTarget()); 
+    ObjectCall(GetActionTarget(), "ControlDownDouble", this); 
     } 
   // Kommando MoveTo in Bogenschieﬂen umwandeln. 
-  if (szCommand eq "MoveTo") 
+  if (szCommand == "MoveTo") 
     { 
     if (IsAiming()) 
       { FireBowAt(iTx, iTy, true); return(1); } 
@@ -470,7 +465,7 @@ private func Control2Vehicle(szControl)
 { 
   // Reiten und Werfen - an dieser Stelle doppelt gemoppelt, weil schon im normalen Clonk-Script.
   /*if (IsRiding()) 
-    if (szControl eq "ControlThrow") 
+    if (szControl == "ControlThrow") 
       if (Contents()) 
       { 
         SetAction("RideThrow"); // Bemerke: ActionTarget wird beibehalten 
@@ -493,7 +488,7 @@ public func StopAiming()
   // Zielt gar nicht: nix machen 
   if (!IsAiming()) return(0); 
   // Stop 
-  SetComDir(COMD_Stop()); 
+  SetComDir(COMD_Stop); 
   // Basisaktion setzen 
   if (IsRiding()) 
     SetAction("Ride"); 
@@ -595,8 +590,7 @@ private func GetContentsPriority(pContents, iArrowPriority, idCollectObj)
   // Der Rest kann kaum gebraucht werden; ablegen nach Wert 
   return(GetValue(pContents)); 
   } 
- 
- 
+  
 /*---------------------------------------------- Aktionen ------------------------------------------------*/ 
   
 private func Throwing(pObj) 
@@ -663,7 +657,7 @@ private func FindSpearContents()
   // Objekte mit IsSpear() suchen 
   while (pObj=Contents(i++)) if (pObj->~IsSpear()) return (pObj); 
   // Nichts gefunden 
-  return(); 
+  return;
   } 
  
 // Pr¸ft, ob der Clonk gerade kaempft. 
@@ -680,9 +674,9 @@ private func IsFighting()
 private func StopFighting() 
 { 
   // ComDir auf NONE setzen, damit der Clonk nach dem Kampfabbruch nicht weiterlaeuft. 
-  SetComDir(COMD_None() ); 
+  SetComDir(COMD_None ); 
   // StopFighting-Effekt anfuegen, der den Kampf nach 25 Frames abbricht, wenn nicht schon vorhanden. 
-  if(!GetEffect("IntKNIGStopFighting",this(),0,1) ) AddEffect("IntKNIGStopFighting", this(), 1, 25, this() ); 
+  if(!GetEffect("IntKNIGStopFighting",this,0,1) ) AddEffect("IntKNIGStopFighting", this, 1, 25, this ); 
 } 
  
 protected func FxIntKNIGStopFightingStop() 
@@ -691,7 +685,7 @@ protected func FxIntKNIGStopFightingStop()
   if(IsFighting() ) 
   { 
     // Letzten Gegner fuer weitere 25 Frames speichern 
-    AddEffect("IntKNIGLastEnemy", this(), 1, 25, this(), 0, GetActionTarget() ); 
+    AddEffect("IntKNIGLastEnemy", this, 1, 25, this, 0, GetActionTarget() ); 
     // Kampf abbrechen 
     SetAction("Walk"); 
   } 
@@ -705,9 +699,9 @@ protected func FxIntKNIGLastEnemyStart(pTarget, iEffect, pEnemy)
 protected func RejectFight(object pEnemy) 
 { 
   // Ist ein letzter Gegner gespeichert? 
-  if(GetEffect("IntKNIGLastEnemy", this(), 0, 1) ) 
+  if(GetEffect("IntKNIGLastEnemy", this, 0, 1) ) 
     // Ist der letzte Gegner der, mit dem wir hier kaempfen wuerden? 
-    if(pEnemy == EffectVar(0, this(), GetEffect("IntKNIGLastEnemy", this()) ) ) 
+    if(pEnemy == EffectVar(0, this, GetEffect("IntKNIGLastEnemy", this) ) ) 
       // Ja, also abbrechen 
       return(1); 
   // Kampf erlauben 
@@ -722,7 +716,7 @@ private func Fighting(pEnemy)
   if (pWeapon = GetFightWeapon()) 
   { 
     // Erstmal Kampfaktion setzen 
-    if (GetAction() ne pWeapon->~GetFightAction()) 
+    if (GetAction() != pWeapon->~GetFightAction()) 
       return (SetAction(pWeapon->~GetFightAction(), pEnemy)); 
     // Je nach Waffengeschwindigkeit Schlag durchf¸hren 
     if (!Random(pWeapon->~GetStrikeTime())) 
@@ -811,11 +805,11 @@ static const KNIG_ShieldLayer=10; // Der Layer der Schildgrafik
 public func WearShield(pObj, szGraphic)
 {
   // Nur ein Schild gleichzeitig
-  if(HasShield()) return();
+  if(HasShield()) return;
   // Kein Objekt oder keine Grafik angegeben?
-  if(!pObj || !szGraphic) return();
+  if(!pObj || !szGraphic) return;
   // Grafik nicht vorhanden?
-  if(!SetGraphics(szGraphic, this(), GetID(), KNIG_ShieldLayer, GFXOV_MODE_ExtraGraphics)) return();
+  if(!SetGraphics(szGraphic, this(), GetID(), KNIG_ShieldLayer, GFXOV_MODE_ExtraGraphics)) return;
   // Angezogen? dann ID speichern und Objekt lˆschen
   idShield = GetID(pObj);
   RemoveObject(pObj);
@@ -832,9 +826,9 @@ public func RemoveShield()
   // Sound
   Sound("Connect");
   // Grafikoverlay entfernen
-  SetGraphics(0, this(), 0, KNIG_ShieldLayer, GFXOV_MODE_ExtraGraphics);
+  SetGraphics(0, this, 0, KNIG_ShieldLayer, GFXOV_MODE_ExtraGraphics);
   // Schildobjekt erzeugen und einstecken
-  Collect(CreateObject(idShield,0,10,GetOwner()),this());
+  Collect(CreateObject(idShield,0,10,GetOwner()),this);
   idShield=0;
   return(1); 
 }    
@@ -847,14 +841,14 @@ public func WearArmor(pArmor)
   // Schon eine R¸stung an? 
   if (fArmored) return(0); 
   // Nicht am Boden?
-  if (GetAction() ne "Walk") return(0);
+  if (GetAction() != "Walk") return(0);
   // Neue Grafik setzen 
   if (!SetGraphics(pArmor->~GetGraphics())) 
     // Grafik nicht vorhanden: Sicher ein abgeleitetes Objekt, das keine R¸stung tragen kann 
     return(0); 
   // Mit dem Anziehen beginnen 
   SetAction("PutOnArmor");  
-  SetComDir(COMD_None());  
+  SetComDir(COMD_None);  
   SetXDir(0); 
   // R¸stungstyp speichern und R¸stungsobjekt verbrauchen 
   idArmorType = GetID(pArmor); 
@@ -870,12 +864,12 @@ public func RemoveArmor()
   // Keine R¸stung an? 
   if (!fArmored) return(0);
   // Nur im laufen, sonst wird evtl. ein Sprung abgebrochen
-  if (GetAction() ne "Walk") return(0);
+  if (GetAction() != "Walk") return(0);
   // Sound 
   Sound("Connect"); 
   // Mit dem Ausziehen beginnen 
   SetAction("PutOffArmor");  
-  SetComDir(COMD_None());  
+  SetComDir(COMD_None);  
   SetXDir(0); 
   return(1); 
 }              
@@ -916,8 +910,8 @@ public func SetArmored(fnArmored, idnArmorType)
     SetPhysical("CanHangle", 0, 2); 
     // Ruestungsportrait 
     var iPortraitCount = 3; 
-    if (strArmorType S= "BlackKnight") iPortraitCount = 1; // Ein GetPortraitCount("Name") w‰re nett...     
-    SetPortrait(Format("%s%d", strArmorType, 1 + Random(iPortraitCount)), this(), GetID(), 0, 0); 
+    if (strArmorType == "BlackKnight") iPortraitCount = 1; // Ein GetPortraitCount("Name") w‰re nett...     
+    SetPortrait(Format("%s%d", strArmorType, 1 + Random(iPortraitCount)), this, GetID(), 0, 0); 
   } 
   else 
   { 
@@ -928,7 +922,7 @@ public func SetArmored(fnArmored, idnArmorType)
     // Normale Physicals 
     ResetPhysical(); 
     // Normales Portrait 
-    SetPortrait(GetPortrait(this(), 0, 1), this(), GetPortrait(this(), 1, 1), 0, 0); 
+    SetPortrait(GetPortrait(this, 0, 1), this, GetPortrait(this, 1, 1), 0, 0); 
   } 
   // Ok 
   return(1); 
@@ -949,7 +943,7 @@ private func Scaling()
   { 
   var szDesiredAction; 
   if (GetYDir()>0) szDesiredAction = "ScaleDown"; else szDesiredAction = "Scale"; 
-  if (GetAction() ne szDesiredAction) SetAction(szDesiredAction); 
+  if (GetAction() != szDesiredAction) SetAction(szDesiredAction); 
   return(1);    
   } 
  
@@ -968,7 +962,7 @@ private func FindEnemyUnit()
 { 
   var pObj; 
   // N‰chstgelegene Mannschaftsobjekte ¸berpr¸fen 
-  while (pObj = FindObject(0, 0,0,-1,-1, OCF_CrewMember(), 0, 0, 0, pObj)) 
+  while (pObj = FindObject(0, 0,0,-1,-1, OCF_CrewMember, 0, 0, 0, pObj)) 
     // Verfeindet? 
     if (Hostile(GetOwner(),GetOwner(pObj))) 
       // Feind gefunden 
@@ -991,7 +985,7 @@ protected func FindAttachedItems(object after)
 {
   var obj = after;
   while(obj = FindObject(0, 0, 0, 0, 0, 0, 0, this(), 0, obj) )
-    if(GetProcedure(obj) S= "ATTACH")
+    if(GetProcedure(obj) == "ATTACH")
       // ein Ritterding
       if(obj->~UnbuckledID())
         return(obj);
@@ -1003,8 +997,8 @@ protected func FindAttachedItems(object after)
 private func AimBowToTarget(iXOffset, iYOffset) 
 { 
   // Richtung 
-  if (iXOffset > 0) SetDir(DIR_Right()); 
-  if (iXOffset < 0) SetDir(DIR_Left()); 
+  if (iXOffset > 0) SetDir(DIR_Right); 
+  if (iXOffset < 0) SetDir(DIR_Left); 
   // Zielrichtung 
   var iAngle = Angle(0,0,Abs(iXOffset),iYOffset); 
   SetPhase(BoundBy( iAngle / 23, 0, 5)); 
@@ -1020,7 +1014,7 @@ private func AimBowToAngle(iAngle)
   // Winkel anpassen 
   while (iAngle > 180) iAngle -= 360; 
   // Richtung 
-  if (iAngle > 0 ) SetDir(DIR_Right()); else SetDir(DIR_Left()); 
+  if (iAngle > 0 ) SetDir(DIR_Right); else SetDir(DIR_Left); 
   // Zielrichtung 
   SetPhase(BoundBy( (Abs(iAngle)+8)/16, 0,7)); 
   // Fertig 
@@ -1051,7 +1045,7 @@ private func FireBowAt(int iX, int iY, bool fForce)
       k = y + f * f * f / 2 / g,
       w = k * k - d;
   // Auﬂer Reichweite?
-  if(w < 0 && !fForce) return();
+  if(w < 0 && !fForce) return;
   // Flugzeiten und Winkel berechnen
   var t1 = Sqrt( (k + Sqrt(w)) * (f * f * f / g) ),
       t2 = Sqrt( (k - Sqrt(w)) * (f * f * f / g) ),
@@ -1062,7 +1056,7 @@ private func FireBowAt(int iX, int iY, bool fForce)
     // Winkel umrechnen
     phi1 = (270 - phi1) % 360 - 180; phi2 = 90 - phi2;
   // Erste Lˆsung auﬂerhalb der Grenzen?
-    if(!Inside(phi1, -120, 120) && !fForce) return();
+    if(!Inside(phi1, -120, 120) && !fForce) return;
     phi1=BoundBy(phi1, -120, 120);
     // Zielwinkel probieren
   var iAngle;
@@ -1074,12 +1068,12 @@ private func FireBowAt(int iX, int iY, bool fForce)
   else if(fForce)
     iAngle = phi1;      
     else
-    return();
+    return;
   // Zielt gar nicht: erst mal laden 
   if (!IsAiming())
     {
     LoadBow(FindContents(BOW1), 1);  
-    return();  
+    return;  
     }
   // Zielen 
   AimBowToAngle(iAngle); 
@@ -1173,7 +1167,7 @@ private func ChangeBowAimAngle(iChange)
   if (IsAiming()) iOldAngle = GetPhase(); 
   if (IsLoading()) iOldAngle = iLastAimAngle; 
   // Am Anschlag? 
-  if (!Inside(iOldAngle + iChange, 0, 7)) return(); 
+  if (!Inside(iOldAngle + iChange, 0, 7)) return; 
   // Neuen Winkel setzen 
   if (IsAiming()) SetPhase(iOldAngle + iChange); 
   if (IsLoading()) iLastAimAngle += iChange; 
@@ -1192,7 +1186,6 @@ public func BowControlDown(pBow, &rVal)
   // Funktion ¸berladen 
   return(1); 
   } 
-
 
 /* Aufwertung: Nur erlauben, wenn der Clonk noch kein Ritter (z.B.: Kˆnig) ist */
 

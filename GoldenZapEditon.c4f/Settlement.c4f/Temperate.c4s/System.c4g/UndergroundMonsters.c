@@ -1,6 +1,6 @@
 /*-- In our world, Monsters live in caves, Fire monsters live at low level caves --*/
 
-#strict
+#strict 2
 #appendto MONS
 #appendto FMNS
 

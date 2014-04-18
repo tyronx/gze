@@ -1,4 +1,4 @@
-#strict
+#strict 2
 
 /* Sets the Rotation using iX, iY as rotation center */
 global func SetR2(int iR, int iX, int iY, object pObj) {

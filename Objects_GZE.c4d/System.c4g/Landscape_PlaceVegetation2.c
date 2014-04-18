@@ -1,4 +1,4 @@
-#strict
+#strict 2
 
 global func GetMatSoil(iMaterial) {
 	return(GetMaterialVal("Soil", "Material", iMaterial));
@@ -35,11 +35,11 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 	if (hanging) yDirection = 1;
 	
 	var x = rect[0], y = rect[1], wdt = rect[2], hgt = rect[3];
-	var havecons = GetType(cons) == C4V_Array();
+	var havecons = GetType(cons) == C4V_Array;
 	if (!havecons) {
 		cons = [0,0];
 	}
-	var haveautorotates = GetType(autorotates) == C4V_Array();
+	var haveautorotates = GetType(autorotates) == C4V_Array;
 	
 	var vegetationRootDepth = DefinitionCall(objectid, "GetVegetationRootDepth");
 	if (!vegetationRootDepth) vegetationRootDepth = 5;
@@ -133,7 +133,6 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 	}
 	return placed;
 }
-
 
 global func isMaterialSoil(x, y, materialsoil) {
 	if (materialsoil != 0) {

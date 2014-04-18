@@ -1,4 +1,4 @@
-#strict
+#strict 2
 
 global func GetHSLaValueFromRGBa(int rgba, int sel) {
 	return GetRGBaValue(RGB2HSL(rgba), sel);

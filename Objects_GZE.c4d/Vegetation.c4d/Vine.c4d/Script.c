@@ -1,6 +1,6 @@
 /*-- Liane --*/
 
-#strict
+#strict 2
 
 protected func Construction() {
   // Zufälliges Aussehen

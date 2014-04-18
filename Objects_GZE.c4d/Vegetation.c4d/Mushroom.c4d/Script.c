@@ -1,4 +1,4 @@
-#strict
+#strict 2
 #include TREE
 
 private func ReproductionAreaSize() { return(80); }
@@ -17,7 +17,6 @@ public func Construction() {
   var dwRGB = HSL(RandomX(0,38),RandomX(127,255),RandomX(64,160));
   SetColorDw(dwRGB);
 }
-
 
 public func GetMyColor(dwColor) {
 
@@ -47,7 +46,6 @@ public func Reproduction()
   // Kein Platz ;'(
   return(0);
 }
-
 
 public func ContextChop(pClonk)		// per Kontextmenü pflücken
 {
@@ -92,7 +90,7 @@ protected func Eat(object pClonk)
 }
 
 protected func Existing() {
-  if(IsStanding()) return();
+  if(IsStanding()) return;
   // re-seed
   if(!Contained())
     if(!GetYDir())

@@ -1,6 +1,6 @@
 /*-- Löschobjekt --*/
 
-#strict
+#strict 2
 
 global func FxFireStart(object obj, int iNumber, int iTemp, int iCausedBy, bool fBlasted, object pIncineratingObject)
   {

@@ -1,4 +1,4 @@
-#strict
+#strict 2
 
 /* 
  * Better Animal Placement. Besides many new parameters it also does the following:
@@ -25,7 +25,7 @@
  */
 global func PlaceAnimals2(id objectid, int quantity, array rect, int placement, int placementmat, array cons) {
 	var x = rect[0], y = rect[1], wdt = rect[2], hgt = rect[3];
-	var havecons = GetType(cons) == C4V_Array();
+	var havecons = GetType(cons) == C4V_Array;
 	if (!havecons) {
 		cons = [0,0];
 	}

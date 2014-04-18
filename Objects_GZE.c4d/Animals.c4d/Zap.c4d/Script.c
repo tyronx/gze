@@ -1,6 +1,6 @@
 /*-- Zap --*/
 
-#strict
+#strict 2
 local target;
 
 local peaceful;
@@ -64,7 +64,7 @@ protected func Check() { // wird alle 18Frames aufgerufen
 
   // stechen
   if(!Random(2))
-    if(obj=FindObject(0,1,0,0,0,OCF_Prey(),0,0,NoContainer()))
+    if(obj=FindObject(0,1,0,0,0,OCF_Prey,0,0,NoContainer()))
       Sting(obj);
 }
   
@@ -78,7 +78,7 @@ public func FindTarget(maxdist) {  // maximale Distanz zum "Opfer"
   var obj;
   if(peaceful) return;
   // neues Ziel bestimmen falls es nicht zu weit entfernt ist
-  if(obj=FindObject(0,0,0,-1,-1,OCF_Prey(),0,0,NoContainer()))
+  if(obj=FindObject(0,0,0,-1,-1,OCF_Prey,0,0,NoContainer()))
     if(ObjectDistance(obj)<maxdist)
       if(!GBackSemiSolid(GetX(obj)-GetX(),GetY(obj)-GetY()))
         return(obj);

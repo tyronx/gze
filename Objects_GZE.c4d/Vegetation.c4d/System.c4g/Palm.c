@@ -1,4 +1,4 @@
-#strict
+#strict 2
 #appendto PLM1
 #appendto PLM2
 

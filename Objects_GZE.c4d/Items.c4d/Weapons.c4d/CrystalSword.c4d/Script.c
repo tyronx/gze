@@ -1,6 +1,6 @@
 /*--- Schwert ---*/
 
-#strict
+#strict 2
 
 /* Ist eine Handwaffe */
 public func IsFightWeapon()

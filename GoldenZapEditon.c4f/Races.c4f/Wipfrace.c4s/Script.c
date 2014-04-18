@@ -1,5 +1,5 @@
 /* Wipfrennen */
-#strict
+#strict 2
 
 func Initialize()
 {
@@ -33,7 +33,7 @@ func Initialize()
   CreateObject(RCTP,130*GetScenMapZoom(),49*GetScenMapZoom(),-1);
   CreateObject(RCTP,133*GetScenMapZoom(),48*GetScenMapZoom(),-1);
   CreateObject(RCTP,136*GetScenMapZoom(),46*GetScenMapZoom(),-1);
-  return();
+  return;
 }
 
 // -- Callbacks des Rennen-Spielziels --
@@ -100,7 +100,7 @@ func JoinPlayer(iPlr)
   GetCrew(iPlr)->SetAction("Ride", wipf);
   wipf->LocalN("rider") = GetCrew(iPlr);
   SetDir(1,wipf);
-  SetComDir(COMD_None(),wipf);
+  SetComDir(COMD_None,wipf);
   wipf->RWPF::AdjustVertex();
   SetCursor(iPlr,GetHiRank(iPlr));
   SelectCrew(iPlr, GetHiRank(iPlr), 1);
@@ -121,10 +121,10 @@ func OnRestart(iPlr)
 global func FxIntGAMEEvtlBackgroundTimer(pTarget, iEffectNumber, iEffectTime)
 {
   // innerhalb von hinter-Mat-Gebiet hinters Mat verschieben
-  if(~GetCategory(pTarget)&C4D_Background())
+  if(~GetCategory(pTarget)&C4D_Background)
   {
     if(GetX(pTarget)>336*GetScenMapZoom()  && GetY(pTarget)<72*GetScenMapZoom())
-      SetCategory(GetCategory(pTarget)|C4D_Background(),pTarget);
+      SetCategory(GetCategory(pTarget)|C4D_Background,pTarget);
   }
   // außerhalb ggf Kategorie zurücksetzen
   else
@@ -136,7 +136,7 @@ global func FxIntGAMEEvtlBackgroundTimer(pTarget, iEffectNumber, iEffectTime)
 
 global func FxIntGAMEEvtlBackgroundEffect(szNewEffect, iEffectTarget,iEffectNumber,iNewEffectNumber)
 {
-  if(szNewEffect eq "IntGAMEEvtlBackground") return(-1); 
+  if(szNewEffect == "IntGAMEEvtlBackground") return(-1); 
 }
 
 func GetHgt(int iX)

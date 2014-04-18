@@ -1,6 +1,6 @@
 /*-- Fahrstuhlkorb --*/
 
-#strict
+#strict 2
 
 // Local 8: Obergrenze
 // Local 9: Untergrenze
@@ -23,7 +23,7 @@ protected func Timer()
   // Clonks umgreifen lassen
   ChangeClonkGrabs();
   // Feststecken -> Schachtbohrung
-  if (Stuck() && GetComDir() != COMD_Stop())
+  if (Stuck() && GetComDir() != COMD_Stop)
     if (!NoEnergy())
       DigFreeRect(GetX() - 12, GetY() - 13, 24, 26);
   if (!timer) Activity();
@@ -53,7 +53,7 @@ protected func Activity()
     MoveToWaitingClonk();
   // Sicherheitscheck: Bewegung ohne Kommando nur bei Schachtbohrung
   if (GetComDir())
-    if (!GetCommand() && GetAction() ne "Drill")
+    if (!GetCommand() && GetAction() != "Drill")
       Halt();
   // Fertig
   return(1);
@@ -67,11 +67,11 @@ private func MoveToWaitingClonk()
 
   // Bewegung nötig?
   if(Abs(GetY(oClnk) - GetY()) < 4 
-     && GetProcedure(oClnk) ne "SWIM") return 0;
+     && GetProcedure(oClnk) != "SWIM") return 0;
 
   // Zielposition bestimmen
   var iTargetY = GetY(oClnk);
-  if(GetProcedure(oClnk) eq "SWIM")
+  if(GetProcedure(oClnk) == "SWIM")
     iTargetY -= 2;
   if(GetY() > iTargetY)
     iTargetY -= 3;
@@ -87,9 +87,9 @@ private func FindWaitingClonk()
   while(clnk = FindObject(0, -30, RangeTop - GetY(), 60, 6000, OCF_CrewMember, 0, 0, NoContainer(), clnk) )
   {
     proc = GetProcedure(clnk);
-    if(GetComDir(clnk) == COMD_Stop || (proc eq "SWIM" && Inside(GetXDir(clnk), -5, 5)) )
+    if(GetComDir(clnk) == COMD_Stop || (proc == "SWIM" && Inside(GetXDir(clnk), -5, 5)) )
     {
-      if(proc eq "WALK" || proc eq "PUSH" || proc eq "SCALE" || proc eq "HANGLE" || proc eq "SWIM")
+      if(proc == "WALK" || proc == "PUSH" || proc == "SCALE" || proc == "HANGLE" || proc == "SWIM")
         if(!Hostile(GetController(clnk), GetOwner()) )
         {
           // Nicht erreichbar?
@@ -129,17 +129,17 @@ private func GrabObjects()
   var pObject, did_grab;
   
   // Fahrzeuge
-  while (pObject = FindObject(0, -8, -10, 16, 30, OCF_Grab(), 0, 0, NoContainer(), pObject)) 
+  while (pObject = FindObject(0, -8, -10, 16, 30, OCF_Grab, 0, 0, NoContainer(), pObject)) 
   {
     // Objekt passt in den Fahrstuhlkorb
     if (FitsInElevator(pObject)) 
     {
-      if (!(GetCategory(pObject) & C4D_Vehicle())) continue;
+      if (!(GetCategory(pObject) & C4D_Vehicle)) continue;
       if (!Inside(GetXDir(pObject, 100), -1, +1)) continue;
       if (pObject->~IsTree() && GetCon(pObject) >= 50) continue;
       if (GetX(pObject) == GetX() && GetY(pObject) == GetY() + 1) continue;
       if (pObject->~IsElevator() ) continue;
-      if (GetProcedure(pObject) eq "FLOAT") continue;
+      if (GetProcedure(pObject) == "FLOAT") continue;
       did_grab = true;
       
       GrabAdjustPosition(pObject);
@@ -154,9 +154,9 @@ private func GrabAdjustPosition(obj)
   var offset = (GetObjHeight(this()) - GetObjHeight(obj)) / 2 - 1;
   var x = GetX();
 
-  if (GetCategory(obj) & C4D_Object()) 
+  if (GetCategory(obj) & C4D_Object) 
   {
-    if(GetOCF(obj) & OCF_HitSpeed1() ) return(0);
+    if(GetOCF(obj) & OCF_HitSpeed1 ) return(0);
     offset = 8 + GetYDir() / 10;
     x = GetX(obj);
   }
@@ -171,13 +171,13 @@ private func GrabAdjustPosition(obj)
 private func ChangeClonkGrabs()
 {
   var clonk;
-  var clonk_ocf = OCF_Living() | OCF_NotContained();
+  var clonk_ocf = OCF_Living | OCF_NotContained;
   // Schiebende Clonks suchen
   while (clonk = FindObject(0, -15, -10, 30, 20, clonk_ocf, "Push", 0, 0, clonk)) 
   {
-    if (GetComDir(clonk) != COMD_Stop() && GetComDir(clonk) != COMD_Up()) continue;
+    if (GetComDir(clonk) != COMD_Stop && GetComDir(clonk) != COMD_Up) continue;
     if (!Inside(GetXDir(clonk), -2, +2)) continue;
-    if (GetCommand(clonk) && GetCommand(clonk) ne "None") continue;
+    if (GetCommand(clonk) && GetCommand(clonk) != "None") continue;
     if (GetMenu(clonk)) continue;
       
     // Geschobenes Objekt prüfen
@@ -185,12 +185,12 @@ private func ChangeClonkGrabs()
     if (!target) continue;
     if (target->~IsElevator() )
     {
-      if(target == this())
+      if(target == this)
       {
         // In den Fahrstuhlkorb laufen, wenn der Clonk am Rand steht
         if(!Inside(GetX(clonk) - GetX(), -8, +8))
         {
-          SetCommand(clonk, "Grab", this());
+          SetCommand(clonk, "Grab", this);
           AddCommand(clonk, "MoveTo", 0, BoundBy(clonk->GetX(), GetX()-5, GetX()+5), GetY());
           AddCommand(clonk, "UnGrab");
         }
@@ -200,9 +200,9 @@ private func ChangeClonkGrabs()
     }
 
     if (!Inside(GetX(target), GetX() - 8, GetX() + 8)) continue;
-    if (ObjectDistance(this(), target) > 15) continue;
+    if (ObjectDistance(this, target) > 15) continue;
     if (!Inside(GetXDir(target), -2, +2)) continue;
-    if (!PathFree(GetX(this()), GetY(this()), GetX(target), GetY(target))) continue;
+    if (!PathFree(GetX(this), GetY(this), GetX(target), GetY(target))) continue;
     if (!FitsInElevator(target)) continue;
       
     // Geschobenes Objekt zentrieren
@@ -225,7 +225,7 @@ private func ChangeClonkGrabs()
     } 
     else 
     {
-      SetActionTargets(this(), 0, clonk);
+      SetActionTargets(this, 0, clonk);
     }
   }
 }
@@ -244,10 +244,10 @@ private func SetMoveTo(iPos)
 
 private func Halt()
 {
-  if (!Elevator()) { SetAction("Idle"); return(); }
+  if (!Elevator()) { SetAction("Idle"); return; }
   SetAction("Wait");
-  SetCommand(this(),"None");
-  SetComDir(COMD_Stop());
+  SetCommand(this,"None");
+  SetComDir(COMD_Stop);
   SetYDir(0);
   if (GetY() > RangeBottom) UpdateRangeBottom();
   return(1);
@@ -294,7 +294,7 @@ protected func ControlCommand(strCommand, oTarget, iTx, iTy)
   if (!Elevator()) return(0);
   if (Hostile(GetController(oTarget), GetOwner())) return(0);
   // Bewegungskommando vertikal
-  if (strCommand eq "MoveTo")
+  if (strCommand == "MoveTo")
     if (Inside(iTx, GetX()-15, GetX()+15))
       return(SetMoveTo(iTy));
   // Andere Kommandos nicht auswerten
@@ -349,9 +349,9 @@ private func DoControlDig(pObj)
   if (NoEnergy()) return(0);
   Sound("Click");
   if (Hostile(GetController(pObj), GetOwner())) return(0);
-  SetCommand(this(),"None");
+  SetCommand(this,"None");
   SetAction("Drill");
-  SetComDir(COMD_Down());
+  SetComDir(COMD_Down);
 }
 
 private func DoControlDigReleased(pObj)
@@ -364,11 +364,11 @@ public func DoControlAuto(pObj)
   // Kein Fahrstuhl
   if (!Elevator()) return(0);
   // Der Clonk soll uns erst anfassen
-  if ((GetAction(pObj) ne "Push") || (GetActionTarget(0, pObj) != this()))
+  if ((GetAction(pObj) != "Push") || (GetActionTarget(0, pObj) != this))
   {
     SetCommand(pObj, "None");
-    AddCommand(pObj, "Call", this(), 0,0,0,0, "DoControlAuto");
-    AddCommand(pObj, "Grab", this());
+    AddCommand(pObj, "Call", this, 0,0,0,0, "DoControlAuto");
+    AddCommand(pObj, "Grab", this);
     return(0);
   }
   // Ein Geräusch machen
@@ -378,7 +378,7 @@ public func DoControlAuto(pObj)
   // Modus ändern
   AutoMode = !AutoMode;
   // Meldung ausgeben
-  Message(GetAutoModeString(AutoMode), this());
+  Message(GetAutoModeString(AutoMode), this);
 }        
 
 private func RouteToVehicle(call, caller, silent)
@@ -386,11 +386,11 @@ private func RouteToVehicle(call, caller, silent)
   var vehicle;
   while (vehicle = FindVehicle(vehicle)) 
   {
-    if (!(GetCategory(vehicle) & C4D_Vehicle())) continue;
+    if (!(GetCategory(vehicle) & C4D_Vehicle)) continue;
     if (!PathFree(GetX(caller), GetY(caller), GetX(vehicle), GetY(vehicle))) continue;
     
     // Kommando 'Werfen'
-    if (call eq "ControlThrow") 
+    if (call == "ControlThrow") 
     {
       var getput = GetDefGrabPutGet(GetID(vehicle));
       // Kommando per Script überladen?
@@ -419,8 +419,8 @@ private func RouteToVehicle(call, caller, silent)
       if (!PrivateCall(vehicle, call, caller)) 
       {
         var comd;
-        if (call eq "ControlLeft") comd = COMD_Left();
-        else if (call eq "ControlRight") comd = COMD_Right();
+        if (call == "ControlLeft") comd = COMD_Left;
+        else if (call == "ControlRight") comd = COMD_Right;
         if (comd) SetComDir(comd, caller);
       }
     }
@@ -438,7 +438,7 @@ private func RouteToVehicle(call, caller, silent)
 
 private func FindVehicle(vehicle) 
 {
-  return(FindObject(0, -8, -10, 16, 30, OCF_Grab(), 0, 0, NoContainer(), vehicle));
+  return(FindObject(0, -8, -10, 16, 30, OCF_Grab, 0, 0, NoContainer(), vehicle));
 }
 
 /* Kontakt */
@@ -486,10 +486,10 @@ private func UpdateRangeBottom()
 private func Passenger()
 {
   // Clonk finden
-  var clnk = FindObject(0, -12,-13,24,20, OCF_CrewMember(),0,0,NoContainer());
+  var clnk = FindObject(0, -12,-13,24,20, OCF_CrewMember,0,0,NoContainer());
   if(!clnk) return (0);
   // steht wirklich auf dem Fahrstuhl?
-  if(GetProcedure(clnk) ne "WALK") return (0);
+  if(GetProcedure(clnk) != "WALK") return (0);
   return (clnk);
 }
 
@@ -538,7 +538,7 @@ protected func ControlTransfer(pObj, iTx, iTy)
     return(0);
 
   // Fahrstuhl fährt: warten
-  if (GetAction() ne "Wait")
+  if (GetAction() != "Wait")
     return(1);
 
   // Fahrstuhl noch nicht beim Clonk: warten
@@ -550,7 +550,7 @@ protected func ControlTransfer(pObj, iTx, iTy)
     return(AddCommand(pObj,"MoveTo",this()));
 
   // Fahrstuhl anfassen
-  if (!InLiquid(pObj) && GetAction(pObj) ne "Push" || GetActionTarget(0, pObj) != this())
+  if (!InLiquid(pObj) && GetAction(pObj) != "Push" || GetActionTarget(0, pObj) != this())
     return(AddCommand(pObj,"Grab",this()));
   
   // Fahrstuhl zur Zielposition steuern
@@ -634,17 +634,17 @@ public func ControlDigReleased(pObj)
 public func ControlLeft(pObj) 
 {
   [$TxtStop$|Image=ECS1:3|Method=Classic]
-  if (GetAction() ne "Wait" && !GetPlrJumpAndRunControl(GetController(pObj)))
+  if (GetAction() != "Wait" && !GetPlrJumpAndRunControl(GetController(pObj)))
   {
     DoControlStop(pObj);
-    SetComDir(COMD_Stop(), pObj);
+    SetComDir(COMD_Stop, pObj);
   } 
   else
   {
     if(!RouteToVehicle("ControlLeft", pObj))
       if(GetPlrJumpAndRunControl(GetController(pObj)))
       {
-        AddCommand(pObj, "Call", this(), 0,0,0,0, "ContMoveLeft");
+        AddCommand(pObj, "Call", this, 0,0,0,0, "ContMoveLeft");
         AddCommand(pObj, "UnGrab");
       }
   }
@@ -655,17 +655,17 @@ public func ControlLeft(pObj)
 public func ControlRight(pObj) 
 {
   [$TxtStop$|Image=ECS1:3|Method=Classic]
-  if (GetAction() ne "Wait" && !GetPlrJumpAndRunControl(GetController(pObj)) )
+  if (GetAction() != "Wait" && !GetPlrJumpAndRunControl(GetController(pObj)) )
   {
     DoControlStop(pObj);
-    SetComDir(COMD_Stop(), pObj);
+    SetComDir(COMD_Stop, pObj);
   } 
   else
   {
     if(!RouteToVehicle("ControlRight", pObj))
       if(GetPlrJumpAndRunControl(GetController(pObj)))
       {
-        AddCommand(pObj, "Call", this(), 0,0,0,0, "ContMoveRight");
+        AddCommand(pObj, "Call", this, 0,0,0,0, "ContMoveRight");
         AddCommand(pObj, "UnGrab");
       }
   }

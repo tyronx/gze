@@ -1,6 +1,6 @@
 /*-- Prevent Wipfs from ruining the landscape --*/
 
-#strict
+#strict 2
 #appendto WIPF
 
 func StartDig() {
