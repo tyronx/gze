@@ -75,18 +75,24 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 		// Okay, we found the correct material, lets try place it somewhere below that material if free
 		if (isMaterialSoil(rndx, rndy, materialsoil)) {
 			// Search upwards/downwards for free area
-			valid = 1; 
-			while (GetMaterial(rndx, rndy) != freemat) {
+			valid = 0;
+			while (true) {
 				// Make sure were still inside target material
 				if (!isMaterialSoil(rndx, rndy, materialsoil)|| rndy >= y+hgt) {
-					valid = 0;
 					break;
 				}
-				
+
 				rndy+= yDirection;
+
+				if(GetMaterial(rndx, rndy) == freemat)
+				{
+					valid = 1;
+					break;
+				}
 			}
+
 			// Has to be either in liquid or free of liquid
-			valid = (liquid && GBackLiquid(rndx, rndy)) || (!liquid && !GBackLiquid(rndx, rndy));
+			valid = valid && (liquid && GBackLiquid(rndx, rndy)) || (!liquid && !GBackLiquid(rndx, rndy));
 			
 			if (valid) {
 				// Search upwards/downwards again to see how much free vertical space we have
