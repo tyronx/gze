@@ -41,8 +41,7 @@ static original_mat_dword; // So sah der Himmel vorher aus
 static time_sky_dword; // So sieht der Himmel mit der aktuellen Farbmodulation des Zeit-Objekts aus
 
 static time_altDarkness; // wenn false, dann wird die Dunkelheit über den Tag verteilt per Cosinus gesetzt
-						 // wenn true, dann wird sie nur von der Hälfte der Dämmerung bis zur Hälfte
-						 // des Morgengrauens per Cosinus gesetzt
+						 // wenn true, dann wird sie tagsüber und nachts konstant gesetzt, im Übergang per Cosinus
 
 
 local time; // Aktuelle Zeit, in Sekunden
@@ -92,6 +91,7 @@ private func Initialized()
 	                       GetRGBaValue(original_sky_dword, 3),
 	                       GetRGBaValue(original_sky_dword, 0)];
 
+	FxIntTimeAdvanceTimer();
 	AddEffect("IntTimeAdvance", this, 1, g_TIME_TickInterval_Frames, this);
 }
 
@@ -265,7 +265,7 @@ private func DoSkyShade()
 	{
 		SetSkyAdjust(time_sky_dword);
 	}
-	else
+	else // Ist fast dasselbe wie die Himmelsfärbung, aber: zeitlich nach hinten versetzt
 	{
 		var percent;
 
@@ -278,9 +278,16 @@ private func DoSkyShade()
 			var nodark_start = (sunrise_start + sunrise_end)/2;
 			var nodark_end = (sundown_start + sundown_end)/2;
 
+			var dark_start = (sundown_end + g_TIME_Day_Seconds)/2;
+			var dark_end = sunrise_start / 2;
+
 			if (Inside(time, nodark_start, nodark_end))
 			{
 				percent = 0;
+			}
+			else if (time >= dark_start || time <= dark_end)
+			{
+				percent = 100;
 			}
 			else
 			{
@@ -288,12 +295,13 @@ private func DoSkyShade()
 
 				var phase;
 				if (time_shifted >= 0)
-					phase = 90 * time_shifted / nodark_start;
+					phase = 180 - 180 * (time-dark_end) / (nodark_start-dark_end);
 				else
-					phase = 90 * time_shifted / (g_TIME_Day_Seconds - nodark_end);
+					phase = 180 * (time-nodark_end) / (dark_start - nodark_end);
 
-				percent = Cos(phase, 100);
+				percent = 50 - Cos(phase, 50);
 			}
+
 		}
 
 		SetDarkness(DarknessGradeRelative(percent));
