@@ -26,20 +26,27 @@ static const g_TIME_TickInterval_Frames = 10;
 
 static const g_TIME_YearLength = 20; // so viele Tage dauert ein Jahr
 
-static const g_TIME_Oldschool = false; // der alte CR Modus?
-
 /* Variablen */
 
 static time_years, time_days, time_hours, time_minutes;
 static time_hours_old;
 static time_object;
 
-local original_sky_dword; // So sah der Himmel vorher aus
-local original_sky_array; // und jetzt nochmal als Farb-Array [r,g,b,a]
+static original_sky_dword; // So sah der Himmel vorher aus
+static original_sky_array; // und jetzt nochmal als Farb-Array [r,g,b,a]
+static original_skybg_dword; // So sah der Himmel vorher aus
+
+static original_mat_dword; // So sah der Himmel vorher aus
+
+static time_sky_dword; // So sieht der Himmel mit der aktuellen Farbmodulation des Zeit-Objekts aus
+
+static time_altDarkness; // wenn false, dann wird die Dunkelheit über den Tag verteilt per Cosinus gesetzt
+						 // wenn true, dann wird sie nur von der Hälfte der Dämmerung bis zur Hälfte
+						 // des Morgengrauens per Cosinus gesetzt
+
 
 local time; // Aktuelle Zeit, in Sekunden
 local advance_seconds_per_tick; // So viele Sekunden vergehen je Tick
-local light_intensity; // Wie hell/dunkel es ist, in Prozent -> wird das überhaupt benötigt??
 
 
 ////////////////////////////////////////////////////////////////////
@@ -49,21 +56,23 @@ local light_intensity; // Wie hell/dunkel es ist, in Prozent -> wird das überhau
 protected func Initialize()
 {
 	advance_seconds_per_tick = g_TIME_BaseSpeed_SecondsPerTick;
-	light_intensity = 100;
 
 	time = Time( 12, 0, 0);
 
-	//	if(!ObjectCount2(Find_ID(DARK)))
-	//	{
-	//		CreateObject(DARK, 0, 0, NO_OWNER);
-	//	}
-	//	SetDarkness(GameCall("MinDarkness"));
+	if(!ObjectCount2(Find_ID(DARK)))
+	{
+			CreateObject(DARK, 0, 0, NO_OWNER);
+	}
+
+	time_altDarkness = true;
 
 	SetAction("Initialize");
 }
 
 private func Initialized()
 {
+	SetDarkness(GameCall("MinDarkness"));
+
 	advance_seconds_per_tick = g_TIME_BaseSpeed_SecondsPerTick * (ObjectCount(TIME) + 1);
 
 	// Andere Objekte des gleichen Typs entfernen
@@ -75,13 +84,13 @@ private func Initialized()
 	time_object = this;
 
 	// Himmelsmodulation speichern - geht nur mit nicht-transparentem Himmel, momentan
-	original_sky_dword = GetSkyAdjust();
+	if (!original_sky_dword) original_sky_dword = GetSkyAdjust(false);
+	if (!original_skybg_dword) original_skybg_dword = GetSkyAdjust(true);
+	if (!original_mat_dword) original_mat_dword = RGBa(255,255,255,0);
 	original_sky_array = [ GetRGBaValue(original_sky_dword, 1),
 	                       GetRGBaValue(original_sky_dword, 2),
 	                       GetRGBaValue(original_sky_dword, 3),
 	                       GetRGBaValue(original_sky_dword, 0)];
-
-	Log("Time speed is now %d", advance_seconds_per_tick);
 
 	AddEffect("IntTimeAdvance", this, 1, g_TIME_TickInterval_Frames, this);
 }
@@ -226,7 +235,8 @@ private func DoSkyShade()
 
 
 	// Shade sky.
-	SetSkyAdjust(RGB(skyshade[0], skyshade[1], skyshade[2]));
+//	Log("sky color: %d %d %d %d", skyshade[0], skyshade[1], skyshade[2], skyshade[3]);
+	time_sky_dword = RGBa(skyshade[0], skyshade[1], skyshade[2], 0);
 
 	// Shade landscape.
 	var gamma = [0,0,0];
@@ -248,6 +258,46 @@ private func DoSkyShade()
 //			cloud->SetLightingShade(255 - skyshade[2]);
 //		}
 //	}
+
+	// Und zusätzlich Licht aus!
+
+	if (!darkness_object) // der macht das sowieso am Ende
+	{
+		SetSkyAdjust(time_sky_dword);
+	}
+	else
+	{
+		var percent;
+
+		if (!time_altDarkness)
+		{
+			percent = 50 + Cos(time * 360 / g_TIME_Day_Seconds, 50);
+		}
+		else
+		{
+			var nodark_start = (sunrise_start + sunrise_end)/2;
+			var nodark_end = (sundown_start + sundown_end)/2;
+
+			if (Inside(time, nodark_start, nodark_end))
+			{
+				percent = 0;
+			}
+			else
+			{
+				var time_shifted = (time + Time(12)) % g_TIME_Day_Seconds - Time(12);
+
+				var phase;
+				if (time_shifted >= 0)
+					phase = 90 * time_shifted / nodark_start;
+				else
+					phase = 90 * time_shifted / (g_TIME_Day_Seconds - nodark_end);
+
+				percent = Cos(phase, 100);
+			}
+		}
+
+		SetDarkness(DarknessGradeRelative(percent));
+	}
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -283,7 +333,7 @@ global func GetTime()
 global func SetTime(int seconds)
 {
 	if (!time_object) return;
-	LocalN("time", seconds);
+	LocalN("time", time_object) = seconds;
 }
 
 global func GetTimeSpeed()
@@ -302,68 +352,3 @@ global func IsDawn() { if(!time_object) return false; var time = GetTime(); retu
 global func IsDay()  { if(!time_object) return true;  var time = GetTime(); return GetDawnPeriod()[1] <= time && time < GetDuskPeriod()[0]; }
 global func IsDusk() { if(!time_object) return false; var time = GetTime(); return GetDuskPeriod()[0] <= time && time < GetDuskPeriod()[1]; }
 global func IsNight(){ if(!time_object) return false; var time = GetTime(); return GetDuskPeriod()[1] <= time || time < GetDawnPeriod()[0]; }
-
-
-
-
-///* Himmelsfarbe */
-//
-//private func RestoreSkyColors(iPercent) {
-//	// Alte Speicherung? Übertragen
-//	if (Local (4)) GetOldSkyColors();
-//	if (Local (6)) {
-//		var i;
-//		// ehemaliges OldGfx: Normales SetSkyColor
-//		while(i < 20) RestoreSkyColor(i++, 100);
-//	}
-//	// NewGfx: Einfach SetSkyAdjust
-//	// Minimale Gammakontrolle (Rampe 3)
-//	var lt = iPercent / 2 + 78;
-//	SetGamma(0, RGB(lt, lt, 128), 16777215, 3);
-//	SetSkyAdjust(RGBa(
-//		iPercent * GetRGBValue(SkyAdjustOrig,1) / 100,
-//		iPercent * GetRGBValue(SkyAdjustOrig,2) / 100,
-//		iPercent * GetRGBValue(SkyAdjustOrig,3) / 100,
-//		iPercent * GetRGBValue(SkyAdjustOrig,0) / 100	), GetSkyAdjust(1));
-//	return(1);
-//}
-//
-//private func RestoreSkyColor(int iColor, int iPercent) {
-//	SetSkyColor(iColor,
-//		((Local(iColor+6)>>16 & 255) * iPercent)/100,
-//		((Local(iColor+6)>> 8 & 255) * iPercent)/100,
-//		((Local(iColor+6)		 & 255) * iPercent)/100
-//	);
-//	Local(iColor + 6) = 0;
-//	return();
-//}
-//
-//private func GetOldSkyColors() {
-//	var i;
-//	i=-1; while (++i<11) Local(i+ 6)=Local(i,Local(4));
-//	i=-1; while (++i<11) Local(i+16)=Local(i,Local(5));
-//	// Alte Hilfsobjekte entfernen
-//	RemoveObject(Local(4));
-//	RemoveObject(Local(5));
-//	return(1);
-//}
-//
-
-//}
-//
-//
-//private func RestoreSkyColors(int iPercent)
-//{
-//	iPercent = 100 - iPercent;
-//	//DebugLog("restoreskycolors %d", iPercent);
-//	var iMin = GameCall("MinDarkness"), iMax = GameCall("MaxDarkness");
-//	if(!iMax) {
-//		iMax = 62; // <Nachtfalter> einigen wir uns auf 62
-//	}
-//	iPercent = iPercent * (iMax - iMin) / 100 + iMin;
-//	//Log("fadedarkness %d", iPercent);
-//	FadeDarkness(iPercent);
-//	return 1;
-//}
-//
-//
