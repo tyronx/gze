@@ -1,6 +1,6 @@
 /*-- Keks --*/
 
-#strict
+#strict 2
 
 public func Activate(object pClonk)
 {

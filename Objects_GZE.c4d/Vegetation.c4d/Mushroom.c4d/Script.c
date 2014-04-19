@@ -1,4 +1,4 @@
-#strict
+#strict 2
 #include TREE
 
 private func ReproductionAreaSize() { return(80); }
@@ -18,7 +18,6 @@ public func Construction() {
   SetColorDw(dwRGB);
 }
 
-
 public func GetMyColor(dwColor) {
 
   var dwRGB = dwColor;
@@ -35,19 +34,10 @@ public func GetMyColor(dwColor) {
 
 public func Reproduction()
 {
-  // Ist noch Platz für einen Baum?
-  var iSize = ReproductionAreaSize();
-  var iOffset = iSize / -2;
-  if (ObjectCount(GetID(), iOffset, iOffset, iSize, iSize)<MaxTreeCount()) {
-    // OK, hin damit
-    var pMush = PlaceVegetation(GetID(), iOffset, iOffset, iSize, iSize, 10);
-    if(pMush) pMush->GetMyColor(GetColorDw());
-    return(1);
-  }
+  
   // Kein Platz ;'(
   return(0);
 }
-
 
 public func ContextChop(pClonk)		// per Kontextmenü pflücken
 {
@@ -92,7 +82,7 @@ protected func Eat(object pClonk)
 }
 
 protected func Existing() {
-  if(IsStanding()) return();
+  if(IsStanding()) return;
   // re-seed
   if(!Contained())
     if(!GetYDir())

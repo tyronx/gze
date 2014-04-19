@@ -1,7 +1,7 @@
 // Work in progress - 
 // ShakeViewPort() was originally intended to be additive, but it's broken. trying to fix it for GZE
 
-#strict
+#strict 2
 
 global func ShakeViewPort(int iLevel, object pObj, int iOffX, int iOffY, bool onlyHorizontal, bool fadein) {
 	if(iLevel <= 0) return(false);

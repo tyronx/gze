@@ -1,6 +1,6 @@
 /*-- Herd --*/
 
-#strict
+#strict 2
 
 private func Burning()
 {

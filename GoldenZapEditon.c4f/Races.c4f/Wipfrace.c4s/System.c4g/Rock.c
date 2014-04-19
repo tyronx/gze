@@ -1,5 +1,5 @@
 /* Raucheffekte des Steines im Berg */
-#strict
+#strict 2
 #appendto ROCK
 
 func Hit()

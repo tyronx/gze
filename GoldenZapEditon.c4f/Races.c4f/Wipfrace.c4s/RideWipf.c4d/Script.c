@@ -1,6 +1,6 @@
 /*-- Wipf --*/
 
-#strict
+#strict 2
 #include WIPF
 
 local rider;
@@ -31,32 +31,32 @@ func ContactRight()
   
 func ControlLeft()
 { 
-  if(GetAction()ne"Walk" && GetAction()ne"Swim") return(0);
+  if(GetAction() != "Walk" && GetAction() != "Swim") return(0);
   TurnLeft();
   return(1);
 }
 
 func ControlRight()
 { 
-  if(GetAction()ne"Walk" && GetAction()ne"Swim") return(0);
+  if(GetAction() != "Walk" && GetAction() != "Swim") return(0);
   TurnRight();
   return(1);
 }
 
 func ControlUp()
 {
-  if(GetAction()S="Swim") 
-    if(GetDir()) SetComDir(COMD_UpRight());
-      else SetComDir(COMD_UpLeft());
+  if(GetAction() == "Swim") 
+    if(GetDir()) SetComDir(COMD_UpRight);
+      else SetComDir(COMD_UpLeft);
     
-  if (GetAction()S="Walk") 
+  if (GetAction() == "Walk") 
     Jump();
   return(1);
 }
   
 func ControlDownSingle()
 {
-  if (GetAction()S="Walk") {
+  if (GetAction() == "Walk") {
     SetComDir(0);
     SetXDir(0);
   }
@@ -69,7 +69,7 @@ func ControlDownDouble()
     ObjectSetAction(rider,"Walk");
     rider=0;
   } else 
-  if (GetAction()S="Walk") {
+  if (GetAction() == "Walk") {
     SetComDir(0);
     SetXDir(0);
   } 
@@ -81,8 +81,8 @@ func ActivateEntrance()
   // Reiter verloren?
   if(!ObjectCall(rider,"IsRiding")) rider=0;
   // Clonks dürfen auf dem Wipf reiten, wenn er nicht bereits beritten wird und der Wipf bereit ist
-  if(GetOCF(Par(0))&OCF_CrewMember() && !rider)
-    if(GetAction()S="Walk" || (GetAction()S="Swim" && !GBackLiquid(3-6*GetDir(),-6))) {
+  if(GetOCF(Par(0))&OCF_CrewMember && !rider)
+    if(GetAction() == "Walk" || (GetAction() == "Swim" && !GBackLiquid(3-6*GetDir(),-6))) {
       AdjustVertex();
       SetObjectOrder(this(),Par(0));
       if(InLiquid(Par(0))) SetPosition(GetX()+3-6*GetDir(),GetY()-6,Par(0));
@@ -94,7 +94,7 @@ func ActivateEntrance()
 // Reitwipfe tauchen nicht gerne
 func GoUp()
 {
-  if(!Random(3)) SetComDir(COMD_Up());
+  if(!Random(3)) SetComDir(COMD_Up);
   return(1);
 }
    

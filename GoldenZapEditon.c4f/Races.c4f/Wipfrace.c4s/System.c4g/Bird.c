@@ -1,5 +1,5 @@
 /* Vögel in den Hintergrund versetzen wenn sie sich in dem Tunnelhinderniss da befinden */
-#strict
+#strict 2
 #appendto BIRD
 
 func Activity()

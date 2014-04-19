@@ -1,6 +1,6 @@
 /*-- Append --*/
 
-#strict
+#strict 
 #appendto *
 
 public func Hit(a,b,c,d,e,f,g,h)

@@ -1,10 +1,10 @@
 /*-- Fackel --*/
 
-#strict
+#strict 2
 
 public func Activate()
 {
-  if(GetAction() S= "Burning") return(Extinguishsh());
+  if(GetAction() == "Burning") return(Extinguishsh());
   SetAction("Burning");
   return(this() );
 }

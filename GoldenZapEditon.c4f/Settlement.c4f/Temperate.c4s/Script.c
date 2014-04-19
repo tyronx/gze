@@ -1,20 +1,16 @@
-#strict
-
-
+#strict 2
 
 func Initialize() {
 	MusicLevel(50);
 	
 	// We place some extra in-earth objects nearby certain materials for awesome looks
-	PlaceObjects2(COAL, 500, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Coal")); // Coal nearby coal 
+	PlaceObjects2(COAL, 250, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Coal")); // Coal nearby coal 
 	PlaceObjects2(FLNT, 80, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Flint"));
 	PlaceObjects2(LOAM, 100, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Loam"));
-	PlaceObjects2(ORE1, 300, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Ore"));
-	
-	
+	PlaceObjects2(ORE1, 150, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Ore"));
+
 	return(1);
 }
-
 
 func InitializePlayer(player) {
 	var x = 20 + Random(LandscapeWidth() - 40);
@@ -35,7 +31,6 @@ func InitializePlayer(player) {
 	hut->CreateObject(ANVL, 17, 23);
 	hut->CreateContents(FLAG);
 }
-
 
 func findSpawnPoint(miny) {
 	var x,y;

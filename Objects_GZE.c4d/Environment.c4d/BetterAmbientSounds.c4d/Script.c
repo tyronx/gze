@@ -205,10 +205,10 @@ private func playSound(sound, ambid, plrid, plrnum, volume, loop) {
 		if (Local(plrid)[1][ambid] && Local(plrid)[1][ambid]->Local(0) != volume) {
 			//Log("stop old sound %d != %d", Local(plrid)[1][ambid]->Local(0), volume);
 			
-			if (Local(plrid)[1][ambid]->Local(1) == ConcatString(sound, "1")) {
-				sound = ConcatString(sound, "2");
+			if (Local(plrid)[1][ambid]->Local(1) == ConcatStrings(sound, "1")) {
+				sound = ConcatStrings(sound, "2");
 			} else {
-				sound = ConcatString(sound, "1");
+				sound = ConcatStrings(sound, "1");
 			}
 			
 			stopSound(ambid, plrid, plrnum); 
@@ -218,7 +218,7 @@ private func playSound(sound, ambid, plrid, plrnum, volume, loop) {
 			if (Local(plrid)[1][ambid]) {
 				sound = Local(plrid)[1][ambid]->Local(1); 
 			} else {
-				sound = ConcatString(sound, "1");
+				sound = ConcatStrings(sound, "1");
 			}
 		}
 	}

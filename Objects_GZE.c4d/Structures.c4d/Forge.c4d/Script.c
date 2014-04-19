@@ -1,6 +1,6 @@
 /*-- Esse --*/
 
-#strict
+#strict 2
 #include BAS1
 
 /* Steuerung */

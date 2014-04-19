@@ -1,6 +1,6 @@
 /* Erdbeben */
 
-#strict
+#strict 2
 
 local iLevel;
 local iLifeTime;

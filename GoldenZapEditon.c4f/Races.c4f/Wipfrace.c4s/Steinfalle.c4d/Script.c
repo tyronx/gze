@@ -1,5 +1,5 @@
 /* Steinfalle */
-#strict
+#strict 2
 
 local delay;
 

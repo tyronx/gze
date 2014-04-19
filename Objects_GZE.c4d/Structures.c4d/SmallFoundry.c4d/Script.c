@@ -1,6 +1,6 @@
 /*-- Kleiner Hochofen --*/
 
-#strict
+#strict 2
 #include BAS2
 
 /* Steuerung */
@@ -47,11 +47,11 @@ private func ProductionAcquireMaterial(idMat, iAmount, pWorker)
   // Benötigte Menge ermitteln
   var iNeededAmount = Max(iAmount - ContentsCount(idMat));
   // Der Arbeiter soll das Material beschaffen
-  AddCommand(pWorker,"Call",this(),0,0,0, 0, Format("CmdAcquire%i", idMat), 0, 3);
+  AddCommand(pWorker,"Call",this,0,0,0, 0, Format("CmdAcquire%i", idMat), 0, 3);
   while (iNeededAmount--)
   {
-    AddCommand(pWorker,"Put",this(),0,0,0, 0, idMat);
-    AddCommand(pWorker,"Acquire",0,0,0,this(), 0, idMat);
+    AddCommand(pWorker,"Put",this,0,0,0, 0, idMat);
+    AddCommand(pWorker,"Acquire",0,0,0,this, 0, idMat);
   }
   return(1);
 }
@@ -77,7 +77,6 @@ protected func CmdAcquireOBRLFailed(pWorker)
   // Fehler bei der Materialbeschaffung: Meldung
   return(Message("$MsgFuelNotAvailable$", pWorker));
 }
-
 
 /* Aufnahme */
 
@@ -107,7 +106,6 @@ protected func Burning()
   // Prüfen, ob der Ofen weiterlaufen kann
   return(ContentsCheck());
 }
-
 
 /* Brennmaterial suchen */
 
@@ -149,7 +147,7 @@ public func HasFuel()
 {
   if (FindContents(COAL)) return(1);
   if (FindContents(OBRL)) return(1);
-  return();
+  return;
 }
 
 

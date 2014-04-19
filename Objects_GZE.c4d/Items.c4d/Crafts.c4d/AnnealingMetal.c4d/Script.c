@@ -1,6 +1,6 @@
 /*-- Glühendes Metall --*/
 
-#strict
+#strict 2
 
 protected func Initialize()
 {

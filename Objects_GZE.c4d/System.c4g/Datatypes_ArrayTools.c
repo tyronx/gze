@@ -1,17 +1,15 @@
-#strict
-
+#strict 2
 
 global func ArrayIndexOf(array &arr, elem1) {
 	var type = GetType(elem1);
 	var idx = 0;
 	for (var elem2 in arr) {
-		if (type == C4V_String() && elem1 S= elem2) return idx;
-		if (type != C4V_String() && elem1 == elem2) return idx;
+		if (type == C4V_String && elem1 == elem2) return idx;
+		if (type != C4V_String && elem1 == elem2) return idx;
 		idx++;
 	}
 	return -1;
 }
-
 
 // Remove the last element from the array
 /* Example:
@@ -58,7 +56,6 @@ global func ArrayUnshift(array &arr, elem) {
 	}
 	arr[0] = elem;
 }
-
 
 // Splits a string into an array with given seperator, e.g. ExplodeString("_", "a_b_c") will return ["a","b","c"]
 global func ExplodeString(string seperator, string str) {

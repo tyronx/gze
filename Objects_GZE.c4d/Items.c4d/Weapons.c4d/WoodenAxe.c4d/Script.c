@@ -1,6 +1,6 @@
 /*-- Axt --*/
 
-#strict
+#strict 2
 #include IAXE
 
 /* Kampfgeschwindigkeit */
