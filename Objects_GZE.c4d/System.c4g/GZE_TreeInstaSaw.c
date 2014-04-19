@@ -25,14 +25,15 @@ public func ChopDown() {
 public func TurnToWood() {
 	var wdt = GetDefCoreVal("Width", "DefCore", GetID()) * GetCon()/10;
 	var hgt = GetDefCoreVal("Height", "DefCore", GetID()) * GetCon()/10;
-	var quantity = Round((GetComponent(WOOD) * GetCon())/20);
+	
+	var treematerial = GetComponent(0, 0);
+	var quantity = Round((GetComponent(treematerial) * GetCon())/20);
 	
 	var i = 0;
 	//Log("%d %d %d", quantity, hgt, pos);
 	while(i < quantity) {
 		i++;
-		
-		CreateObject(WOOD, -Sin(GetR(), i * (wdt/quantity) - wdt/2)/10, Cos(GetR(), (i * (hgt/quantity) - hgt/2))/10);
+		CreateObject(treematerial, -Sin(GetR(), i * (wdt/quantity) - wdt/2)/10, Cos(GetR(), (i * (hgt/quantity) - hgt/2))/10);
 	}
 	//Sound("TreeDown*");
 	RemoveObject();

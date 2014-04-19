@@ -1,6 +1,7 @@
 /*-- Liane --*/
 
 #strict 2
+#include TREE
 
 protected func Construction() {
   // Zufälliges Aussehen
