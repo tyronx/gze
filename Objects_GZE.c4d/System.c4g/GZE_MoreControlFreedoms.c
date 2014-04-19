@@ -7,8 +7,7 @@ public func ControlThrow()
 	// Träger bereit zum Werfen?
 	if (Contents(0) && GetAction() == "Jump") 
 		if (SetAction("JumpThrow"))  { return(1); }
-	else	
-		return(_inherited());
+	return(_inherited());
 }
 
 public func ControlLeft() 
