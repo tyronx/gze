@@ -1,2 +1,0 @@
-DE:Tageszeiten
-US:Time of day
