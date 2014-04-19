@@ -8,6 +8,8 @@ local animalplacementlevel;
 protected func Initialize() {
 	SetPosition(0,0);
 	
+	Log("Replacing Animals");
+	
 	SetEarthObjectsLevel();
 	RemoveEnginePlacedAnimals();
 	PlaceAnimals();

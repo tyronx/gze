@@ -1,6 +1,10 @@
 /*-- Seegras --*/
 
 #strict 2
+#include TREE
+
+func Construction() {
+}
 
 protected func CheckEnvironment()
 {

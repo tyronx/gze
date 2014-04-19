@@ -8,6 +8,8 @@ local vegetationlevel;
 protected func Initialize() {
 	SetPosition(0,0);
 	
+	Log("Replacing Vegetation");
+	
 	SetVegetationLevel();
 	RemoveEnginePlacedVegetation();
 	RepopulateVegetation();

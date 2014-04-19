@@ -16,3 +16,4 @@ Mass=1
 Components=SWD1=1
 Picture=0,0,16,20
 Placement=1
+Chop=1

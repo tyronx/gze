@@ -10,7 +10,6 @@ protected func Initialize() {
 
 	var lightColour = RGBa(220, 255, 180, 110);
 	var light = AddLightAmbience(RandomX(8,15),this);
-
 	var color = light->ChangeColor(lightColour);
 
 	FadeIn(this, 0, false);
