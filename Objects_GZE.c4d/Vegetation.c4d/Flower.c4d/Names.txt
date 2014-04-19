@@ -1,2 +1,2 @@
-DE:Blumen
-US:Flowers
+DE:Blume
+US:Flower

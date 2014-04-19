@@ -36,7 +36,7 @@ global func PlaceObjects2(id objectid, int quantity, array rect, array inmateria
 	
 		
 	if (nearbymaterial) {
-		while (quantity > 0 && attempts++ < 10000) {
+		while (quantity > 0 && attempts++ < 20000) {
 			rndx = x + Random(wdt);
 			rndy = y + Random(hgt);
 			
@@ -79,7 +79,7 @@ global func PlaceObjects2(id objectid, int quantity, array rect, array inmateria
 	} else {
 	
 		
-		while (quantity > 0 && attempts++ < 10000) {
+		while (quantity > 0 && attempts++ < 20000) {
 			rndx = x + Random(wdt);
 			rndy = y + Random(hgt);
 			

@@ -2,7 +2,7 @@
 
 #strict 2
 
-global func FireflyFrequency() { return 8; } 
+global func FireflyFrequency() { return 5; } 
 
 local spawned_fireflies;
 
@@ -42,9 +42,9 @@ protected func Initialize() {
 }
 
 private func MoveBehindTrees() {
-	var obj;
-	while (obj = FindObject(0, 1,1, 0,0, OCF_Chop, 0,0, NoContainer(), obj)) {
-		if (obj->~IsTree() && (obj->GetCategory() & C4D_StaticBack)) {
+	for (var obj in FindObjects(Find_OCF(OCF_Chop), Find_NoContainer(), Find_Category(C4D_StaticBack), Find_AtPoint())) {
+		if (obj->~IsTree()) {
+			//Log("put %v behind tree", GetID());
 			SetObjectOrder(obj, this, 1); 
 		}
 	}
