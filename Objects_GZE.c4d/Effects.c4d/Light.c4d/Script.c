@@ -1,6 +1,6 @@
 /*-- Licht --*/
 
-#strict
+#strict 2
 
 local iColor, bAmbience, iF;
 
@@ -97,17 +97,16 @@ global func CreateLight(id ID, int iSize, int iColor, object pTarget, string sGr
 //erzeugt ein Licht mit Größe und Farbe und hängt es an pTarget
 global func AddLight(int iSize, int iColor, object pTarget) {
   if(!pTarget)
-    if(!(pTarget = this()))
-      return();
+    if(!(pTarget = this))
+      return;
   
   return(CreateLight(LIGH, iSize, iColor, pTarget));
 }
 
-
 global func AddLightHalf(int iSize, int iColor, object pTarget) {
   if(!pTarget)
     if(!(pTarget = this()))
-      return();
+      return;
   
   return(CreateLight(LIGH, iSize, iColor, pTarget, "Half"));
 }
@@ -115,7 +114,7 @@ global func AddLightHalf(int iSize, int iColor, object pTarget) {
 global func AddLightCone(int iSize, int iColor, object pTarget) {
   if(!pTarget)
     if(!(pTarget = this()))
-      return();
+      return;
   
   return(CreateLight(LGHC, iSize, iColor, pTarget));
 }
@@ -124,7 +123,7 @@ global func AddLightCone(int iSize, int iColor, object pTarget) {
 global func AddLightAmbience(int iSize, object pTarget, string cGraphics) {
   if(!pTarget)
     if(!(pTarget = this()))
-      return();
+      return;
       
   var light = CreateObject(LIGH,0,0,GetController(pTarget));
   light->LocalN("bAmbience") = true;

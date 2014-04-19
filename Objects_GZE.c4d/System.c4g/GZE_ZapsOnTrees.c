@@ -1,4 +1,4 @@
-#strict
+#strict 2
 #appendto TRE1
 #appendto TRE2
 #appendto TRE3

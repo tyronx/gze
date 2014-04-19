@@ -1,6 +1,6 @@
 /*-- Tageszeiten --*/
 
-#strict
+#strict 2
 
 /* Locals */
 
@@ -77,7 +77,7 @@ private func Timing() {
 	
 protected func UpdateTransferZone() {
 	// Kleiner Trick, damit der Himmel nach dem Laden aktualisiert wird
-	if (GetAction() S= "Time") 
+	if (GetAction() == "Time") 
 		RestoreSkyColors(Local(2));
 	return(0);	
 }
@@ -125,7 +125,7 @@ private func RestoreSkyColor(int iColor, int iPercent) {
 		((Local(iColor+6)		 & 255) * iPercent)/100
 	);
 	Local(iColor + 6) = 0;
-	return();
+	return;
 }
 
 private func GetOldSkyColors() {
@@ -137,12 +137,6 @@ private func GetOldSkyColors() {
 	RemoveObject(Local(5));
 	return(1);
 }
-
-
-
-
-
-
 
 static time_years,time_days,time_hours,time_minutes;
 static time_hours_old;
@@ -269,7 +263,6 @@ global func TimeSetHour( int iHour ) {
 
 	return x;
 }
-
 
 global func IsDawn() { if(FrameCounter() < 10) return false; return time_hours == gTime_Morning; }
 global func IsDay() { if(FrameCounter() < 10) return true; return time_hours > 6 && time_hours < 19; } // 7-18 Uhr

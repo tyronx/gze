@@ -1,12 +1,13 @@
 /*--- Caverace ---*/
 
-#strict
+#strict 2
 
 /* Initialisierung */
 
 protected func Initialize()
 {
-  var cnt=Random(5); while (++cnt<8) PlaceVehicle();
+  var cnt=Random(5); 
+  while (++cnt<8) PlaceVehicle();
   CreateObject(GIDL,LandscapeWidth()/2,167,-1);
   var pLorry;
   CreateContents(RndCntID(),pLorry=CreateObject(LORY,50,LandscapeHeight()-50,-1));
@@ -28,7 +29,7 @@ static rnd_x, rnd_y;
 private func PlaceVehicle()
 {
   var obj, c=0, i=0;
-  if (!FindVehPos()) return();
+  if (!FindVehPos()) return;
   obj=CreateObject(RndVehID(),rnd_x,rnd_y,-1);
   if (GetID(obj)==CANN) while (c++<5) CreateContents(GUNP,obj);
   if (GetID(obj)==XBOW) { while (i++<10) CreateContents(XARW,obj); return(obj); }
@@ -46,7 +47,7 @@ private func FindVehPos()
     if (GBackSolid(rnd_x, rnd_y-25)) rnd_y+=25;
     if (!GBackSolid(rnd_x, rnd_y) && !GBackLiquid(rnd_x, rnd_y)) return(1);
     }
-  return();
+  return;
 }
 
 private func RndVehID()

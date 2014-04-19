@@ -18,7 +18,7 @@
     [Type 3 Quests - Lorenladungen machen]
 */
 
-#strict
+#strict 2
 #include GOAL
 
 // allgemein
@@ -33,8 +33,8 @@ local iQuestObjCount;   // Anzahl
 local iQuestPrize;      // Belohnung
 local strQuestText;     // Quest Beschreibung
 
-protected Initialize:
-
+protected func Initialize()
+{
   // anderes Objekt vorhanden? Selber dazuzählen
   if (Var()=FindObject(GetID()))
     { LocalN("iQuestsLeft",Var())++; return(RemoveObject()); }
@@ -44,8 +44,10 @@ protected Initialize:
   iQuestPrize = 0;
   SetPosition(0,0); // sonst Probleme mit offset bei lokalen aufrufen
   return(1);
-
-private Execute:
+}
+  
+private func Execute()
+{
   if(iQuestsLeft==0)
     return(0);
   if(iQuestType==-1)
@@ -54,8 +56,10 @@ private Execute:
   if(IsQuestFulfilled())
     CreateQuest();
   return(1);
+}
 
-private CreateQuest:
+private func CreateQuest()
+{
   // Belohnung geben
   if(iQuestPrize)
   {
@@ -80,9 +84,11 @@ private CreateQuest:
   if(!Suceed)
     iQuestsLeft=0;
   return(1);
+}
 
 // versuchen, ein neues Quest aufzubauen
-private AttemptNewQuest:
+private func AttemptNewQuest()
+{
     Var()=0;
 
     Var() = Objects_AttemptQuest (Var());
@@ -99,24 +105,30 @@ private AttemptNewQuest:
       return(1);
     }
   return(0);
+}
 
-private UpdateQuestText:
+private func UpdateQuestText()
+{
     Var(0)=0;
     Var() = Objects_GetQuestText(Var());
     Var() =   Other_GetQuestText(Var());
     if(iQuestType==3)
         strQuestText= Format( "Mach eine Lorenladung %s (%d)!", GetName(0, idQuestTarget), iQuestObjCount );
     return(1);
+}
 
-InitQuestType1: // Par() C4ID
+public func InitQuestType1() // Par() C4ID
+{
     iQuestType = 1;
     idQuestTarget = Par();
     
     if(IsQuestFulfilled())  return (0);
     
     return((GetResourceCount(idQuestTarget)*Sqrt(LandscapeWidth()*LandscapeHeight()))/1000);
-
-InitQuestType2: // Par() C4ID
+}
+	
+public func InitQuestType2() // Par() C4ID
+{
     iQuestType = 2;
     idQuestTarget = Par();
 
@@ -130,23 +142,23 @@ InitQuestType2: // Par() C4ID
     // Herstellbarkeit prüfen
     var ProductionPlace=0;
     if(DefinitionCall(Par(),"IsChemicalProduct"))  ProductionPlace = CHEM;
-    if(GetDefCoreVal("Category",0,Par()) & C4D_Vehicle())  ProductionPlace = WRKS;
+    if(GetDefCoreVal("Category",0,Par()) & C4D_Vehicle)  ProductionPlace = WRKS;
 
     // Productionplace da oder beschaffbar?
     if(   !ProductionPlace
-        || FindObject(ProductionPlace,0,0,0,0,OCF_Fullcon())
+        || FindObject(ProductionPlace,0,0,0,0,OCF_Fullcon)
         || ( GetAnyPlayerKnowledge(ProductionPlace) && FindAnyBase() )
-        || FindObject(RSRC,0,0,0,0,OCF_Fullcon())
+        || FindObject(RSRC,0,0,0,0,OCF_Fullcon)
         || ( GetAnyPlayerKnowledge(RSRC) && FindAnyBase() )
        )
     {
             // Bauplan da oder beschaffbar?
             if(    GetAnyPlayerKnowledge(Par())
-                || FindObject(RSRC,0,0,0,0,OCF_Fullcon())
+                || FindObject(RSRC,0,0,0,0,OCF_Fullcon)
                 || GetAnyPlayerKnowledge(RSRC))
             {
                 // Benötigte Materialien vorhanden?
-                if(!(!FindObject(CNMT) && (GetCategory(0,Par())&C4D_Structure())))
+                if(!(!FindObject(CNMT) && (GetCategory(0,Par())&C4D_Structure)))
                 {
                     i=0; var comp;
                     while(comp = GetComponent(0, i++, 0, Par()))
@@ -160,10 +172,10 @@ InitQuestType2: // Par() C4ID
     }
 
     return(0);
+}
 
-
-InitQuestType3: // Par(0): C4ID
-
+public func InitQuestType3() // Par(0): C4ID
+{
     if(!FindObject(LORY) && !(FindAnyBase()&&GetAnyHomeBaseMaterial(LORY)))
         return (0);
 
@@ -187,26 +199,28 @@ InitQuestType3: // Par(0): C4ID
     
     // Belohnung je nach Häufigkeit
     return((Sqrt(LandscapeWidth()*LandscapeHeight()))/GetResourceCount(Par(),1)/100);
-
-IsQuestFulfilled:
+}
+	
+public func IsQuestFulfilled()
+{
   // *** Queststatus prüfen
   // Objekttyp sammeln/entfernen/töten
   if(iQuestType==1)
   {
       // vernichten
-      if(!FindObjectOwner(idQuestTarget,-1,0,0,0,0,OCF_Fullcon()))
+      if(!FindObjectOwner(idQuestTarget,-1,0,0,0,0,OCF_Fullcon))
           return(1);
       // töten
-      while(Var()=FindObjectOwner(idQuestTarget,-1,0,0,0,0,OCF_Fullcon(),0,0,Var()))
-            if((GetOCF(Var()) & OCF_Living()) && (GetOCF(Var()) & OCF_Alive()))
+      while(Var()=FindObjectOwner(idQuestTarget,-1,0,0,0,0,OCF_Fullcon,0,0,Var()))
+            if((GetOCF(Var()) & OCF_Living) && (GetOCF(Var()) & OCF_Alive))
                 return(0);
       // sammeln
-      if(ObjectCount(idQuestTarget,0,0,0,0,OCF_Fullcon())<=1)
+      if(ObjectCount(idQuestTarget,0,0,0,0,OCF_Fullcon)<=1)
           return(0);
-      Var()=FindObjectOwner(idQuestTarget,-1,0,0,0,0,OCF_Fullcon());
+      Var()=FindObjectOwner(idQuestTarget,-1,0,0,0,0,OCF_Fullcon);
       Var(1)=GetX(Var());
       Var(2)=GetY(Var());
-      while(Var()=FindObjectOwner(idQuestTarget,-1,0,0,0,0,OCF_Fullcon(),0,0,Var()))
+      while(Var()=FindObjectOwner(idQuestTarget,-1,0,0,0,0,OCF_Fullcon,0,0,Var()))
           if(GetX(Var())<Var(1)-20 || GetX(Var())>Var(1)+20 || GetY(Var())<Var(2)-20 || GetY(Var())>Var(2)+20)
             return(0);
       return(1);
@@ -216,7 +230,7 @@ IsQuestFulfilled:
   if(iQuestType==2)
   {
       Var()=0;
-      while(Var()=FindObject(idQuestTarget,0,0,0,0,OCF_Fullcon(),0,0,0,Var()))
+      while(Var()=FindObject(idQuestTarget,0,0,0,0,OCF_Fullcon,0,0,0,Var()))
         if(GetOwner(Var()) != -1)
           return(1);
   }
@@ -229,8 +243,10 @@ IsQuestFulfilled:
           return(1);
   }
   return(0);
+}
   
-GetAnyPlayerKnowledge:  // Par() C4ID
+public func GetAnyPlayerKnowledge()  // Par() C4ID
+{
     var i,j;
     for(i=0; i<12; i++)
     {
@@ -240,8 +256,10 @@ GetAnyPlayerKnowledge:  // Par() C4ID
     // negativ...
     if(i==12)  return(0);
     return (j);
-
-FindAnyBase:
+}
+	
+public func FindAnyBase()
+{
     var i,j;
     for(i=0; i<12; i++)
     {
@@ -251,7 +269,8 @@ FindAnyBase:
     // negativ...
     if(i==12)  return(0);
     return (j);
-
+}
+	
 private func GetAnyHomeBaseMaterial(objectid)
 {
     var i,j=0;
@@ -269,7 +288,6 @@ private func GetAnyHomeBaseMaterial(objectid)
 // Zukunftsmusik: bei idRes angeben: CST1 etc; und er prüft, ob die Materialien und das Wissen da sind, um das ding zu bauen
 private func GetResourceCount(idRes, fSourceCheck)
 {
-
     var iCount=0;
 
     if( fSourceCheck == 2 )
@@ -280,7 +298,7 @@ private func GetResourceCount(idRes, fSourceCheck)
     else
     {
         Var(0)=0;
-        while(Var()=FindObjectOwner(idRes,-1,0,0,0,0,OCF_Fullcon()|OCF_Alive(),0,0,Var()))
+        while(Var()=FindObjectOwner(idRes,-1,0,0,0,0,OCF_Fullcon|OCF_Alive,0,0,Var()))
           iCount++;
     }
 
@@ -291,22 +309,27 @@ private func GetResourceCount(idRes, fSourceCheck)
     return(iCount);
 }
 
-private GetMaterialRatio:   // Par(0) strMatName oder Par(1) C4ID MatObj
+private func GetMaterialRatio()   // Par(0) strMatName oder Par(1) C4ID MatObj
+{
     var ratio;
     ratio = Objects_MaterialRatio(Par(),Par(1)); if(ratio) return (ratio);
 //  ratio = YourPack_MaterialRatio(Par(),Par(1)); if(ratio) return ratio;
     return(0);
-
+}
+	
 // nicht synchronisierte Inhalte setzen
-UpdateTransferZone:
+public func UpdateTransferZone()
+{
     if(iQuestsLeft==0)
         SetName("Quests");
     else
         SetName(Format("Quests (%d)", iQuestsLeft), this());
 
     return(1);
-
-protected Activate:
+}
+	
+protected func Activate()
+{
   if(iQuestsLeft)
   {
     UpdateQuestText();
@@ -315,12 +338,14 @@ protected Activate:
   else
     MessageWindow("Alle Quests erfüllt!",Par());
   return(1);
-
-IsFulfilled:
+}
+  
+public func IsFulfilled()
+{
   if(!iQuestsLeft)
     return (1);
   return (0);
-
+}
 
 
 
@@ -335,7 +360,8 @@ IsFulfilled:
 
 
 // versuchen, einen Quest aufzubauen
-private Objects_AttemptQuest:
+private func Objects_AttemptQuest()
+{
     Var() = Par();
 
     /*
@@ -400,22 +426,24 @@ private Objects_AttemptQuest:
     if(iQuestID==Var()++)  iQuestPrize = InitQuestType2(BLMP);
 
     if(iQuestID==Var()++
-        && !(FindObject(CST2,0,0,0,0,OCF_Fullcon())
-             ||FindObject(CST3,0,0,0,0,OCF_Fullcon())))
+        && !(FindObject(CST2,0,0,0,0,OCF_Fullcon)
+             ||FindObject(CST3,0,0,0,0,OCF_Fullcon)))
                            iQuestPrize = InitQuestType2(CST1);
     if(iQuestID==Var()++
-        && !(FindObject(CST1,0,0,0,0,OCF_Fullcon())
-             ||FindObject(CST3,0,0,0,0,OCF_Fullcon())))
+        && !(FindObject(CST1,0,0,0,0,OCF_Fullcon)
+             ||FindObject(CST3,0,0,0,0,OCF_Fullcon)))
                            iQuestPrize = InitQuestType2(CST2);
     if(iQuestID==Var()++
-        && !(FindObject(CST1,0,0,0,0,OCF_Fullcon())
-             ||FindObject(CST2,0,0,0,0,OCF_Fullcon())))
+        && !(FindObject(CST1,0,0,0,0,OCF_Fullcon)
+             ||FindObject(CST2,0,0,0,0,OCF_Fullcon)))
                            iQuestPrize = InitQuestType2(CST3);
     //if(iQuestID==Var()++)  iQuestPrize = InitQuestType2(IGLO);
 
     return(Var());
-
-private Objects_AttemptLoryQuest:
+}
+	
+private func Objects_AttemptLoryQuest()
+{
     Var()=Par();
 
     /*
@@ -431,9 +459,10 @@ private Objects_AttemptLoryQuest:
     if(iQuestID==Var()++)  iQuestPrize = InitQuestType3(WOOD);
 
     return(Var());
+}
 
-
-private Objects_GetQuestText:
+private func Objects_GetQuestText()
+{
     Var()=Par();
 
     if(iQuestID==Var(0)++) strQuestText = Format("Muscheln sammeln (%d)!",ObjectCount(idQuestTarget));
@@ -442,7 +471,7 @@ private Objects_GetQuestText:
     if(iQuestID==Var(0)++) strQuestText = Format("Finde alle Monstereier (%d)! Lass die Feuermonstereier.",ObjectCount(idQuestTarget));
     if(iQuestID==Var(0)++) strQuestText = Format("Finde alle Feuermonstereier (%d)!",ObjectCount(idQuestTarget));
     if(iQuestID==Var(0)++) strQuestText = Format("Finde alle Zapnester (%d)!", ObjectCount(idQuestTarget));
-    if(iQuestID==Var(0)++) strQuestText = Format("Schlangenjagd, alle Schlangen wegbringen oder töten (%d)!", ObjectCount(idQuestTarget,0,0,0,0,OCF_Alive()));
+    if(iQuestID==Var(0)++) strQuestText = Format("Schlangenjagd, alle Schlangen wegbringen oder töten (%d)!", ObjectCount(idQuestTarget,0,0,0,0,OCF_Alive));
     if(iQuestID==Var(0)++) strQuestText = Format("Fische fangen (%d)!", ObjectCount(idQuestTarget));
     if(iQuestID==Var(0)++) strQuestText = Format("Wipfe retten (%d)!", ObjectCount(idQuestTarget));
 
@@ -459,9 +488,10 @@ private Objects_GetQuestText:
     // Beschreibungen für Lory Loads werden automatisch erzeugt!
 
     return(Var());
+}
 
-
-private Objects_SourceCheck:
+private func Objects_SourceCheck()
+{
     var iCount=0;
     var idRes; idRes=Par();
     var fSourceCheck; fSourceCheck=Par(1);
@@ -511,29 +541,30 @@ private Objects_SourceCheck:
         }
     }
     return (iCount);
+}
 
-
-private Objects_MaterialRatio:
-    if( Par() eq "Crystal" || Par(1) == CRYS )  return(100);
-    if( Par() eq "Gold"    || Par(1) == GOLD )  return(75);
-    if( Par() eq "Rock"    || Par(1) == ROCK )  return(75);
-    if( Par() eq "Sulphur" || Par(1) == SPHR )  return(200);
-    if( Par() eq "Coal"    || Par(1) == COAL )  return(300);
-    if( Par() eq "Ore"     || Par(1) == ORE1 )  return(100);
-    if( Par() eq "Earth"   || Par(1) == ERTH )  return(200);
-    if( Par() eq "Sand"    || Par(1) == SAND )  return(200);
-//  if( Par() eq "Snow"    || Par(1) == SNOW )  return(200);
-    if( Par() eq "Ice"     || Par(1) == ICE1 )  return(400);
-    if( Par() eq "Water"   || Par(1) == WBRL )  return(200);
-    if( Par() eq "Oil"     || Par(1) == OBRL )  return(200);
-    if( Par() eq "DuroLava"|| Par(1) == LBRL )  return(200);
-    if( Par() eq "Acid"    || Par(1) == ABRL )  return(200);
+private func Objects_MaterialRatio()
+{
+    if( Par() == "Crystal" || Par(1) == CRYS )  return(100);
+    if( Par() == "Gold"    || Par(1) == GOLD )  return(75);
+    if( Par() == "Rock"    || Par(1) == ROCK )  return(75);
+    if( Par() == "Sulphur" || Par(1) == SPHR )  return(200);
+    if( Par() == "Coal"    || Par(1) == COAL )  return(300);
+    if( Par() == "Ore"     || Par(1) == ORE1 )  return(100);
+    if( Par() == "Earth"   || Par(1) == ERTH )  return(200);
+    if( Par() == "Sand"    || Par(1) == SAND )  return(200);
+//  if( Par() == "Snow"    || Par(1) == SNOW )  return(200);
+    if( Par() == "Ice"     || Par(1) == ICE1 )  return(400);
+    if( Par() == "Water"   || Par(1) == WBRL )  return(200);
+    if( Par() == "Oil"     || Par(1) == OBRL )  return(200);
+    if( Par() == "DuroLava"|| Par(1) == LBRL )  return(200);
+    if( Par() == "Acid"    || Par(1) == ABRL )  return(200);
     
     // Kein echtes Material
     if( Par(1) == WOOD )  return(75);
     if( Par(1) == METL )  return(200);
     return (0);
-
+}
 
 
 
@@ -547,10 +578,9 @@ private Objects_MaterialRatio:
 
 
 
-
 // versuchen, einen Quest aufzubauen
-private Other_AttemptQuest:
-
+private func Other_AttemptQuest()
+{
     Var()=Par();
 
     /*
@@ -566,19 +596,22 @@ private Other_AttemptQuest:
     // Dorf zerstören
     if(iQuestID==Var()++)
     {
-      if(!FindObject(JHUT,0,0,0,0,OCF_Fullcon()))
+      if(!FindObject(JHUT,0,0,0,0,OCF_Fullcon))
         return(0);
       InitQuestType1(JHUT);
-      iQuestPrize=10*ObjectCount(JHUT,0,0,0,0,OCF_Fullcon());
-      iQuestPrize+=15*ObjectCount(JCLK,0,0,0,0,OCF_Alive());
-      iQuestPrize+=20*ObjectCount(JCKH,0,0,0,0,OCF_Alive());
+      iQuestPrize=10*ObjectCount(JHUT,0,0,0,0,OCF_Fullcon);
+      iQuestPrize+=15*ObjectCount(JCLK,0,0,0,0,OCF_Alive);
+      iQuestPrize+=20*ObjectCount(JCKH,0,0,0,0,OCF_Alive);
     }
 
     return(Var());
-
-private Other_GetQuestText:
+}
+	
+private func Other_GetQuestText()
+{
     Var()=Par();
     if(iQuestID==Var(0)++) strQuestText = Format("Finde alle Groms und sammle, aktiviere oder verkaufe sie (%d)!",ObjectCount(idQuestTarget));
-    if(iQuestID==Var(0)++) strQuestText = Format("Greife die Siedlung der Jungel-Clonks an! Zerstöre ihre Hütten (%d)!",ObjectCount(idQuestTarget,0,0,0,0,OCF_Fullcon()));
+    if(iQuestID==Var(0)++) strQuestText = Format("Greife die Siedlung der Jungel-Clonks an! Zerstöre ihre Hütten (%d)!",ObjectCount(idQuestTarget,0,0,0,0,OCF_Fullcon));
 
     return(Var());
+}

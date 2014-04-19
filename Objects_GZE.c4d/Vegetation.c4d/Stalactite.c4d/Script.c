@@ -1,19 +1,21 @@
 /*-- Stalaktit --*/
 
-#strict
+#strict 2
 
 local phase;
 
-func Initialize() {
+func Initialize() 
+{
   SetAction("Hanging");
   SetPhase(phase=Random(4));
 }
 
-func Check() {
+func Check() 
+{
   var clnk;
-  if(GetAction()S="Falling") return(Falling());
+  if(GetAction() =="Falling") return(Falling());
     
-  while(clnk=FindObject(0,-25,0,50,100,OCF_CrewMember(),0,0,0,clnk)) 
+  while(clnk=FindObject(0,-25,0,50,100,OCF_CrewMember,0,0,0,clnk)) 
     if(GetAlive(clnk) && !Random(2)) { 
       Sound("Earthquake"); 
       SetAction("Falling");
@@ -23,19 +25,21 @@ func Check() {
     }
 }
 
-func Falling() {
+func Falling() 
+{
   var clnk;
 
-  while(clnk=FindObject(0,-7,-19,14,50,OCF_CrewMember(),0,0,0,clnk)) {
+  while(clnk=FindObject(0,-7,-19,14,50,OCF_CrewMember,0,0,0,clnk)) {
     DoEnergy(RandomX(-5,0),clnk);
   }
 
   if (GetActTime() > 700) Hit();
 }
 
-func Hit() {
+func Hit() 
+{
   var obj;
-  if(GetAction()ne"Falling") return(1);
+  if(GetAction() != "Falling") return(1);
   Sound("RockBreak*");
   Sound("Blast2",0,0,50);
   // links oben
@@ -56,7 +60,6 @@ func Hit() {
 	
   RemoveObject();
 }
-
 
 public func IsHangingVegetation() { return(1); }
 public func IsUndergroundVegetation() { return(1); }

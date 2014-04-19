@@ -1,4 +1,4 @@
-#strict
+#strict 2
 #appendto TREE
 
 public func GetVegetationSoil() { return ("FlyAshes"); }

@@ -1,4 +1,4 @@
-#strict
+#strict 2
 #appendto SPHR
 
 /* Spawn sulphur only in the sky */

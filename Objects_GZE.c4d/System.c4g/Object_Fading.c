@@ -1,6 +1,6 @@
 /*-- Fading --*/
 
-#strict
+#strict 2
 
 global func SetObjAlpha(int byAlpha,object pObj) {
 	var dwClrMod=GetClrModulation(pObj);
@@ -9,7 +9,6 @@ global func SetObjAlpha(int byAlpha,object pObj) {
 	dwClrMod = SetRGBaValue(dwClrMod,byAlpha,0);
  	return(SetClrModulation(dwClrMod, pObj));
 }
-
 
 global func FxFadeOutStart(target, no, temp, level, amount) {
 	if(!level) {
@@ -35,11 +34,11 @@ global func FxFadeOutTimer(target, no) {
 
 global func FadeOut(object pObject, int level, bool fFast, int iAmount) {
 	if (!pObject) {
-		pObject = this();
+		pObject = this;
 	}
 
 	if (GetEffect("*FadeOut*", pObject)) {
-		return();
+		return;
 	}
 	if (fFast) {
 		return AddEffect("FadeOut", pObject, 101, 1,0,0,level, iAmount);
@@ -64,10 +63,10 @@ global func FxFadeInTimer(target, no) {
 
 global func FadeIn(object pObject, int level, bool fFast, int iAmount) {
 	if(!pObject) {
-		pObject = this();
+		pObject = this;
 	}
 	if (GetEffect("*FadeIn*", pObject)) {
-		return();
+		return;
 	}
 	if (fFast) {
 		return AddEffect("FadeIn", pObject, 101, 1,0,0,level, iAmount);
@@ -77,7 +76,7 @@ global func FadeIn(object pObject, int level, bool fFast, int iAmount) {
 
 global func StopFading(object pObject) {
 	if(!pObject) {
-		pObject = this();
+		pObject = this;
 	}
 	var eff = GetEffectCount("*Fade*",pObject);
 	for(eff; eff; eff--) {

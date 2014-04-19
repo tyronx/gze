@@ -3,7 +3,7 @@
  * The original Stuck() doesn't test if there is solid material below each vertex, thus the object can fall down
  */
 
-#strict
+#strict 2
 
 global func Stuck(object obj) {
 	if (!obj) obj = this();

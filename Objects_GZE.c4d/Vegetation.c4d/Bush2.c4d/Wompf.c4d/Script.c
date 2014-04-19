@@ -1,4 +1,4 @@
-#strict
+#strict 2
 
 protected func Construction() {			// init
   // zufällige Grafik

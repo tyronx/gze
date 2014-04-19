@@ -1,6 +1,6 @@
 /*-- Holzwasserfass --*/
 
-#strict
+#strict 2
 #include WDBR
 
 // Fassdaten
@@ -24,7 +24,7 @@ public func BarrelEject()
   var check_container = NoContainer();
   while (check_container)
     {
-    while (obj = FindObject(0, -20, -15, 40, 30, OCF_OnFire(), 0,0, check_container, obj))
+    while (obj = FindObject(0, -20, -15, 40, 30, OCF_OnFire, 0,0, check_container, obj))
       if (wamnt >= Random(Min(GetMass(obj), GetMass(0, GetID(obj)))))
       {
         fExt=1; Extinguish(obj);

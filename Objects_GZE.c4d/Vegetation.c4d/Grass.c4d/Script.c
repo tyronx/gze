@@ -1,6 +1,6 @@
 /*-- Grass --*/
 
-#strict
+#strict 2
 
 global func FireflyFrequency() { return 8; } 
 
@@ -20,8 +20,6 @@ public func UpdateTime(hours, hoursOld) {
 	}
 }
 
-
-
 protected func Initialize() { 
 	// Zufällige Form	
 	SetAction("Grass");
@@ -36,9 +34,9 @@ protected func Initialize() {
 
 private func MoveBehindTrees() {
 	var obj;
-	while (obj = FindObject(0, 1,1, 0,0, OCF_Chop(), 0,0, NoContainer(), obj)) {
+	while (obj = FindObject(0, 1,1, 0,0, OCF_Chop, 0,0, NoContainer(), obj)) {
 		if (obj->~IsTree() && (obj->GetCategory() & C4D_StaticBack)) {
-			SetObjectOrder(obj, this(), 1); 
+			SetObjectOrder(obj, this, 1); 
 		}
 	}
 }

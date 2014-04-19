@@ -1,6 +1,6 @@
 /*--- Skylands - Parcour ---*/
 
-#strict
+#strict 2
 
 /* Initialisierung */
 
@@ -15,7 +15,7 @@ func Initialize()
 func PlaceBuilding()
 {
   var obj;
-  if (!(obj=PlaceVegetation(ROCK,0,0,LandscapeWidth(),LandscapeHeight()))) return();
+  if (!(obj=PlaceVegetation(ROCK,0,0,LandscapeWidth(),LandscapeHeight()))) return;
   var x = GetX(obj); var y = GetY(obj);
   RemoveObject(obj);
   obj = CreateConstruction(RndBldID(), x, y, -1, 100, 1);
@@ -41,7 +41,7 @@ private func RndBldID()
 
 private func RndCntID()
 {
-  var num=13; if (GetCategory(Par())&C4D_Vehicle()) num=10;
+  var num=13; if (GetCategory(Par())&C4D_Vehicle) num=10;
   if (!(num=Random(num))) return(SFLN);
   if (!--num)             return(EFLN);
   if (!--num)             return(LOAM);

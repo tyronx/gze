@@ -1,6 +1,6 @@
-/*-- Neues Szenario --*/
+/*-- Vulkan --*/
 
-#strict
+#strict 2
 
 func Initialize() {
    

@@ -1,5 +1,5 @@
 /* Sägewerke sind obsolet: Heutzutage werden Bäume Vor-Ort zerkleinert! */
-#strict
+#strict 2
 #appendto TREE
 
 local chops;

@@ -1,6 +1,6 @@
 /* Rennen */
 
-#strict
+#strict 
 
 // WICHTIG: damit man das Rennen auf Liga spielen kann
 // muss Wettstreit(RVLR) aktiviert sein
@@ -22,7 +22,7 @@ func Initialize()
   DoPlaceObjects(FLNT,60,"Earth");
   DoPlaceObjects(METL,50,"Earth");
   DoPlaceAnimal(BIRD, 14);
-  return();
+  return;
 }
 
 global func DoPlaceObjects(idID, iAmount, szMat)

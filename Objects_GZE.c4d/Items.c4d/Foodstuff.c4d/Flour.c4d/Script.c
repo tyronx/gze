@@ -1,6 +1,6 @@
 /*-- Mehl --*/
 
-#strict
+#strict 2
 
 protected func Hit()
 {

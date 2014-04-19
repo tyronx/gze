@@ -1,7 +1,6 @@
-#strict
+#strict 2
 
 // Useful function for placing objects on surfaces
-
 
 /* Moves vertically up or down (default) the landscape to find a solid pixel */
 // stepping parameter is optional

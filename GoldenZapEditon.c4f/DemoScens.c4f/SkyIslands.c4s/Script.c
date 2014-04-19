@@ -1,6 +1,6 @@
 /* Himmelsinseln */
 
-#strict
+#strict 2
 
 /* Initialisierung */
 

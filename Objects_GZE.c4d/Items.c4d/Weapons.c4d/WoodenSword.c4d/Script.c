@@ -1,6 +1,6 @@
 /*--- Schwert ---*/
 
-#strict
+#strict 2
 #include ISWR
 
 /* Kampfgeschwindigkeit */

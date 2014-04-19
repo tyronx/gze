@@ -1,6 +1,6 @@
 /*-- Leitungsbausatz --*/
 
-#strict
+#strict 2
 
 protected func Hit()
 {
@@ -11,12 +11,12 @@ protected func Activate(clonk)
 {
   [$TxtConnectline$]
   // Objekt zum Line-Verlegen finden.
-  var obj = FindObject(0, 1,0,0,0, OCF_LineConstruct(), 0,0,0, obj);
+  var obj = FindObject(0, 1,0,0,0, OCF_LineConstruct, 0,0,0, obj);
   // Keins da? Auch gut.
-  if(!obj) return(Message("$TxtNoNewLine$", this()) );
+  if(!obj) return(Message("$TxtNoNewLine$", this) );
   // Leitung
-  var pLine = FindObject(0, 0,0,0,0, 0, "Connect", this() );
-  SetComDir(COMD_Stop(), clonk);
+  var pLine = FindObject(0, 0,0,0,0, 0, "Connect", this );
+  SetComDir(COMD_Stop, clonk);
 
   // Aktuelle Leitung anschließen
   if(pLine)
@@ -25,7 +25,7 @@ protected func Activate(clonk)
     if(obj == GetActionTarget(0, pLine) || obj == GetActionTarget(1, pLine) )
     {
       // Leitung wieder entfernen
-      Message("$TxtLineRemoval$", this(), GetName(pLine) );
+      Message("$TxtLineRemoval$", this, GetName(pLine) );
       RemoveObject(pLine);
       Sound("Connect");
       return(1);
@@ -47,11 +47,11 @@ protected func Activate(clonk)
     if(!linetype)
     {
       Sound("Error");
-      return(Message("$TxtNoNewLine$", this()) );
+      return(Message("$TxtNoNewLine$", this) );
     }
 
     // Line erzeugen
-    pLine = CreateLine(linetype, GetOwner(), obj, this() );
+    pLine = CreateLine(linetype, GetOwner(), obj, this );
   }
 
   // Engineinternes Verhalten blockieren
@@ -160,7 +160,7 @@ private func ConnectLine(line, to)
   {
     // Nö, also tschüss
     Sound("Error");
-    Message("$TxtNoConnectType$", this(), GetName(line), GetName(to) );
+    Message("$TxtNoConnectType$", this, GetName(line), GetName(to) );
     return(0);
   }
   

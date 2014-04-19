@@ -1,4 +1,4 @@
-#strict
+#strict 2
 
 /* Yes, these are actually nowhere defined :/ */
 

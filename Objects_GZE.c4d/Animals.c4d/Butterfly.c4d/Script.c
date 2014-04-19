@@ -1,9 +1,6 @@
 /*-- Schmetterling --*/
 
-// NewSyntax by Miniwipf
-#strict
-
-////////////////////////////// Script //////////////////////////////
+#strict 2
 
 /*-- Engine-Calls --*/
 
@@ -14,19 +11,19 @@ protected func Initialize()
   SetAction("Fly");
   MoveToTarget();
   //SetClrModulation(RGBa(RandomX(0,255),RandomX(0,255),RandomX(0,255)),this());
-  return();
+  return;
 }
 
 // TimerCall
 protected func Activity()
 {
   // Unterwasser :( Nach oben fliegen
-  if (InLiquid()) return(SetComDir(COMD_Up()));
+  if (InLiquid()) return(SetComDir(COMD_Up));
   // Sitzt: warten
-  if (SEqual(GetAction(), "Sit")) return();
+  if (SEqual(GetAction(), "Sit")) return;
   // Neues Ziel
   if (!GetCommand() && !Random(5)) MoveToTarget();
-  return();
+  return;
 }
 
 /*-- Bewegung (Action-Calls) --*/
@@ -34,48 +31,48 @@ protected func Activity()
 protected func Flying()
 {
   // Richtung anpassen
-  if (GetXDir() > 0) SetDir(DIR_Right());
-  if (GetXDir() < 0) SetDir(DIR_Left());  
+  if (GetXDir() > 0) SetDir(DIR_Right);
+  if (GetXDir() < 0) SetDir(DIR_Left);  
   // Aktion ändern
   if (!Random(3)) SetAction("Flutter");
-  return();
+  return;
 }
 
 protected func Fluttering()
 {
   // Richtung anpassen
-  if (GetXDir() > 0) SetDir(DIR_Right());
-  if (GetXDir() < 0) SetDir(DIR_Left());   
+  if (GetXDir() > 0) SetDir(DIR_Right);
+  if (GetXDir() < 0) SetDir(DIR_Left);   
   // Aktion ändern
   if (!Random(7)) SetAction("Fly");
-  return();
+  return;
 }
 
 /*-- Kontakt (CNAT) --*/
 
 protected func ContactTop()
 {
-  SetCommand(this(), "None");
-  SetComDir(COMD_Down());
+  SetCommand(this, "None");
+  SetComDir(COMD_Down);
 }
 
 protected func ContactBottom()
 {
-  SetCommand(this(), "None");
-  SetComDir(COMD_Up());
-  return();
+  SetCommand(this, "None");
+  SetComDir(COMD_Up);
+  return;
 }
 
 protected func ContactLeft()
 {
-  SetCommand(this(), "None");
-  SetComDir(COMD_Right());
+  SetCommand(this, "None");
+  SetComDir(COMD_Right);
 }
 
 protected func ContactRight()
 {
-  SetCommand(this(), "None");
-  SetComDir(COMD_Left());
+  SetCommand(this, "None");
+  SetComDir(COMD_Left);
 }
 
 /*-- Aktionen --*/
@@ -85,29 +82,29 @@ private func SitDown()
   // Absitzen und nichts tun
   SetXDir();
   SetYDir();
-  SetComDir(COMD_Stop());
+  SetComDir(COMD_Stop);
   SetAction("Sit");
   SetCommand(0, "None");
-  return();
+  return;
 }
   
 private func TakeOff()
 {
-  SetComDir(COMD_Up());
-  return();
+  SetComDir(COMD_Up);
+  return;
 }
 
 private func MoveToTarget()
 {
   var iX = Random(LandscapeWidth());
   var iY = Random(GetHorizonHeight(iX)-60) + 30;
-  SetCommand(this(), "MoveTo", 0, iX, iY,,, 1);
-  return();
+  SetCommand(this, "MoveTo", 0, iX, iY,,, 1);
+  return;
 }
   
 protected func Death()
 {
-  AddEffect("FadeOut", this(), 101, 1);
+  AddEffect("FadeOut", this, 101, 1);
   return(1);
 }
 

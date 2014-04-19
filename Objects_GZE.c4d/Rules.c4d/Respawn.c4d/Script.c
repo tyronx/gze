@@ -1,4 +1,4 @@
-#strict
+#strict 2
 
 local playerSpawnPoints;
 

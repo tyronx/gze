@@ -1,4 +1,4 @@
-#strict
+#strict 2
 #appendto SHEL
 
 public func IsHangingVegetation() { return(0); }
