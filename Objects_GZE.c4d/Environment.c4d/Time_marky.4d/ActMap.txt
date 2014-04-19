@@ -8,5 +8,6 @@ EndCall=Initialized
 [Action]
 Name=Time
 Length=1
-Delay=0
-NextAction=Hold
+Delay=10
+NextAction=Time
+StartCall=Timing
