@@ -1,0 +1,3 @@
+TxtNoBackground=Here is no wall to attach the torch
+TxtTooClose=Too close to another torch
+TxtPlaceTorch=Place Torch

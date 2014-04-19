@@ -1,0 +1,3 @@
+TxtNoBackground=Hier ist keine Wand um die Fackel zu festzuhalten
+TxtTooClose=Zu nahe zu einer anderen Fackel
+TxtPlaceTorch=Fackel platzieren
