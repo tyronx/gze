@@ -2,7 +2,7 @@
 
 #strict 2
 
-global func FireflyFrequency() { return 5; } 
+global func FireflyFrequency() { return 4; } 
 
 local spawned_fireflies;
 
@@ -12,7 +12,7 @@ public func UpdateTime(hours, hoursOld) {
 		spawned_fireflies = true; // nicht alle Gräser müssen Glühwürmchen erstellen!
 
 		if( GetTemperature()>10 && !Random(FireflyFrequency())) {
-			var count = RandomX(2,5);
+			var count = RandomX(1, 2);
 			var dist = 30;
 
 			for(var i = 0; i < count; i++) {
