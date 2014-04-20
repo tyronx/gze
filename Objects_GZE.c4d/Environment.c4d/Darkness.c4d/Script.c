@@ -62,7 +62,7 @@ public func OnClonkRecruitment(object pClonk)
 	}
 
 	SetPlrViewRange(CalcViewRange(), pClonk);
-	var tmp = AddLightAmbience(80, pClonk);
+	var tmp = LIGH->AddLightAmbience(80, pClonk);
 
 	tmp->ChangeColor(RGBa(255,253,135,110)); // ein bisschen wärmer...
 

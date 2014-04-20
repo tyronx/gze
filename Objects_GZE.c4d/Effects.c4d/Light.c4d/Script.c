@@ -84,10 +84,10 @@ public func ChangeGraphics(string cNewGraphics) {
 public func IsLight() { return(1); }
 public func NoWarp() { return(true); }
 
-/*--  Globale Funktionen zur Lichterzeugung  --*/
+/*--  Funktionen zur Lichterzeugung  --*/
 
 //Hilfsfunktion
-global func CreateLight(id ID, int iSize, int iColor, object pTarget, string sGraphics) {
+func CreateLight(id ID, int iSize, int iColor, object pTarget, string sGraphics) {
   var light = CreateObject(ID, 0, 0, GetController(pTarget));
   light->Init(iSize, iColor, pTarget, sGraphics);
   
@@ -95,7 +95,7 @@ global func CreateLight(id ID, int iSize, int iColor, object pTarget, string sGr
 }
 
 //erzeugt ein Licht mit Größe und Farbe und hängt es an pTarget
-global func AddLight(int iSize, int iColor, object pTarget) {
+func AddLight(int iSize, int iColor, object pTarget) {
   if(!pTarget)
     if(!(pTarget = this))
       return;
@@ -103,7 +103,7 @@ global func AddLight(int iSize, int iColor, object pTarget) {
   return(CreateLight(LIGH, iSize, iColor, pTarget));
 }
 
-global func AddLightHalf(int iSize, int iColor, object pTarget) {
+func AddLightHalf(int iSize, int iColor, object pTarget) {
   if(!pTarget)
     if(!(pTarget = this()))
       return;
@@ -111,7 +111,7 @@ global func AddLightHalf(int iSize, int iColor, object pTarget) {
   return(CreateLight(LIGH, iSize, iColor, pTarget, "Half"));
 }
 
-global func AddLightCone(int iSize, int iColor, object pTarget) {
+func AddLightCone(int iSize, int iColor, object pTarget) {
   if(!pTarget)
     if(!(pTarget = this()))
       return;
@@ -120,7 +120,7 @@ global func AddLightCone(int iSize, int iColor, object pTarget) {
 }
 
 //Ambience-Light, Umgebungslicht, nicht sichtbar wenn keine Dunkelheit herrscht.
-global func AddLightAmbience(int iSize, object pTarget, string cGraphics) {
+func AddLightAmbience(int iSize, object pTarget, string cGraphics) {
   if(!pTarget)
     if(!(pTarget = this()))
       return;
@@ -132,7 +132,7 @@ global func AddLightAmbience(int iSize, object pTarget, string cGraphics) {
   return(light);
 }
 
-global func AddBuildingLight() {
+func AddBuildingLight() {
 	AddVertex(); // mittiger Vertex erstellen, damit das Licht zentriert wird
 	var pLight = AddLight(GetDefWidth(GetID()) * 2, RGB(200, 200, 255));
 	pLight -> LocalN("bAmbience") = true;
@@ -142,7 +142,7 @@ global func AddBuildingLight() {
 }
 
 //Lichtblitz!
-global func AddLightFlash(int iSize, int iX, int iY, int iColor) {
+func AddLightFlash(int iSize, int iX, int iY, int iColor) {
   var alphamod, sizemod;
   CalcLight(alphamod, sizemod);
   

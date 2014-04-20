@@ -7,10 +7,10 @@ local light;
 public func Activate() {
 	if(GetAction() == "Burning") return(Extinguishsh());
 	
-	SetPlrViewRange(100);
+	SetPlrViewRange(150);
 	SetAction("Burning");
 	var lightColour = RGBa(240, 240, 180, 30);
-	light = AddLightAmbience(RandomX(40,60),this);
+	light = LIGH->AddLightAmbience(RandomX(40,60),this);
 	light->ChangeColor(lightColour);
 	
 	return(this() );
