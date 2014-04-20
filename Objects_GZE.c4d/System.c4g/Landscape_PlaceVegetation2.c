@@ -69,7 +69,7 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 		rndy_diff = vegetationRootDepth;
 		realy_diff = GetDefHeight(objectid) / 2;
 	}
-	Log("PlaceVegetation2 start loop");
+	Log("PlaceVegetation2 start loop with x,y,wdt,hgt,ydir: %d,%d,%d,%d,%d", x, y, wdt, hgt, yDirection);
 	while (quantity > 0 && attempts++ < 50000) {
 		rndx = x + Random(wdt);
 		rndy = y + Random(hgt);
