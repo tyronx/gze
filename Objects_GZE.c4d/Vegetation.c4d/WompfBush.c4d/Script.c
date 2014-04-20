@@ -21,7 +21,7 @@ func Construction() {
 private func StartingFruits() {
 	var fruits = RandomX(0, (MaxFruitCount() * GetCon()) / 100);
 	while (fruits-- > 0) {
-		GrowFruit(RandomX(10,300));
+		GrowFruit(RandomX(10,150));
 	}
 }
 

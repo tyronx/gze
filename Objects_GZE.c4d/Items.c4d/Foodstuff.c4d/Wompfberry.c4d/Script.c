@@ -1,24 +1,20 @@
 #strict 2
 
-
-// var dwRGB = HSL(RandomX(0,38),RandomX(127,255),RandomX(64,160));
-//  SetColorDw(dwRGB);
-// add 13 hue
-
 // 0 = unripe (green)    increase Con, turing very slightly green-yellowish
-// 80 = ripening (turning from green to yellow to red)
-// 100-200 = ripe
-// 180 = falls off the tree
-// 201 = starting to spoil (going red to brown)
-// 225 = not collectible anymore
-// 230 = decrease con
-// 250 = brown and spoiled
-// 266 = con = 0, removeobject
+// 90 = ripening (turning from green to yellow to red)
+// 100-150 = ripe
+// 120 = falls off the tree
+// 141 = starting to spoil (going red to brown)
+// 165 = not collectible anymore
+// 170 = decrease con
+// 190  = brown and spoiled
+// 206 = con = 0, removeobject
 local growth;
+
 local collected;
 
 // By default, the wompfberry shall not grow or wither
-func Initialize() {
+func Construction() {
 	collected = 1;
 }
 
@@ -31,8 +27,8 @@ func GrowBerry() {
 }
 
 func SetGrowthStage() {
-	if (growth >= 230) {
-		SetCon(100 - (growth*3 - 460));
+	if (growth >= 170) {
+		SetCon(100 - (growth*3 - 340));
 		if (GetCon() < 10) RemoveObject();
 	} else {
 		SetCon(Min(100, growth));
@@ -54,16 +50,16 @@ func SetGrowthStage() {
 		
 		SetColorDw(HSL(60 - huediff, 250, 128));
 	}
-	if (growth >= 100 && growth <= 200) {
+	if (growth >= 100 && growth <= 140) {
 		SetColorDw(HSL(0, 250, 128));
 	}
 
-	if (growth > 180 && GetCategory() == 1) {
+	if (growth > 120 && GetCategory() == 1) {
 		Drop();
 	}
 	
-	if (growth > 200) {
-		var chng = growth - 200;
+	if (growth > 140) {
+		var chng = growth - 140;
 		SetColorDw(HSL(chng/2, 250 - chng, 128 - chng/2));
 	}
 }
@@ -92,7 +88,7 @@ public func Drop() {
 
 // Clonks pick up only ripe and not spoiling fruits
 protected func RejectEntrance() {
-	return growth < 100 || growth > 225;
+	return growth < 100 || growth >= 165;
 }
 
 // Picked from tree

@@ -159,7 +159,7 @@ private func DoSkyShade()
 	var skyshade = [0,0,0,0]; //R,G,B,A
 	var nightcolour = [10,25,40]; // default darkest-night colour
 	var daycolour = original_sky_array;//[255,255,255];
-	var sunsetcolour = [140,45,10];
+	var sunsetcolour = [140,45,0];
 	var sunrisecolour = [140,100,70];
 
 	var sunrise_start = GetDawnPeriod()[0];

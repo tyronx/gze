@@ -1,5 +1,8 @@
 #strict 2
-#appendto KNIG
+#appendto CLNK
+
+
+/* Jump throws and turn around midair */
 
 public func ControlThrow() 
 {	

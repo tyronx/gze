@@ -5,7 +5,7 @@
 static darkness_object;
 
 static const g_DARK_MaxDarkness = 1000;
-static const g_DARK_Default_MaxDarkness = 55;
+static const g_DARK_Default_MaxDarkness = 50;
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -254,7 +254,7 @@ private func CalcViewRange()
 	{
 		iMax = 700;
 	}
-	return (700-6*GetDarkness(100))*iMax/700;
+	return (650-6*GetDarkness(100))*iMax/700;
 }
 
 public func Destruction()
