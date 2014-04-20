@@ -7,6 +7,7 @@ local light;
 public func Activate() {
 	if(GetAction() == "Burning") return(Extinguishsh());
 	
+	SetPlrViewRange(100);
 	SetAction("Burning");
 	var lightColour = RGBa(240, 240, 180, 30);
 	light = AddLightAmbience(RandomX(40,60),this);
