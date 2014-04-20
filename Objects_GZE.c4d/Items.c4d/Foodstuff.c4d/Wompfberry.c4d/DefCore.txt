@@ -16,10 +16,13 @@ Mass=10
 Components=WMPF=1
 Picture=8,0,64,64
 Edible=1
-Growth=20
 Rebuy=1
 Collectible=1
 Rotate=1
 StretchGrowth=1
 IncompleteActivity=1
 Float=1
+TimerCall=GrowBerry
+Timer=150
+AllowPictureStack=APS_Color
+ColorByOwner=1

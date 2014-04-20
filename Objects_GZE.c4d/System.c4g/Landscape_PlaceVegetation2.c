@@ -84,7 +84,7 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 			var testi = 0;
 			while (isMaterialSoil(rndx, rndy, materialsoil) && rndy < y+hgt && rndy > y)  {
 				rndy+= yDirection;
-				if (testi++ > 50000) {
+				if (testi++ > 5000) {
 					Log("odd errror, loop seems infinite. Vars are rndy: %d, y: %d, hgt: %d, ydir: %d",rndy,y,hgt,yDirection);
 					return;
 				}
@@ -108,7 +108,7 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 					rndy_spacecheck+= yDirection;
 					testverticalspace--;
 					
-					if (testi++ > 50000) {
+					if (testi++ > 5000) {
 						Log("odd errror, loop seems infinite. Vars are rndy: %d, y: %d, hgt: %d, ydir: %d",rndy,y,hgt,yDirection);
 						return;
 					}

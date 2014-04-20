@@ -28,3 +28,4 @@ Other Features:
 To document:
 - Scenario.txt  Min,Max,Random Values (e.g. landscape width)
 - C4Id()
+- What is AllowPictureStack=APS_Color
