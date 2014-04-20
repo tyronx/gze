@@ -61,7 +61,7 @@ public func RepopulateVegetation() {
 		vegeid = GetScenarioVal ("Vegetation", "Landscape", idx++);
 		relativequantity = GetScenarioVal ("Vegetation", "Landscape", idx++);
 		
-		Log("placing %v", vegeid);
+		//Log("placing %v", vegeid);
 		
 		var vegebalance = DefinitionCall(vegeid, "GetVegetationPlacementBalance");
 		if (!vegebalance) vegebalance = 100;
