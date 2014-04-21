@@ -1,16 +1,14 @@
+/* Himmelsinseln */
+
 #strict 2
 
-func Initialize() {
-	MusicLevel(50);
-	
-	// We place some extra in-earth objects nearby certain materials for awesome looks
-	PlaceObjects2(COAL, 250, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Coal")); // Coal nearby coal 
-	PlaceObjects2(FLNT, 80, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Flint"));
-	PlaceObjects2(LOAM, 100, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Loam"));
-	PlaceObjects2(ORE1, 150, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Ore"));
+/* Initialisierung */
 
-	return(1);
+protected func Initialize()
+{
+  SetGamma(RGB(10,9,10), RGB(161,157,159), RGB(255,254,255) );
 }
+
 
 func InitializePlayer(player) {
 	var x = 20 + Random(LandscapeWidth() - 40);
@@ -20,7 +18,7 @@ func InitializePlayer(player) {
 	}
 	
 	// Find a goot spot
-	var miny = (4*LandscapeHeight())/10;
+	var miny = LandscapeHeight()/5;
 	var spawnpoint = findSpawnPoint(miny);
 	
 	// Place player and hut there

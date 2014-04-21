@@ -1,16 +1,6 @@
+/*-- Vulkan --*/
+
 #strict 2
-
-func Initialize() {
-	MusicLevel(50);
-	
-	// We place some extra in-earth objects nearby certain materials for awesome looks
-	PlaceObjects2(COAL, 250, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Coal")); // Coal nearby coal 
-	PlaceObjects2(FLNT, 80, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Flint"));
-	PlaceObjects2(LOAM, 100, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Loam"));
-	PlaceObjects2(ORE1, 150, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Ore"));
-
-	return(1);
-}
 
 func InitializePlayer(player) {
 	var x = 20 + Random(LandscapeWidth() - 40);
@@ -20,12 +10,15 @@ func InitializePlayer(player) {
 	}
 	
 	// Find a goot spot
-	var miny = (4*LandscapeHeight())/10;
+	var miny = (1*LandscapeHeight())/10;
 	var spawnpoint = findSpawnPoint(miny);
 	
 	// Place player and hut there
 	var hut = CreateConstruction(HUT2, spawnpoint[0], spawnpoint[1],player,100,1);
 	SetPosition(spawnpoint[0], spawnpoint[1]-8, GetCrew(player,0));
+	
+	var wdt = GetDefWidth(GetID(hut)), hgt = GetDefHeight(GetID(hut));
+	FreeRect(GetX(hut) - wdt / 2, GetY(hut) - hgt / 2, wdt, hgt);
 	
 	// Amboss drüberklatschen
 	hut->CreateObject(ANVL, 17, 23);
