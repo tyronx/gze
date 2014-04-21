@@ -101,14 +101,15 @@ global func PlaceObjects2(id objectid, int quantity, array rect, array inmateria
 			if (valid) {
 				obj = CreateObject(objectid, rndx, rndy + objhgt / 2, -1);
 				obj->SetR(Random(360));
+				
+				if (Stuck(obj)) {
+					placed++;
+					quantity--;
+				} else {
+					RemoveObject(obj);
+				}
 			}
 			
-			if (Stuck(obj)) {
-				placed++;
-				quantity--;
-			} else {
-				RemoveObject(obj);
-			}
 		}
 	}
 	return placed;
