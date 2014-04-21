@@ -1,5 +1,9 @@
 #strict 2
 
+global func MovePosition(int x, int y, object pObj) {
+	SetPosition(GetX(pObj) + x, GetY(pObj) + y, pObj);
+}
+
 /* Sets the Rotation using iX, iY as rotation center */
 global func SetR2(int iR, int iX, int iY, object pObj) {
 	SetR(iR, pObj);

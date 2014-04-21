@@ -29,11 +29,24 @@ public func TurnToWood() {
 	var treematerial = GetComponent(0, 0);
 	var quantity = Round((GetComponent(treematerial) * GetCon())/20);
 	
-	var i = 0;
+	var i = 0, pObj, attempts = 0, x, y;
 	//Log("%d %d %d", quantity, hgt, pos);
 	while(i < quantity) {
 		i++;
-		CreateObject(treematerial, -Sin(GetR(), i * (wdt/quantity) - wdt/2)/10, Cos(GetR(), (i * (hgt/quantity) - hgt/2))/10);
+		
+		x = -Sin(GetR(), i * (wdt/quantity) - wdt/2)/10;
+		y = Cos(GetR(), (i * (hgt/quantity) - hgt/2))/10;
+		pObj = CreateObject(treematerial, x, y);
+		attempts = 0;
+		while (Stuck(pObj) && attempts++ < 100) {
+			pObj->SetPosition(GetX()+x, GetY()+y+attempts);
+			if (!Stuck(pObj)) break;
+			pObj->SetPosition(GetX()+x, GetY()+y-attempts);
+			if (!Stuck(pObj)) break;
+		}
+		if (attempts >= 100) {
+			pObj->SetPosition(GetX()+x, GetY()+y);
+		}
 	}
 	//Sound("TreeDown*");
 	RemoveObject();
