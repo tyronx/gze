@@ -4,7 +4,13 @@
 
 local light;
 
-public func Activate() {
+func ControlDigDouble(pCaller) {
+	CreateContents(PTRC, pCaller);
+	RemoveObject(light);
+	RemoveObject();
+}
+
+public func Place() {
 	if(GetAction() == "Burning") return(Extinguishsh());
 	
 	SetPlrViewRange(150);

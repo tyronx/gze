@@ -2,6 +2,11 @@
 
 #strict 2
 
+// Called by Anvil when the object is being created
+public func Produced() {
+	CreateObject(GetID());
+}
+
 public func Activate() {
 	[$TxtPlaceTorch$]
 	
@@ -16,7 +21,7 @@ public func Activate() {
 	}
 	
 	Sound("WoodHit*");
-	CreateObject(TORC,0,8)->Activate();
+	CreateObject(TORC, 0, 10, -1)->Place();
 	RemoveObject();
 	
 	return 1;
@@ -26,4 +31,4 @@ func Hit() {
 	Sound("WoodHit*");
 }
 
-func IsAnvilProduct() { return 1; }
+func IsAnvilProduct() { return 2; }

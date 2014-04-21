@@ -6,6 +6,7 @@ local OldX, OldY;
 
 local eruptTime; 
 
+
 /* Ausbruch */ 
 
 func Advance() 
