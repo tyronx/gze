@@ -1,0 +1,10 @@
+[DefCore]
+id=ANMR
+Version=4,9,8
+Name=Animal Respawning
+Category=C4D_StaticBack|C4D_Rule
+Width=1
+Height=1
+Picture=0,0,64,64
+TimerCall=CheckPopulation
+Timer=350
