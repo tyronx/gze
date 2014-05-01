@@ -19,7 +19,6 @@ Mass=15
 Components=MEAT=1;FAT1=1;FSHB=1
 Picture=320,0,64,64
 PictureFE=384,0,64,64
-Collection=-8,-6,16,12
 Placement=1
 Growth=15
 ConstructTo=NONE

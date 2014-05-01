@@ -237,16 +237,6 @@ public func RejectEntrance(pContainer) {
 
 /* Steuerung durch Besessenheit */
 
-protected func RejectCollect(c4ID, pObject) {
-	var iEffectNumber, pSorcerer;
-	if (iEffectNumber = GetEffect("PossessionSpell", this()))
-		if (pSorcerer = EffectVar(0, this(), iEffectNumber))
-		 if (!GetEffect("IntCollectionDelay", this()))
-			if (!pSorcerer->Contents() && !(pObject->GetOCF() & OCF_Living))
-				Collect(pObject, pSorcerer);
-	return 1;
-}
-
 protected func ControlCommand(szCommand, pTarget, iTx, iTy) {
 	// Bewegungskommando
 	if (szCommand == "MoveTo") {
