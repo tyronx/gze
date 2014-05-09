@@ -1,4 +1,4 @@
-#strict
+#strict 2
 
 /* 
  * Better Animal Placement. Besides many new parameters it also does the following:
@@ -25,7 +25,7 @@
  */
 global func PlaceAnimals2(id objectid, int quantity, array rect, int placement, int placementmat, array cons) {
 	var x = rect[0], y = rect[1], wdt = rect[2], hgt = rect[3];
-	var havecons = GetType(cons) == C4V_Array();
+	var havecons = GetType(cons) == C4V_Array;
 	if (!havecons) {
 		cons = [0,0];
 	}
@@ -36,15 +36,16 @@ global func PlaceAnimals2(id objectid, int quantity, array rect, int placement, 
 	
 	// At least 120% of the objects height must be free vertically
 	var minverticalspace = (GetDefHeight(objectid) * 5) / 4;
+	// Minimum distance between other animals
+	var mindistance = GetDefWidth(objectid);
 
 	// The Material the object will be placed in
-	
 	var freemat = -1;  // in air for placement == 0 and placement == 2
 	if (placement == 3) freemat = Material("Tunnel");
 	if (placement == 1) freemat = placementmat;
 	
 	// Create a dozen random places and try there
-	var rndx, rndy, realy, valid, materialatpos, obj;
+	var rndx, rndy, realy, valid, materialatpos, pAnimal;
 	
 	// to make the loop a bit more efficient we do this calculation outside the loop - these are adjustments for root depth etc.
 	var realy_diff;
@@ -58,20 +59,33 @@ global func PlaceAnimals2(id objectid, int quantity, array rect, int placement, 
 		while (quantity > 0 && attempts++ < 10000) {
 			rndx = x + Random(wdt);
 			rndy = y + Random(hgt);
-	
+		
+			// Check a few points if there can be a burrow
 			if (isMaterialSoil(rndx, rndy) &&
+				isMaterialSoil(rndx-minhorizontalspace/2, rndy-minverticalspace/2) &&
 				isMaterialSoil(rndx-minhorizontalspace, rndy) &&
 				isMaterialSoil(rndx-minhorizontalspace, rndy-minverticalspace) &&
 				isMaterialSoil(rndx, rndy-minverticalspace)
 			) {
 				
+				var digx, digy, radius;
 				for (var i = 0; i < minhorizontalspace; i+=2) {
 					rndy += RandomX(-3,3);
-					DigFree(rndx-minhorizontalspace + i, rndy-minverticalspace/2, minverticalspace/2 - 3 + RandomX(-3,3));
+					
+					digx = rndx-minhorizontalspace + i;
+					digy = rndy-minverticalspace/2;
+					radius = minverticalspace/2 - 3 + RandomX(-3,3);
+					
+					DigFree(digx, digy, radius);
+					for (var pObj in FindObjects(Find_Distance(radius, digx, digy), Find_Category(C4D_SelectInEarth()))) {
+						if (!Stuck(pObj)) {
+							pObj->RemoveObject();
+						}
+					}
 				}
-				obj = CreateObject(objectid, rndx-minhorizontalspace/2, rndy);
+				pAnimal = CreateObject(objectid, rndx-minhorizontalspace/2, rndy);
 				if (havecons) {
-					obj->SetCon(BoundBy(RandomX(cons[0], cons[1]), 1, 100));
+					pAnimal->SetCon(BoundBy(RandomX(cons[0], cons[1]), 1, 100));
 				}
 				placed++;
 				quantity--;
@@ -117,10 +131,10 @@ global func PlaceAnimals2(id objectid, int quantity, array rect, int placement, 
 				// Actual position retrieved by GetY() is rndy - realy_diff because CreateObject() creates centered to bottom middle and GetX()/GetY() gets object center
 				realy = rndy - realy_diff;
 				
-				if (!FindObject2(Find_ID(objectid), Find_Distance(10, rndx, realy))) {
-					obj = CreateObject(objectid, rndx, rndy);
+				if (!FindObject2(Find_ID(objectid), Find_Distance(mindistance, rndx, realy))) {
+					pAnimal = CreateObject(objectid, rndx, rndy);
 					if (havecons) {
-						obj->SetCon(BoundBy(RandomX(cons[0], cons[1]), 1, 100));
+						pAnimal->SetCon(BoundBy(RandomX(cons[0], cons[1]), 1, 100));
 					}
 					//Log("%v %d %d", obj, rndx, rndy);
 					//obj->~PlacedByScript();

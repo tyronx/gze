@@ -13,7 +13,7 @@ VertexY=-8,-12,7,11
 VertexFriction=100,100,100,100,100
 Value=8
 Mass=10
-Components=WOOD=3
+Components=WOOD=2;CK5P=1
 Picture=7,0,64,64
 ContactIncinerate=5
 BlastIncinerate=30

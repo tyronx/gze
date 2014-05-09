@@ -1,4 +1,4 @@
-#strict
+#strict 2
 
 global func GetMatSoil(iMaterial) {
 	return(GetMaterialVal("Soil", "Material", iMaterial));
@@ -31,15 +31,16 @@ global func GetMatSoil(iMaterial) {
  * - Places 20 hanging vines inside underground water sources
  */
 global func PlaceVegetation2(id objectid, int quantity, array rect, int materialsoil, bool underground, int liquid, bool hanging, array cons, array autorotates) {
+	//Log("PlaceVegetation2 called for objid %v", objectid);
 	var yDirection = -1;
 	if (hanging) yDirection = 1;
 	
 	var x = rect[0], y = rect[1], wdt = rect[2], hgt = rect[3];
-	var havecons = GetType(cons) == C4V_Array();
+	var havecons = GetType(cons) == C4V_Array;
 	if (!havecons) {
 		cons = [0,0];
 	}
-	var haveautorotates = GetType(autorotates) == C4V_Array();
+	var haveautorotates = GetType(autorotates) == C4V_Array;
 	
 	var vegetationRootDepth = DefinitionCall(objectid, "GetVegetationRootDepth");
 	if (!vegetationRootDepth) vegetationRootDepth = 5;
@@ -68,33 +69,49 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 		rndy_diff = vegetationRootDepth;
 		realy_diff = GetDefHeight(objectid) / 2;
 	}
+	//Log("PlaceVegetation2 start loop with x,y,wdt,hgt,ydir: %d,%d,%d,%d,%d", x, y, wdt, hgt, yDirection);
 	while (quantity > 0 && attempts++ < 50000) {
 		rndx = x + Random(wdt);
 		rndy = y + Random(hgt);
 		
+	//	if (attempts % 10000 == 0) Log("attempts %d", attempts);
+		
 		// Okay, we found the correct material, lets try place it somewhere below that material if free
 		if (isMaterialSoil(rndx, rndy, materialsoil)) {
 			// Search upwards/downwards for free area
-			valid = 1; 
-			while (GetMaterial(rndx, rndy) != freemat) {
-				// Make sure were still inside target material
-				if (!isMaterialSoil(rndx, rndy, materialsoil)|| rndy >= y+hgt) {
-					valid = 0;
+			valid = 0; 
+			
+			//var testi = 0;
+			while (isMaterialSoil(rndx, rndy, materialsoil) && rndy < y+hgt && rndy > y)  {
+				rndy+= yDirection;
+				/*if (testi++ > 5000) {
+					Log("odd errror, loop seems infinite. Vars are rndy: %d, y: %d, hgt: %d, ydir: %d",rndy,y,hgt,yDirection);
+					return;
+				}*/
+				
+				if (GetMaterial(rndx, rndy) == freemat) {
+					valid = 1;
 					break;
 				}
 				
-				rndy+= yDirection;
+
 			}
 			// Has to be either in liquid or free of liquid
-			valid = (liquid && GBackLiquid(rndx, rndy)) || (!liquid && !GBackLiquid(rndx, rndy));
+			valid = valid && ((liquid && GBackLiquid(rndx, rndy)) || (!liquid && !GBackLiquid(rndx, rndy)));
 			
 			if (valid) {
 				// Search upwards/downwards again to see how much free vertical space we have
 				var rndy_spacecheck = rndy, testverticalspace = minverticalspace;
 				
+				//var testi = 0;
 				while (GetMaterial(rndx, rndy_spacecheck) == freemat && testverticalspace > 0) {
 					rndy_spacecheck+= yDirection;
 					testverticalspace--;
+					
+					/*if (testi++ > 5000) {
+						Log("odd errror, loop seems infinite. Vars are rndy: %d, y: %d, hgt: %d, ydir: %d",rndy,y,hgt,yDirection);
+						return;
+					}*/
 				}
 				
 				// Ok, enough vertical space
@@ -133,7 +150,6 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 	}
 	return placed;
 }
-
 
 global func isMaterialSoil(x, y, materialsoil) {
 	if (materialsoil != 0) {

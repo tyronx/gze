@@ -1,0 +1,17 @@
+[DefCore]
+id=PTRC
+Version=4,9,8
+Name=Placeable Torch
+Category=C4D_Object|C4D_SelectMaterial|C4D_SelectKnowledge|C4D_SelectHomebase
+Width=10
+Height=9
+Offset=-5,-4
+Vertices=2
+VertexX=-4,4
+VertexY=1,1
+VertexFriction=10,10
+Value=4
+Mass=10
+Components=WOOD=1;COAL=1
+Picture=10,0,128,113
+Collectible=1

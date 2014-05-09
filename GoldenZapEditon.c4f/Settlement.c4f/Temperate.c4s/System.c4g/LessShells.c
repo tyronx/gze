@@ -1,6 +1,6 @@
 /*-- Because we have little sand in this scenario, we individually balance out the placement of these items here  --*/
 
-#strict
+#strict 2
 #appendto SHEL
 
 // Place only half as much

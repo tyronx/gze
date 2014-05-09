@@ -1,6 +1,6 @@
 /*-- Speer --*/
 
-#strict
+#strict 2
 
 /* Status */
 public func IsSpear() 
@@ -28,7 +28,7 @@ public func ControlThrow()
   // Der Clonk kann dieses Objekt nicht verwenden
   if (!pClonk->~CanUse(GetID())) return(0);
   // Träger bereit zum Werfen?
-  if (GetAction(pClonk) ne "Walk" && GetAction(pClonk) ne "Jump" && GetAction(pClonk) ne "Ride" && GetAction(pClonk) ne "RideStill") return;
+  if (GetAction(pClonk) != "Walk" && GetAction(pClonk) != "Jump" && GetAction(pClonk) != "Ride" && GetAction(pClonk) != "RideStill") return;
   // Beim Träger Wurfaktion setzen (reitend)
   if (Contained()->~IsRiding())
     return(ObjectSetAction(Contained(), "RideThrowSpear"));

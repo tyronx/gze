@@ -1,4 +1,4 @@
-#strict
+#strict 2
 
 /* Same as FindObjects() but removes all found objects and returns amount removed */
 global func RemoveObjects() {

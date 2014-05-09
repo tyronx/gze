@@ -8,6 +8,8 @@ local earthobjectslevel;
 protected func Initialize() {
 	SetPosition(0,0);
 	
+	Log("Replacing Earth Objects");
+	
 	SetEarthObjectsLevel();
 	RemoveEnginePlacedEarthObj();
 	PlaceEarthObjects();

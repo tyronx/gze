@@ -1,14 +1,18 @@
 /*-- Seegras --*/
 
-#strict
+#strict 2
+#include TREE
+
+func Construction() {
+}
 
 protected func CheckEnvironment()
 {
   if (GBackLiquid())
-    if (GetAction() S= "Dry")
+    if (GetAction() == "Dry")
       return(StartWiggle());
   if (!GBackLiquid())
-    if (GetAction() S= "Wiggle")
+    if (GetAction() == "Wiggle")
       return(StartDry());
   return(1);
 }
@@ -29,8 +33,6 @@ protected func Completion()
   StartDry();
   return(1);
 }
-
-
 
 public func IsHangingVegetation() { return(0); }
 public func IsUndergroundVegetation() { return(0); }

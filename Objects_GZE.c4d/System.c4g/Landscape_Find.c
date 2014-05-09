@@ -1,7 +1,6 @@
-#strict
+#strict 2
 
 // Useful function for placing objects on surfaces
-
 
 /* Moves vertically up or down (default) the landscape to find a solid pixel */
 // stepping parameter is optional
@@ -23,7 +22,7 @@ global func GetYFree(int x, int y, int stepping) {
 	if (!stepping) stepping = -1;
 	while (GBackSolid(x,y)) {
 		y+=stepping;
-		if (y>=LandscapeHeight() && y <= 0) {
+		if (y>=LandscapeHeight() || y <= 0) {
 			return(-1);
 		}
 	}

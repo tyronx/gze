@@ -1,6 +1,6 @@
 /*-- Zapnest --*/
 
-#strict
+#strict 2
 #include ZAPN
 
 protected func Initialize() {

@@ -1,4 +1,4 @@
-#strict
+#strict 2
 
 /* A C4Script Equivalent for rounding numbers. 
  *

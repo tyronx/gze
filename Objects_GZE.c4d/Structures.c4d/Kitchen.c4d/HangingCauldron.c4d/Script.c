@@ -1,6 +1,6 @@
 /*-- Hängender Kochtopf --*/
 
-#strict
+#strict 2
 
 /* TimerCall */
 

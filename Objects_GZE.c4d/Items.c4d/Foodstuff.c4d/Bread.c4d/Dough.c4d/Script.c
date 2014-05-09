@@ -1,6 +1,6 @@
 /*-- Brotteig --*/
 
-#strict
+#strict 2
 
 public func Bake()
 {

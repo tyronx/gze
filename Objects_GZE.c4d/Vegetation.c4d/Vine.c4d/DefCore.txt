@@ -12,8 +12,9 @@ VertexY=0,63
 VertexFriction=50,50
 Value=2
 Mass=40
-Components=WOOD=1
+Components=FIBR=4
 Picture=0,0,18,64
 StretchGrowth=1
 IncompleteActivity=1
 Oversize=1
+Chop=1

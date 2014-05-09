@@ -1,5 +1,5 @@
 /* Vulkan */
-#strict
+#strict 2
 
 local iWidth,iMat, iXDir;
 local OldX, OldY;
@@ -7,15 +7,16 @@ local OldX, OldY;
 local eruptTime; 
 
 
-
 /* Ausbruch */ 
 
-func Advance() {
+func Advance() 
+{
 	var advancex=Random(11)-5+iXDir;
 	var advancey=Random(8)-12;
 	var obj, xdir, ydir;
 	
-	if(!InLava()) {
+	if(!InLava()) 
+	{
 		return(SetAction("Discharge"));
 		xdir=30-Random(60);
 		ydir=-20-Random(50)-iWidth/2;
@@ -24,7 +25,8 @@ func Advance() {
 		ydir=(GetY()-OldY)*10;
 	}
 	// Objekte mitschleudern
-	while(obj=FindObject(0,Max(OldX,GetX())-Min(OldX,GetX())-iWidth/2,0,iWidth+Abs(OldX-GetX()),OldY-GetY(),OCF_Collectible(),0,0,0,obj)) {
+	while(obj=FindObject(0,Max(OldX,GetX())-Min(OldX,GetX())-iWidth/2,0,iWidth+Abs(OldX-GetX()),OldY-GetY(),OCF_Collectible,0,0,0,obj)) 
+	{
 		SetYDir(ydir, obj);
 		SetXDir(xdir, obj);
 	}
@@ -33,12 +35,14 @@ func Advance() {
 	
 	SetPosition(GetX()+advancex,GetY()+advancey);
 	
-	if(iWidth>5) {
+	if(iWidth>5) 
+	{
 		if(!Random(3)) Sound("Lava*");
 	}
 
-	if (iWidth>10) {
-		if(!Random(10)) ShakeViewPort(10+Random(iWidth),this());
+	if (iWidth>10)
+	{
+		if(!Random(10)) ShakeViewPort(10+Random(iWidth),this);
 	}
 	
 	DrawMaterialQuad(
@@ -57,10 +61,13 @@ func Advance() {
 
 
 /* Eruption */ 
-func CastLava() {
+func CastLava() 
+{
 	// Perma Vulkane halten den gleichen Flüssigkeitslevel
-	if (InLava()) {
-		if (GameCall("PermaVolcanoRisingLava")) {
+	if (InLava()) 
+	{
+		if (GameCall("PermaVolcanoRisingLava")) 
+		{
 			return(SetAction("Advance"));
 		} else {
 			for(var i; i<40; i++) ExtractLiquid(0,2);
@@ -79,19 +86,15 @@ func CastLava() {
 		}
 	}
 	
-	
     // rumspritzen
 	if (eruptTime > 0) {
 		var y_diff;
 		while(GetMaterial(0,y_diff)==iMat) y_diff--;
 	
 		//CastPXSX(string mat,int am,int lev,int x,int y,int angs,int angw) {
-	
 		CastPXSX(MaterialName(iMat), Max(iWidth/4,2), Max(40, iWidth) + Random(50), -iWidth/2 + Random(iWidth), y_diff - 1, 270 + 10 - Random(21), 20 + Random(30));
-			
-		
 		// mit Lavaklumpen um sich werfen
-		if(MaterialName(iMat)S="Lava" || MaterialName(iMat)S="DuroLava") {
+		if(MaterialName(iMat) =="Lava" || MaterialName(iMat) =="DuroLava") {
 			if(iWidth>10) {
 				if(!Random(20)) {
 					CastObjectsX(LAVA,1,Max(40,iWidth)+Random(30),-iWidth/2+Random(iWidth),0,270,50,"LavaCast");
@@ -105,11 +108,6 @@ func CastLava() {
 	} else {
 		if (!Random(2000)) eruptTime = RandomX(150, 1000);
 	}
-	
-	
-	
-	
-
 }
 
 /* Callback of CastObjectsX */
@@ -117,7 +115,6 @@ func LavaCast(obj) {
 	obj->SetMaterial(MaterialName(iMat));
 	DoCon(-50+Random(5*iWidth)+iWidth/2,obj);
 }
-
 
 /* Aktivierung des Vulkans */
 func Activate(iStr,iM) {
@@ -129,13 +126,11 @@ func Activate(iStr,iM) {
 	return(1);
 }
 
-
 /* Prüfungen */
 
 private func InLava() {
    if (GetMaterial(0,2) == iMat || (iMat==Material("Lava") && GetMaterial(0,2)==Material("DuroLava"))) return(1);
   return(0);
 }
-
 
 public func GetVegetationRootDepth() { return(-1); }

@@ -2,8 +2,13 @@
 
 #strict 2
 
-global func ConcatString(string str1, string str2) {
-	return Format("%s%s", str1, str2);
+// Concat up to 9 strings into one
+global func ConcatStrings() {
+	var i=0, result = "";
+	while (Par(i)) {
+		result = Format("%s%s", result, Par(i++));
+	}
+	return result;
 }
 
 // end may be ommitted

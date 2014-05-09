@@ -1,2 +1,2 @@
-DE:Objekte
-US:Objects
+DE:GZE Objekte v0.2.5
+US:GZE Objects v0.2.5
