@@ -8,9 +8,10 @@ protected func Initialize() {
 }
 
 func LaunchZap() {
-	if (!IsNight()) CreateObject(ZAP1);
-	//zap->CollectHoneyTo(this());
+	if (!IsNight()) {
+		CreateObject(ZAP1, 0, 0, -1)->CollectHoneyTo(this());
+	}
 	
-	ScheduleCall(this(), "LaunchZap", RandomX(500,5000));
+	ScheduleCall(this(), "LaunchZap", RandomX(200,2000));
 }
 
