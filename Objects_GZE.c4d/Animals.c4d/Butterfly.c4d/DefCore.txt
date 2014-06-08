@@ -4,6 +4,7 @@ Name=Butterfly
 Category=69640
 MaxUserSelect=10
 TimerCall=Activity
+Timer=35
 ContactCalls=1
 Width=24
 Height=24
@@ -11,11 +12,10 @@ Offset=-12,-12
 Value=1
 Mass=1
 Components=_BTF=1;
-Vertices=4
-VertexX=0,0,-2,2
-VertexY=-2,2,0,0
-VertexCNAT=4,8,1,2
-VertexFriction=100,100,100,100,100,100
+Vertices=5
+VertexX=-5,5,0,0,0
+VertexY=0,0,-6,3,-2
+VertexCNAT=1,2,4,8,16
 Placement=2
 ContactIncinerate=0
 Growth=15
@@ -24,6 +24,8 @@ BorderBound=7
 StretchGrowth=1
 NoBurnDecay=1
 IncompleteActivity=1
+Pathfinder=2
+
 
 [Physical]
 Energy=40000

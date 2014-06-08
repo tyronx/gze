@@ -7,7 +7,7 @@
 local Bait; // Verfolgter Köder
 local pNest;
 
-private func ReproductionRate()		 { return(2000); }	// Die Chance, dass in einem Timerintervall eine Vermehrung stattfindet
+private func ReproductionRate() { return(2000); }	// Die Chance, dass in einem Timerintervall eine Vermehrung stattfindet
 
 public func IsPossessible() { return 1; }
 

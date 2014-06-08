@@ -45,12 +45,9 @@ private func Flying() { // wird alle 3 Frames aufgerufen
 protected func Check() { // wird alle 18Frames aufgerufen
 	var obj;
 
-	if(GetCommand() == "Wait") {
-		SetSpeed(0,0);
-	}
-		
 	if (flowerobj && ObjectDistance(flowerobj) < 14) {
 		SetSpeed(0,0);
+		SetComDir(COMD_None);
 		SetCommand(this(), "Wait", 0, 0, 0, 0, 80 + Random(150));
 		flowerobj = 0;
 		if (Random(3) && !IsNight()) {
