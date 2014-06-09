@@ -199,7 +199,7 @@ public func Eat(object pByObject) {
 
 public func Cook() {
 	ChangeDef(CFSH);
-	SetAlive(0);
+	SetAlive(0,this);
 	return 1;
 }
 

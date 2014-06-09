@@ -190,7 +190,7 @@ protected func Death()
 {
   SetDir(0);
   ChangeDef(DSHK);
-  SetAction("Dead");
+  SetAction("Dead",this);
   return 1;
 }
 

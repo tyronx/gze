@@ -99,8 +99,8 @@ private func Wind2Sail()
 private func LandOn()
 {
   ChangeDef(SLBT);
-  SetComDir(COMD_None);
-  SetAction("JustLanded");
+  SetComDir(COMD_None, this);
+  SetAction("JustLanded", this);
 }
 
 private func LowerAnchor()

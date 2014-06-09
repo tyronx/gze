@@ -218,7 +218,7 @@ protected func Death()
   SetDir(0);
   LeftLorry();
   ChangeDef(DWPF);
-  SetAction("Dead");
+  SetAction("Dead", this);
   return(1);
 }
 
