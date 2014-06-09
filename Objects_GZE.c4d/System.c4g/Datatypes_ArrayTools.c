@@ -4,8 +4,7 @@ global func ArrayIndexOf(array &arr, elem1) {
 	var type = GetType(elem1);
 	var idx = 0;
 	for (var elem2 in arr) {
-		if (type == C4V_String && elem1 == elem2) return idx;
-		if (type != C4V_String && elem1 == elem2) return idx;
+		if (elem1 == elem2) return idx;
 		idx++;
 	}
 	return -1;
@@ -79,4 +78,5 @@ global func ImplodeArray(string concatenator, array parts) {
 		str = Format("%s%s", str, part);
 		if (i++ > 0) str = Format("%s%s", str, concatenator);
 	}
+	return str;
 }

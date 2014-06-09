@@ -2,6 +2,16 @@
 
 #strict 2
 
+func Initialize() {
+	ScriptGo(1);
+	
+	return(1);
+}
+
+func Script1() {
+	FindObject(MUMA)->SetPlaylist("hell");
+}
+
 func InitializePlayer(player) {
 	var x = 20 + Random(LandscapeWidth() - 40);
 	
