@@ -77,12 +77,12 @@ func ContinueExecuteFeed() {
 	if (!flowerObj) return 0;
 	
 	if (GetAction() == "Sit") {
-		if (!Random(5)) {
+		if (!Random(4)) {
 			SetAction("Feeding");
 		}
 		feedCooldown++;
 		
-		if (feedCooldown > 4 && !Random(4)) {
+		if (feedCooldown > 5 && !Random(5)) {
 			return 0;
 		}
 	}
@@ -99,9 +99,17 @@ func ContinueExecuteFeed() {
 		return 0;
 	}
 	
-	if (!Random(100)) {
-		return 0;
+	/* Stuck in one spot prevention */
+	if (stuckX == GetX() && stuckY == GetY()) {
+		if (stuckTimer++ > 3) {
+			stuckTimer = 0;
+			SetCommand(this(), "None");
+			return 0;
+		}
 	}
+	stuckX = GetX();
+	stuckY = GetY();
+
 	
 	return 1;
 }
@@ -150,6 +158,7 @@ func ContinueExecuteFly() {
 		}
 	}
 	
+	/* Stuck in one spot prevention */
 	if (stuckX == GetX() && stuckY == GetY()) {
 		if (stuckTimer++ > 3) {
 			stuckTimer = 0;
@@ -170,6 +179,7 @@ protected func Initialize() {
 		SetGraphics("Charaxes");
 	}
 	SetAction("Fly");
+	Activity();
 	Activity();
 	return;
 }
@@ -202,21 +212,20 @@ protected func Death() {
 
 
 func ContactLeft() {
-	Contact();
+	Contact(COMD_Left);
 }
 func ContactBottom() {
-	Contact();
+	Contact(COMD_Down);
 }
 func ContactTop() {
-	Contact();
+	Contact(COMD_Up);
 }
 func ContactRight() {
-	Contact();
+	Contact(COMD_Right);
 }
-func Contact() {
+func Contact(direction) {
 	if (activity == "Glide") {
 		activity = "Fly";
 		ShouldExecuteFly();
 	}
 }
-
