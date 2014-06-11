@@ -1,11 +1,8 @@
-/*-- Schmetterling --*/
+/*-- Butterfly --*/
 
 #strict 2
 
-/*-- Engine-Calls --*/
-
-func GetActivities() { return ["Sleep", "Feed", "Glide", "Fly"]; }
-local activity;
+#include AIBA // AI Base
 
 local flowerObj;
 local feedCooldown;
@@ -13,6 +10,17 @@ local sleepCooldown;
 local stuckTimer;
 local stuckX, stuckY;
 
+
+func Initialize() {
+	if (!Random(3)) {
+		SetGraphics("Charaxes");
+	}
+	return _inherited();
+}
+
+func ActivityInit() {
+	AddActivities(["Sleep", "Feed", "Glide", "Fly"]);
+}
 
 func ShouldExecuteSleep() {
 	if (sleepCooldown > 0 && sleepCooldown-- > 0) return 0;
@@ -73,7 +81,6 @@ func ShouldExecuteFeed() {
 }
 
 func ContinueExecuteFeed() {
-
 	if (!flowerObj) return 0;
 	
 	if (GetAction() == "Sit") {
@@ -173,56 +180,11 @@ func ContinueExecuteFly() {
 }
 
 
-// Initialisierung
-protected func Initialize() {
-	if (!Random(3)) {
-		SetGraphics("Charaxes");
-	}
-	SetAction("Fly");
-	Activity();
-	Activity();
-	return;
-}
-
-// TimerCall
-protected func Activity() {
-	if (activity) {
-		if (!ObjectCall(this(), Format("ContinueExecute%s", activity))) {
-			activity = 0;
-		}
-	}
-	
-	for (strActivity in GetActivities()) {
-		//Activities are sorted by priority. So if a higher priority activity is running, do not check on others
-		if (activity == strActivity) break;
-		
-		if (ObjectCall(this(), Format("ShouldExecute%s", strActivity))) {
-			activity = strActivity;
-			break;
-		}
-	}
-	return;
-}
   
 protected func Death() {
 	FadeOut();
 }
 
-
-
-
-func ContactLeft() {
-	Contact(COMD_Left);
-}
-func ContactBottom() {
-	Contact(COMD_Down);
-}
-func ContactTop() {
-	Contact(COMD_Up);
-}
-func ContactRight() {
-	Contact(COMD_Right);
-}
 func Contact(direction) {
 	if (activity == "Glide") {
 		activity = "Fly";
