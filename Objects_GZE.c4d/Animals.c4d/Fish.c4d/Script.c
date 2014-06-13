@@ -1,16 +1,64 @@
-/*-- Fisch --*/
+/*-- Fish --*/
 
 #strict 2
-#include ANIM
+#include AIBA // A.I. Base
 
-local Bait; // Verfolgter Köder
+local fullness;
 
-public func IsPossessible() { return 1; }
 func GetAnimalPlacementMaterial() { return Material("Water"); }
 
-/* Initialisierung */
+func ActivityInit() { 
+	fullness = RandomX(0, 50);
+	AddActivities(["AvoidThreats", "Sleep", "Feed", "Swim"]);
+}
 
-protected func Initialize() { if(GetAction() == "Idle") return(Birth()); }
+func ShouldExecuteAvoidThreats() {
+}
+
+func ContinueExecuteAvoidThreats() {
+}
+
+
+
+func ShouldExecuteSleep() {
+}
+
+func ContinueExecuteSleep() {
+}
+
+
+
+func ShouldExecuteFeed() {
+	if (Random(2) && fullness > 0) fullness--;
+	if (fullness<= 0) {
+		
+		return 1;
+	}
+	return 0;
+}
+
+func ContinueExecuteFeed() {
+	
+}
+
+
+func ShouldExecuteSwim() {
+	SetCommand(this, "None");
+	return 1;
+}
+
+func ContinueExecuteSwim() {
+	if (!GetCommand()) {
+		var x,y, attempts = 10;
+		while (attempts-- > 0) {
+			if (GBackLiquid(x += RandomX(-50, 50), y += RandomX(-50, 50))) {
+				SetCommand(this, "MoveTo", 0, GetX() + x, GetY() + y, 0,  1);
+				break;
+			}
+		}
+	}
+}
+
 
 /* TimerCall mit KI-Steuerung */
 
@@ -113,63 +161,6 @@ private func Activity()
 	return(TurnLeft());
 }
 
-private func WalkDir() {
-	SetComDir(COMD_Left);
-	if (Random(2)) SetComDir(COMD_Right);
-	return 1;
-}
-
-/* Kontakte */
-
-protected func ContactLeft() {
-	// Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-	if (GetEffect("PossessionSpell", this())) return 0;
-
-	return TurnRight();
-}
-
-protected func ContactRight() {
-	// Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-	if (GetEffect("PossessionSpell", this())) return 0;
-
-	return TurnLeft();
-}
-
-protected func ContactTop() {
-	// Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-	if (GetEffect("PossessionSpell", this())) return 0;
-
-	SetComDir(COMD_Down);
-	return 1;
-}
-
-protected func ContactBottom() {
-	// Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-	if (GetEffect("PossessionSpell", this())) return 0;
-
-	if (GetAction() != "Walk") SetComDir(COMD_Up);
-	if (Random(10)) SetComDir(COMD_Right);
-	if (Random(10)) SetComDir(COMD_Left);
-	return 1;
-}
-
-/* Aktionen */
-
-private func TurnRight() {
-	if (Stuck() || (GetAction() != "Walk" && GetAction() != "Swim")) return 0;
-	if (GetXDir() < 0) SetXDir(0);
-	SetDir(DIR_Right);
-	SetComDir(COMD_Right);
-	return 1;
-}
-
-private func TurnLeft() {
-	if (Stuck() || (GetAction() != "Walk" && GetAction() != "Swim")) return 0;
-	if (GetXDir() > 0) SetXDir(0);
-	SetDir(DIR_Left);
-	SetComDir(COMD_Left);
-	return 1;
-}
 
 public func Entrance(container)  {
 	// Damit der Fisch nicht aus U-Booten flieht und so.
@@ -177,19 +168,6 @@ public func Entrance(container)  {
 }
 
 
-/* Einwirkungen */
-
-public func Activate(object pClonk) {
-	[$TxtEmbowel$|Image=KNFE]
-	if (pClonk)
-		{
-		// Aquaclonks (und damit Hydroclonks) können Fische direkt essen
-		if (pClonk->~IsAquaClonk()) return(Eat(pClonk));
-		// Andere versuchen zu zerlegen (lebende Fische im Inventar dürften ohnehin selten sein)
-		return(ObjectSetAction(pClonk, "Embowel", this()));
-		}
-	return 1;
-}
 
 public func Eat(object pByObject) {
 	pByObject->~Feed(50);
@@ -210,130 +188,3 @@ protected func Death() {
 	return 1;
 }
 
-/* Vermehrung */
-
-private func SpecialReprodCond() {
-	return(GetAction() == "Swim");
-}
-
-public func Birth() {
-	var pEnv;
-	if (pEnv=FindObject(CLFS)) pEnv->CLFS::Colorize(this());
-	else SetColorDw(RGB(255,255,255));
-	SetAction("Swim");
-	SetComDir(COMD_Left);
-	if(Random(2)) SetComDir(COMD_Right);
-}
-
-public func RejectEntrance(pContainer) {
-	// Aquaclonks/Hydroclonks können ungeachtet der Regel immer einsammeln
-	// (In Tiefsee sind Fische die einzige Möglichkeit, Energie aufzuladen!)
-	if (pContainer->~IsAquaClonk()) return 0;
-	// Fischtürme sollten auch immer funktionieren
-	if (pContainer->~IsFishTower()) return 0;
-	// ANIM-Definition (Einsammelbare Tiere)
-	return(_inherited(pContainer, ...));
-}
-
-/* Steuerung durch Besessenheit */
-
-protected func ControlCommand(szCommand, pTarget, iTx, iTy) {
-	// Bewegungskommando
-	if (szCommand == "MoveTo") {
-		return(SetCommand(this(),szCommand, pTarget, iTx, iTy));
-	}
-	return 0;
-}
-
-protected func ContainedLeft(object caller) {
-	[$TxtMovement$]
-	SetCommand(this(),"None");
-	if(!GetPlrJumpAndRunControl(caller->GetController()))
-		TurnLeft();
-	return 1;
-}
-
-protected func ContainedRight(object caller) {
-	[$TxtMovement$]
-	SetCommand(this(),"None");
-	if(!GetPlrJumpAndRunControl(caller->GetController()))
-		TurnRight();
-	return 1;
-}
-
-protected func ContainedUp(object caller) {
-	[$TxtMovement$]
-	SetCommand(this(),"None");
-	if(!GetPlrJumpAndRunControl(caller->GetController()))
-		SetComDir(COMD_Up);
-	return 1;
-}
-
-protected func ContainedDown(object caller) {
-	[$TxtMovement$]
-	SetCommand(this(),"None");
-	if(Contained()) return SetCommand(this, "Exit");
-	if(!GetPlrJumpAndRunControl(caller->GetController()))
-		SetComDir(COMD_Down);
-	return 1;
-}
-
-/* JumpAndRun-Steuerung */
-
-private func ClearDir(bool fX) {
-	if(fX && GetXDir()) {
-		if(GetXDir() > 0) SetXDir(Max(GetXDir() - 2, 0));
-		else SetXDir(Min(GetXDir() + 2, 0));
-	}
-	if(!fX && GetYDir()) {
-		if(GetYDir() > 0) SetYDir(Max(GetYDir() - 2, 0));
-		else SetYDir(Min(GetYDir() + 2, 0));
-	}
-}
-
-public func ContainedUpdate(object self, int comdir) {
-	SetComDir(comdir);
-	ClearScheduleCall(this(), "ClearDir");
-	if(comdir == COMD_Down || comdir == COMD_Up) ScheduleCall(this(), "ClearDir", 1, (Abs(GetXDir())+1)/2, true);
-	if(comdir == COMD_Left || comdir == COMD_Right) ScheduleCall(this(), "ClearDir", 1, (Abs(GetYDir())+1)/2, false);
-
-	return 1;
-}
-
-protected func ContainedThrow() {
-	[$TxtDrop$]
-	var iEffectNumber, pSorcerer;
-	if (iEffectNumber = GetEffect("PossessionSpell", this())) {
-		if (pSorcerer = EffectVar(0, this(), iEffectNumber)) {
-			if (pSorcerer->Contents()) pSorcerer->Contents()->Exit(0,0,6);
-			AddEffect("IntCollectionDelay", this(), 1, 70);
-		}
-	}
-	return 1;
-}
-
-protected func ContainedDigDouble() {
-	[$TxtLeave$]
-	RemoveEffect("PossessionSpell", this());
-	return 1;
-}
-
-/* Aufwertungszauberkombo: Mit Fisch wird der Clonk zum Aquaclonk */
-public func GetRevaluationCombo(object pClonk) { return(ACLK); }
-
-
-/* Zerlegen nach Clonktyp */
-
-protected func GetCustomComponents(object pClonk) {
-	if (pClonk) {
-		// Jedem seine Extrawürste
-		if (pClonk->~IsTrapper() || pClonk->~IsIndian()) return ([FSHM, FSHM, FSHB]);
-		if (pClonk->~IsInuk()) return([MEAT, FAT1, FSHB]);
-		//if (pClonk->~IsJungleClonk()) return([MEAT, FAT1, FSHB]); // Jungelclonk kann (noch) nicht zerlegen
-	}
-}
-
-
-/* Kranke Tiere (Arktis) */
-
-public func Sick() { ChangeDef(QFSH);	Birth(); }
