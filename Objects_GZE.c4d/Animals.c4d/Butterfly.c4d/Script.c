@@ -70,12 +70,16 @@ func ContinueExecuteSleep() {
 func ShouldExecuteFeed() {
 	if (feedCooldown > 0 && feedCooldown-- > 0) return 0;
 	
-	for (var objplant in FindObjects(Find_Distance(30), Find_Category(C4D_SelectVegetation()))) {
-		if (objplant->~GetVegetationIsFlower() && objplant != flowerObj) {
-			SetCommand (this(), "Follow", objplant);
-			flowerObj = objplant;
-			return 1;
-		}
+	var objplant = FindObject2(
+		Find_Distance(30), 
+		Find_Func("GetVegetationIsFlower"), 
+		Find_Category(C4D_SelectVegetation()),
+		Find_Exclude(flowerObj)
+	);
+	if (objplant) {
+		SetCommand(this(), "Follow", objplant);
+		flowerObj = objplant;
+		return 1;
 	}
 	return 0;
 }
@@ -151,8 +155,14 @@ func ContinueExecuteFly() {
 	if (!GetCommand() || (GetCommand() != "MoveTo" && GetCommand() != "Follow") || (GetCommand() == "Follow" && GetCommand(this, 1) == flowerObj)) {
 		SetCommand(this(), "None");
 		if (Random(2)) {
-			for (var objplant in FindObjects(Find_Distance(300), Sort_Distance(), Find_Category(C4D_SelectVegetation()))) {
-				if (objplant->~GetVegetationIsFlower() && Random(2) && objplant != flowerObj) {
+			for (var objplant in FindObjects(
+				Find_Distance(300), 
+				Sort_Distance(), 
+				Find_Category(C4D_SelectVegetation()), 
+				Find_Func("GetVegetationIsFlower"),
+				Find_Exclude(flowerObj)
+			)) {
+				if (Random(2)) {
 					SetCommand (this(), "MoveTo", objplant);
 				}
 			}

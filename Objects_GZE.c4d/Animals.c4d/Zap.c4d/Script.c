@@ -15,8 +15,12 @@ protected func Construction() {
 func CollectHoneyTo(mynestobj) {
 	nestobj=mynestobj;
 	
-	for (var objplant in FindObjects(Sort_Distance(), Find_Category(C4D_SelectVegetation()))) {
-		if (objplant->~GetVegetationIsFlower() && Random(2) && ObjectDistance(objplant) > 15) {
+	for (var objplant in FindObjects(
+			Sort_Distance(), 
+			Find_Category(C4D_SelectVegetation()),
+			Find_Func("GetVegetationIsFlower")
+	)) {
+		if (Random(2) && ObjectDistance(objplant) > 15) {
 			AppendCommand (this(), "Follow", objplant);
 			flowerobj = objplant;
 			return;
@@ -105,7 +109,7 @@ public func FindTarget(maxdist) {  // maximale Distanz zum "Opfer"
 	
 	// neues Ziel bestimmen falls es nicht zu weit entfernt ist
 	if(obj=FindObject(0,0,0,-1,-1,OCF_Prey,0,0,NoContainer())) {
-		if(ObjectDistance(obj)<maxdist) {
+		if(ObjectDistance(obj) < maxdist) {
 			if(!GBackSemiSolid(GetX(obj)-GetX(),GetY(obj)-GetY())) {
 				// otherwise forget about the nest
 				SetCommand(this(), "None");

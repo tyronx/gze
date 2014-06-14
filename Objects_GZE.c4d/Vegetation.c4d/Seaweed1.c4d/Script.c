@@ -39,3 +39,4 @@ public func IsUndergroundVegetation() { return(0); }
 public func IsSubmergedVegetation() { return("Water"); }
 public func GetVegetationSoil() { return ("Sand"); }
 public func GetVegetationRootDepth() { return(4); } 
+public func FishFoodQuality() { return(5); } 
