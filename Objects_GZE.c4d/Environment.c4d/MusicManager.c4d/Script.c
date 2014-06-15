@@ -5,6 +5,7 @@ local playlistnames;
 //local shuffle, loop;
 
 local currentplaylistIndex;
+local currentplaylist;
 
 func Initialize() {
 	playlists = [];
@@ -15,7 +16,7 @@ func Initialize() {
 }
 
 func AddDefaultPlaylists() {
-	CreatePlaylist("peacefullsettlement", [
+	CreatePlaylist("peaceful", [
 		"484019_Blind-Alley.ogg",
 		"515887_Red.ogg",
 		"550015_Rebuild.ogg",
@@ -37,6 +38,13 @@ func AddDefaultPlaylists() {
 		"568516_Dungeon-Deep-1.ogg",
 		"Bezo - UWXXIX - Demon Lord (Fix) (ID 424274).ogg",
 		"Brian Czernikowski (Cherni-Braiton) - unknown title.ogg"
+	]);
+	
+	CreatePlaylist("peaceful-nightloop1", [
+		"Night Loop 1.ogg"
+	]);
+	CreatePlaylist("peaceful-nightloop2", [
+		"Night Loop 2.ogg"
 	]);
 }
 
@@ -64,10 +72,11 @@ func RemoveSongFromPlaylist(playlistname, song) {
 
 // If currently running a song of another playlist, this func will fade to a song of the other playlist
 func SetPlaylist(playlistname) {
-	var index = ArrayIndexOf(playlistnames, playlistname);
-	Log("%d", index);
-	if (index != -1) {
-		SetPlayList(ImplodeArray(";", playlists[index]));
+	currentplaylist = playlistname;
+	currentplaylistIndex = ArrayIndexOf(playlistnames, playlistname);
+	
+	if (currentplaylistIndex != -1) {
+		SetPlayList(ImplodeArray(";", playlists[currentplaylistIndex]));
 	}
 }
 

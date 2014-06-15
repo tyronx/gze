@@ -15,7 +15,15 @@ func Initialize() {
 }
 
 func Script1() {
-	FindObject(MUMA)->SetPlaylist("peacefullsettlement");
+	if (IsNight() && LocalN("currentplaylist", FindObject(MUMA)) == "peaceful") {
+		FindObject(MUMA)->SetPlaylist(Format("peaceful-nightloop%d", Random(2)+1));
+	}
+	if (!IsNight() && LocalN("currentplaylist", FindObject(MUMA)) != "peaceful") {
+		FindObject(MUMA)->SetPlaylist("peaceful");
+	}
+}
+func Script2() {
+	goto(1);
 }
 
 func InitializePlayer(player) {
