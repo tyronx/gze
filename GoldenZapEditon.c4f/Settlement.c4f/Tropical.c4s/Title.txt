@@ -1,2 +1,2 @@
-DE:Neues Szenario
-US:New Scenario
+DE:Tropische Inseln
+US:Tropical Islands
