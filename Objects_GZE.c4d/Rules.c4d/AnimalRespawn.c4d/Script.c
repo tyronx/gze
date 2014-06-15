@@ -21,7 +21,6 @@ func CheckPopulation() {
 	var cid, i=0;
 	while (cid = GetComponent(0, i++)) {
 		if (ObjectCount(cid) < GetComponent(cid) && !Random(5)) {
-			Log("sapwning animal %v", cid);
 			SpawnAnimal(cid);
 		}
 	}

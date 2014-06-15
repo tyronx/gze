@@ -48,7 +48,7 @@ func ShouldExecuteFleeing() {
 		if (GetContact(threat, -1, 8)) continue;
 		// Keine unsichtbaren Objekte
 		if (GetVisibility(threat)) continue;
-		Log("escape %v", threat);
+		
 		threatObj = threat;
 		fleeThreat(threat);
 		return 1;
@@ -141,7 +141,7 @@ func ContinueExecuteSwim() {
 	if (!GetCommand() || Abs(GetX() - GetCommand(this, 2)) < 10 || Abs(GetY() - GetCommand(this, 3)) < 10) {
 		var x,y, attempts = 13;
 		while (attempts-- > 0) {
-			if (GBackLiquid(x += RandomX(-80, 80), y += RandomX(-80, 80))) {
+			if (GBackLiquid(x += RandomX(-80, 80), y += RandomX(-80, 80)) && GetMaterial(x, y) == GetAnimalPlacementMaterial()) {
 				SetCommand(this, "MoveTo", 0, GetX() + x, GetY() + y, 0,  1);
 				break;
 			}

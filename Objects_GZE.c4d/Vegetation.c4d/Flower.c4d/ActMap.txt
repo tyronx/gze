@@ -2,7 +2,7 @@
 Name=Flower
 Directions=2
 FlipDir=1
-Length=3
+Length=4
 Delay=0
 Facet=0,0,30,20
 FacetBase=0

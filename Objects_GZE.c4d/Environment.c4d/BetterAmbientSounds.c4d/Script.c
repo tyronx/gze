@@ -32,7 +32,7 @@ protected func Initialize() {
 	AddAmbient("nightowlsintrees", ["nearbyDefcall_IsTree", "IsNight_1"], "Owl", 10);
 	AddAmbient("daybirdsintrees", ["nearbyDefcall_IsTree", "IsNight_0"], "Bird*", 20);
 	AddAmbient("nightcicadasingrass", ["nearbyId_GRAS", "IsNight_1"], "Cicada*", 20);
-	AddAmbient("underwater", ["inMat_Water"], "UnderWater", 100);
+	AddAmbient("underwater", ["inMat_Water"], "Underwater.ogg", 100);
 
 	AddEffect("Ambient", this, 1, 40, this);
 	
@@ -91,7 +91,7 @@ func updatePlayerStati() {
 		playerid = GetPlayerByIndex(GetOwner(clonk));
 		//Log("%v", enviromentconditions);
 		
-		for (envnum = 0; envnum < GetLength(enviromentconditions) - 1; envnum++) {
+		for (envnum = 0; envnum < GetLength(enviromentconditions); envnum++) {
 			//Log("%d %d", envnum, GetLength(enviromentconditions));
 			found = 1;
 			//Log("envnum %d", envnum);

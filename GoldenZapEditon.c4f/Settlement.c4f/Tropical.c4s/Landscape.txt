@@ -1,0 +1,62 @@
+// Icebergs :O
+// overlay { mat=Water; tex=Liquid; algo=solid; y=40; sub=0; }; // Waterlevel
+// overlay { mat=Rock; tex=Rough; algo=sin; ox=-40 - 40; y=10; oy=27; turbulence=100; zoomY=80; zoomX=85; loosebounds=1; x=-40; wdt=180; hgt=8; };
+
+
+map Tropical {
+
+  overlay { mat=Water; tex=Liquid; algo=solid; y=50; sub=0; }; // Waterlevel
+  
+
+  overlay { mat=Rock; tex=Rough; algo=sin; ox=-20 - 20; y=12; oy=34; turbulence=100; zoomY=72; zoomX=90; loosebounds=1; x=-40; wdt=180; hgt=80;
+  
+    overlay { mat=Earth; tex=Smooth; algo=border; turbulence=10; loosebounds=1; a=20 - 30; b=20 - 30; };
+    
+     
+    overlay { algo=rndchecker; a=3; turbulence=1000; oy=70; }
+    & overlay { algo=bozo; a=4; turbulence=100;  }
+    ^ overlay { mat=Oil; tex=Liquid; 
+      algo=lines; a=4 - 6; b=20 - 30; turbulence=1000; rotate=90; y=70; };
+    
+
+    overlay { algo=rndchecker; a=3; turbulence=1000; oy=70; }
+    & overlay { algo=bozo; a=4; turbulence=100;  mat=Tunnel; tex=Smooth; };
+    
+
+    // Underground - Resources
+    overlay { algo=rndchecker; a=20; turbulence=1000; oy=70; }
+    & overlay { algo=bozo; mat=Oil; tex=Liquid; hgt=80; y=53;  };
+    
+    overlay SmallOre { algo=random; a=40; y=60; tex=Rough; mat=Ore; turbulence=1000; zoomX=100; zoomY=100; };
+    SmallOre { mat=Flint; tex=Sponge; a=65; y=50; hgt=30; };
+        
+    SmallOre { mat=Rock; a=80; };
+    SmallOre { mat=Coal; tex=Coal; y=30; };
+	  SmallOre { mat=Loam; tex=Smooth2; a=40; y=0; hgt=70; };
+
+
+
+
+    // Surface materials
+    overlay { mat=Sand; tex=Smooth; algo=border; turbulence=10; loosebounds=1; a=4 - 6; b=4 - 6; hgt=50; };
+    overlay { mat=Sand; tex=Smooth; algo=border; turbulence=10; loosebounds=1; a=1 - 2; b=2 - 4; hgt=60; };
+    overlay { mat=Sand; tex=Smooth; algo=border; turbulence=10; loosebounds=1; a=2; b=2; };
+    
+    overlay { algo=border; turbulence=10; loosebounds=1; a=2; b=2; y=53; }
+    & overlay Corals { algo=bozo; mat=Coral1; tex=Coral1;};
+    
+    overlay { algo=border; turbulence=10; loosebounds=1; a=2; b=2; y=53; }
+    & Corals { mat=Coral2; tex=Coral2; };
+    
+    overlay { algo=border; turbulence=10; loosebounds=1; a=2; b=2; y=53; }
+    & Corals { mat=Coral3; tex=Coral3; };
+
+
+    overlay { algo=border; a=1; b=1; hgt=50; }
+    & overlay { algo=random; mat=Grass; tex=Grassy; a=1; zoomX=100; zoomY=100; };
+
+  }; 
+                
+
+
+};

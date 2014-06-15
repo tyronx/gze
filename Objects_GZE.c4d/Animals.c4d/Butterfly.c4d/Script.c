@@ -12,14 +12,29 @@ local stuckX, stuckY;
 
 
 func Initialize() {
-	if (!Random(3)) {
-		SetGraphics("Charaxes");
+	if (Random(2)) {
+		SetGraphics("EmeraldSwallowtail");
+	} else {
+		if (!Random(3)) {
+			SetGraphics("Charaxes");
+		}
 	}
 	return _inherited();
 }
 
 func ActivityInit() {
 	AddActivities(["Sleep", "Feed", "Glide", "Fly"]);
+}
+
+func FxActivityTimer() {
+	_inherited();
+	
+	if (GetXDir() > 0 && !GetDir()) {
+		SetDir(1);
+	}
+	if (GetXDir() < 0 && GetDir()) {
+		SetDir(0);
+	}
 }
 
 func ShouldExecuteSleep() {

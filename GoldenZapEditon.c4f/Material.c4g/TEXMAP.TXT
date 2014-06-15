@@ -61,3 +61,17 @@ OverloadMaterials
 82=Gold-Rough
 83=Ore-Rough
 84=Ore-Ridge
+
+86=Coral1-Coral1
+87=Coral1-Coral2
+88=Coral1-Coral3
+89=Coral1-Coral4
+90=Coral2-Coral1
+91=Coral2-Coral2
+92=Coral2-Coral3
+93=Coral2-Coral4
+94=Coral3-Coral1
+95=Coral3-Coral2
+96=Coral3-Coral3
+97=Coral3-Coral4
+
