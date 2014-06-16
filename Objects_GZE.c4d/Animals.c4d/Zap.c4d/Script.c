@@ -70,9 +70,9 @@ protected func Check() { // wird alle 18Frames aufgerufen
 	//if(lifetime-- < 0) return(Death());
 	if(!Random(160)) return(Death());
 	// Summen
-	if(!Random(10) && GetSpeed() > 0) {
+	if(!Random(9) && GetSpeed() > 0) {
 		for (var clonk in FindObjects(Find_Distance(400), Find_OCF(OCF_CrewMember))) {
-			Sound("Bsss", 1, this(), BoundBy(120-ObjectDistance(clonk)/2, 20, 100), GetOwner(clonk));
+			Sound("Bsss", 1, this(), BoundBy(120-ObjectDistance(clonk), 10, 100), GetOwner(clonk));
 		}
 	}
 

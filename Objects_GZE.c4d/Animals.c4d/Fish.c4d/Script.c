@@ -19,7 +19,11 @@ func Initialize() {
 		return InitFish();
 	}
 }
-
+/*
+func FxActivityTimer() {
+	_inherited();
+	Message("%s", this, activity);
+}*/
 
 func ActivityInit() { 
 	fullness = RandomX(0, 50);
@@ -27,13 +31,14 @@ func ActivityInit() {
 }
 
 func ShouldExecuteFleeing() {
-	// Flee from danger
-	if (!Contained() && InLiquid())  {
+	// Don't flee if cant flee
+	if (Contained() || !InLiquid())  {
 		return 0;
 	}
 	
+	// Flee from danger
 	for (var threat in FindObjects(
-		Find_Distance(100),
+		Find_Distance(200),
 		Find_Category(C4D_Living | C4D_Object | C4D_Vehicle | C4D_Structure),
 		Find_Not(Find_Category(C4D_Background | C4D_Parallax)), 
 		Find_Not(Find_ID(FXU1)), // Air bubble
@@ -43,7 +48,7 @@ func ShouldExecuteFleeing() {
 		Sort_Distance()
 	)) {
 		// Bedrohung bewegt sich nicht?
-		if (Inside(GetXDir(threat), -2, +2) && Inside(GetYDir(threat), -3, +3)) continue;
+		if (Abs(GetXDir(threat)) + Abs(GetYDir(threat)) < 4 && GetAction(threat) != "Swim") continue;
 		// Kontakt zum Boden?
 		if (GetContact(threat, -1, 8)) continue;
 		// Keine unsichtbaren Objekte
@@ -51,6 +56,9 @@ func ShouldExecuteFleeing() {
 		
 		threatObj = threat;
 		fleeThreat(threat);
+		
+		SetPhysical("Swim", 150000, 2);
+		
 		return 1;
 	}
 
@@ -60,28 +68,51 @@ func ShouldExecuteFleeing() {
 func fleeThreat(threat) {
 	var attempts = 0;
 	var fleex, fleey, bestdistance;
-	while (attempts++ < 8) {
-		var x = RandomX(20, 80) * (Random(2)*2 - 1);
-		var y = RandomX(20, 80) * (Random(2)*2 - 1);
+	
+	var xdirection = GetX() - GetX(threat);
+	var ydirection = GetY() - GetY(threat);
+	
+	if (ydirection == 0) {
+		ydirection = Random(2)*2 - 1;
+	} else {
+		ydirection = ydirection / Abs(ydirection);
+	} 
+	if (xdirection == 0) {
+		xdirection = Random(2)*2 - 1;
+	} else {
+		xdirection = xdirection / Abs(xdirection);
+	}
+	
+	while (attempts++ < 4) {
+		var x = RandomX(20, 200) * xdirection;
+		var y = RandomX(20, 200) * ydirection;
 		var distance = Distance(GetX()+x, GetY()+y, GetX(threat), GetY(threat));
 		
-		if (GBackLiquid(x,y) && distance > bestdistance) {
+		if (GBackLiquid(x,y) && PathFree(GetX(), GetY(), x, y) && distance > bestdistance) {
 			fleex = x;
 			fleey = y;
+			bestdistance = distance;
 		}
 	}
 	
-	SetCommand(this(), "MoveTo", 0, GetX() + fleex, GetY() + fleey, 0, true);
+	if (!bestdistance) {
+		fleex = RandomX(-100, 100);
+		fleey = RandomX(-100, 100);
+	}
+	
+	SetCommand(this(), "MoveTo", 0, GetX() + fleex, GetY() + fleey, 0, false);
 }
 
 func ContinueExecuteFleeing() {
-	// Wenn keine Bedrohung mehr oder nicht im Wasser aufhören zu fliehen
-	if (!InLiquid() || Contained() || gotStuck()) {
-		SetCommand(this(), "None");
+	var threat = GetCommand(this, 1);
+	
+	if (!threat || ObjectDistance(threat) > 200 || Contained() || gotStuck()) {
+		SetPhysical("Swim", 65000, 2);
 		return 0;
 	}
 	
-	return GetCommand() == "MoveTo";
+	fleeThreat(threat);
+	return 1;
 }
 
 
@@ -111,8 +142,8 @@ func ShouldExecuteFeed() {
 		}
 		if (bestfood && Random(100) < bestfood->FishFoodQuality()) {
 			SetCommand(this(), "Follow", bestfood);
+			return 1;
 		}
-		return 1;
 	}
 	return 0;
 }
@@ -128,33 +159,29 @@ func ContinueExecuteFeed() {
 	}
 	
 	
-	return fullness < 50;
+	return fullness < 50 || !GetCommand();
 }
 
 
 func ShouldExecuteSwim() {
 	SetCommand(this, "None");
+	//swimmingTimer = 0;
 	return 1;
 }
 
 func ContinueExecuteSwim() {
-	if (!GetCommand() || Abs(GetX() - GetCommand(this, 2)) < 10 || Abs(GetY() - GetCommand(this, 3)) < 10) {
-		var x,y, attempts = 13;
-		while (attempts-- > 0) {
-			if (GBackLiquid(x += RandomX(-80, 80), y += RandomX(-80, 80)) && GetMaterial(x, y) == GetAnimalPlacementMaterial()) {
-				SetCommand(this, "MoveTo", 0, GetX() + x, GetY() + y, 0,  1);
-				break;
-			}
-		}
+	if (!GetCommand()) {
+		SetCommand(this, "MoveTo", 0, RandomX(0, LandscapeWidth()), GetY() + RandomX(-LandscapeHeight()/10, LandscapeHeight()/10));
 	}
-	return 1;
+	
+	return !gotStuck();
 }
 
 
 func gotStuck() {
 	/* Stuck in one spot prevention */
 	if (stuckX == GetX() && stuckY == GetY()) {
-		if (stuckTimer++ > 2) {
+		if (stuckTimer++ > 1) {
 			stuckTimer = 0;
 			return 1;
 		}

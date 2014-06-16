@@ -10,7 +10,7 @@ protected func Initialize() {
 	
 	Log("Replacing Animals");
 	
-	SetEarthObjectsLevel();
+	SetAnimalPlacementLevel();
 	RemoveEnginePlacedAnimals();
 	PlaceAnimals();
 }
@@ -20,7 +20,7 @@ public func AnimalsMultiplier() {
 	return ((animalplacementlevel * Sqrt(LandscapeWidth() * LandscapeHeight())) / 2000);
 }
 
-private func SetEarthObjectsLevel() {
+private func SetAnimalPlacementLevel() {
 	animalplacementlevel = 8;
 }
 
