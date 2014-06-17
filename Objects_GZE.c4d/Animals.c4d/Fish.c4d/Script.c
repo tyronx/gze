@@ -8,6 +8,8 @@ local fullness, threatObj;
 local stuckTimer;
 local stuckX, stuckY;
 
+local swimmingTimer;
+local schoolTarget;
 
 func GetAnimalPlacementMaterial() { return Material("Water"); }
 func IsFish() { return 1; }
@@ -20,8 +22,8 @@ func Initialize() {
 		return InitFish();
 	}
 }
-/*
-func FxActivityTimer() {
+
+/*func FxActivityTimer() {
 	_inherited();
 	Message("%s", this, activity);
 }*/
@@ -129,6 +131,57 @@ func ContinueExecuteSleep() {
 }
 
 
+func ShouldExecuteSchooling() {
+	if (buildSchool()) {
+		SetCommand(this, "None");
+		return 1;
+	}
+	return 0;
+}
+
+func ContinueExecuteSchooling() {
+	//Message("schooling", this);
+	if (GetCommand() != "MoveTo" || ObjectDistance(schoolTarget) > 20) {
+		if (buildSchool()) {
+			return 1;
+		} else {
+			SetPhysical("Swim", 65000, 2);
+			return 0;
+		}
+	}
+	if (gotStuck()) {
+		SetPhysical("Swim", 65000, 2);
+		return 0;
+	}
+	return 1;
+	
+}
+
+
+func buildSchool() {
+	for (var pFish in FindObjects(Find_Exclude(this), Find_ID(FISH), Find_Distance(300), Sort_Distance())) {
+		if (Local(0) == pFish->Local(0) && LocalN("activity", pFish) != "Schooling") {
+			if (ObjectDistance(pFish) > 15) {
+				SetCommand(
+					this,
+					"MoveTo", 
+					0,
+					GetX(pFish) + RandomX(10,20) * Random(2)*2-1, 
+					GetY(pFish) + RandomX(10,20) * Random(2)*2-1,
+					0,
+					true
+				);
+				schoolTarget = pFish;
+				SetPhysical("Swim", 75000, 2);
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	}
+	return 0;
+}
+
 
 func ShouldExecuteFeed() {
 	if (Random(2) && fullness > 0) fullness--;
@@ -166,14 +219,27 @@ func ContinueExecuteFeed() {
 
 func ShouldExecuteSwim() {
 	SetCommand(this, "None");
-	//swimmingTimer = 0;
+	swimmingTimer = 0;
 	return 1;
 }
 
 func ContinueExecuteSwim() {
 	if (!GetCommand()) {
-		SetCommand(this, "MoveTo", 0, RandomX(0, LandscapeWidth()), GetY() + RandomX(-LandscapeHeight()/10, LandscapeHeight()/10));
+		// Don't Scratch the Lake surface
+		if (GetMaterial(0,-2) == -1) {
+			SetCommand(this, "MoveTo", 0, RandomX(0, LandscapeWidth()), GetY() + RandomX(3, LandscapeHeight()/10), 0, 1);
+		} else {
+			SetCommand(this, "MoveTo", 0, RandomX(0, LandscapeWidth()), GetY() + RandomX(-LandscapeHeight()/10, LandscapeHeight()/10), 0, 1);
+		}
 	}
+	
+	if ((GBackSolid(10, -5)  || GBackSolid(-10, -5) || GBackSolid(10, 5)  || GBackSolid(-10, 5)) && swimmingTimer > 1) return 0;
+
+	if (GetMaterial(0,-2) == -1 && GetCommand(this, 3) < GetY()) {
+		return 0;
+	}
+	
+	swimmingTimer++;
 	
 	return !gotStuck();
 }
@@ -202,7 +268,7 @@ public func Entrance(container)  {
 
 
 public func Eat(object pByObject) {
-	pByObject->~Feed(50);
+	pByObject->~Feed(GetCon()/2);
 	RemoveObject();
 	return 1;
 }

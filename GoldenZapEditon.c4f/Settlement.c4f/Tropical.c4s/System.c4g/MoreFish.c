@@ -2,5 +2,5 @@
 #appendto BEAN
 
 private func SetAnimalPlacementLevel() {
-	animalplacementlevel = 32;
+	animalplacementlevel = 64;
 }

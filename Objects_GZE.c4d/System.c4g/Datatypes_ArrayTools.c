@@ -10,14 +10,16 @@ global func ArrayIndexOf(array &arr, elem1) {
 	return -1;
 }
 
-// Remove the last element from the array
+// Remove the last element from the array, returning the last element
 /* Example:
 	var values = [1,2,3,4,5];
-	ArrayPop(values);
+	Log("%v", ArrayPop(values)); // will print 5
 	Log("%v", values) // Will print [1, 2,3, 4]
 */
 global func ArrayPop(array &arr) {
+	var elem = arr[GetLength(arr) - 1];
 	SetLength(arr, Max(0, GetLength(arr) - 1));
+	return elem;
 }
 
 // Push given element onto end of the array
@@ -40,10 +42,21 @@ global func ArraySlice(array &arr, int index) {
 	return val;
 }
 
+global func ArrayInsert(array &arr, elem, int index) {
+	SetLength(arr, GetLength(arr)+1);
+	var i = index;
+	var len = GetLength(arr);
+	while (i++ < len) {
+		arr[i+1] = arr[i];
+	}
+	arr[index] = elem;
+}
 
 // Remove the first element from the array
 global func ArrayShift(array &arr) {
+	var elem = arr[0];
 	ArraySlice(arr, 0);
+	return elem;
 }
 
 // Push element to beginning of the array

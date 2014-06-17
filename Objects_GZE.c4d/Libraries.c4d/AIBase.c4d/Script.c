@@ -18,12 +18,12 @@ func ActivityInit() {
 	
 }
 
-func AddActivity(name) {
-	ArrayPush(activities, name);
+func AddActivity(name, priority) {
+	ArrayInsert(activities, name, priority);
 }
 func AddActivities(names) {
 	for (name in names) {
-		AddActivity(name);
+		ArrayPush(activities, name);
 	}
 }
 

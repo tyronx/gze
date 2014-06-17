@@ -1,36 +1,59 @@
 /*-- Fish diversity --*/
 
-#strict
+#strict 2
+
+local intialized;
 
 local fishColor;
 local fishSize;
+local schooling;
 
 protected func Initialize()  {
-	ScheduleCall(this(), "LateInitialize", 1);
+	ScheduleCall(this, "LateInitialize", 1);
 }
 
 func LateInitialize() {
-	var fishCount = ObjectCount2(Find_Func("IsFish"));
-	var populations = Sqrt(fishCount);
-	if (populations > 10) populations += RandomX(-5, 5);
-	else if (populations > 3) populations += RandomX(-2, 3);
+	var fishCount = ObjectCount2(Find_OCF(OCF_Living), Find_Func("IsFish"));
+	var types = Sqrt(fishCount);
+	if (types > 10) types += RandomX(-5, 5);
+	else if (types > 3) types += RandomX(-2, 3);
 	
 	fishColor = [];
 	fishSize = [];
+	schooling = [];
 	
-	while (populations-- > 0) {
+	while (types-- > 0) {
 		ArrayPush(fishColor, HSL(Random(256),255,100+Random(60)));
 		ArrayPush(fishSize, Min(100, RandomX(40, 120)));
+		ArrayPush(schooling, Random(2));
 	}
 	
-	//for (var pFish in FindObjects2
+	var types = GetLength(fishSize);
+	var i = 0, type;
+	for (var pFish in FindObjects(Find_OCF(OCF_Living), Find_Func("IsFish"))) {
+		type = (types * i) / fishCount;
+		pFish->SetColorDw(fishColor[type]);
+		pFish->SetCon(fishSize[type]);
+		if (schooling[type]) {
+			pFish->AddActivity("Schooling", 2);
+		}
+		Local(0, pFish) = type;
+		i++;
+	}
 	
-  // Alle Fische anfangs umfärben
-  var pFish;
-  while(pFish=FindObject(FISH,0,0,0,0,0,0,0,0,pFish))
-    Colorize(pFish);	
+	ClearScheduleCall(this, "LateInitialize");
+	intialized = 1;
 }
 
-public func Colorize(pObj)  {
-	SetColorDw(HSL(Random(256),255,100+Random(60)),pObj);
+
+func Colorize(pFish) {
+	if (intialized) {
+		var type = Random(GetLength(fishSize));
+		pFish->SetColorDw(fishColor[type]);
+		pFish->SetCon(fishSize[type]);
+		if (schooling[type]) {
+			pFish->AddActivity("Schooling", 2);
+		}
+		Local(0, pFish) = type;
+	}
 }
