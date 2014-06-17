@@ -4,6 +4,9 @@
 #include TREE
 
 func Construction() {
+	var dwRGB = HSL(RandomX(38,80),RandomX(150,180),RandomX(120,150));
+	SetColorDw(dwRGB);
+
 }
 
 protected func CheckEnvironment()

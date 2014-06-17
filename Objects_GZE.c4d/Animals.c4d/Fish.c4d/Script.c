@@ -10,6 +10,7 @@ local stuckX, stuckY;
 
 
 func GetAnimalPlacementMaterial() { return Material("Water"); }
+func IsFish() { return 1; }
 
 
 func Initialize() { 

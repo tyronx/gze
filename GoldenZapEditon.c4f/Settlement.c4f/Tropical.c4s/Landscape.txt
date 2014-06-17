@@ -43,13 +43,13 @@ map Tropical {
     overlay { mat=Sand; tex=Smooth; algo=border; turbulence=10; loosebounds=1; a=2; b=2; };
     
     overlay { algo=border; turbulence=10; loosebounds=1; a=2; b=2; y=53; }
-    & overlay Corals { algo=bozo; mat=Coral1; tex=Coral1;};
+    & overlay Corals { algo=random; a=0; mat=Coral1; tex=Coral3;};
     
     overlay { algo=border; turbulence=10; loosebounds=1; a=2; b=2; y=53; }
-    & Corals { mat=Coral2; tex=Coral2; };
+    & Corals { mat=Coral2; tex=Coral2; a=2; };
     
     overlay { algo=border; turbulence=10; loosebounds=1; a=2; b=2; y=53; }
-    & Corals { mat=Coral3; tex=Coral3; };
+    & Corals { mat=Coral3; tex=Coral1; a=5; };
 
 
     overlay { algo=border; a=1; b=1; hgt=50; }

@@ -20,3 +20,5 @@ Chop=1
 StretchGrowth=1
 IncompleteActivity=1
 Oversize=1
+ColorByOwner=1
+AllowPictureStack=APS_Color
