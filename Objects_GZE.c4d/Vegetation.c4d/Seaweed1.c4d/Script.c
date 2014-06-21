@@ -4,6 +4,9 @@
 #include TREE
 
 func Construction() {
+	var dwRGB = HSL(RandomX(38,80),RandomX(150,180),RandomX(120,150));
+	SetColorDw(dwRGB);
+
 }
 
 protected func CheckEnvironment()
@@ -39,3 +42,4 @@ public func IsUndergroundVegetation() { return(0); }
 public func IsSubmergedVegetation() { return("Water"); }
 public func GetVegetationSoil() { return ("Sand"); }
 public func GetVegetationRootDepth() { return(4); } 
+public func FishFoodQuality() { return(5); } 

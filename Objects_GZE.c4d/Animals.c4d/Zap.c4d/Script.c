@@ -15,8 +15,12 @@ protected func Construction() {
 func CollectHoneyTo(mynestobj) {
 	nestobj=mynestobj;
 	
-	for (var objplant in FindObjects(Sort_Distance(), Find_Category(C4D_SelectVegetation()))) {
-		if (objplant->~GetVegetationIsFlower() && Random(2) && ObjectDistance(objplant) > 15) {
+	for (var objplant in FindObjects(
+			Sort_Distance(), 
+			Find_Category(C4D_SelectVegetation()),
+			Find_Func("GetVegetationIsFlower")
+	)) {
+		if (Random(2) && ObjectDistance(objplant) > 15) {
 			AppendCommand (this(), "Follow", objplant);
 			flowerobj = objplant;
 			return;
@@ -66,9 +70,9 @@ protected func Check() { // wird alle 18Frames aufgerufen
 	//if(lifetime-- < 0) return(Death());
 	if(!Random(160)) return(Death());
 	// Summen
-	if(!Random(10) && GetSpeed() > 0) {
+	if(!Random(9) && GetSpeed() > 0) {
 		for (var clonk in FindObjects(Find_Distance(400), Find_OCF(OCF_CrewMember))) {
-			Sound("Bsss", 1, this(), BoundBy(120-ObjectDistance(clonk)/2, 20, 100), GetOwner(clonk));
+			Sound("Bsss", 1, this(), BoundBy(120-ObjectDistance(clonk), 10, 100), GetOwner(clonk));
 		}
 	}
 
@@ -105,7 +109,7 @@ public func FindTarget(maxdist) {  // maximale Distanz zum "Opfer"
 	
 	// neues Ziel bestimmen falls es nicht zu weit entfernt ist
 	if(obj=FindObject(0,0,0,-1,-1,OCF_Prey,0,0,NoContainer())) {
-		if(ObjectDistance(obj)<maxdist) {
+		if(ObjectDistance(obj) < maxdist) {
 			if(!GBackSemiSolid(GetX(obj)-GetX(),GetY(obj)-GetY())) {
 				// otherwise forget about the nest
 				SetCommand(this(), "None");

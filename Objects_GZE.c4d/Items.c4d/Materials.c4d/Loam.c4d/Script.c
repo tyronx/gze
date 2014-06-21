@@ -17,7 +17,7 @@ public func BridgeMaterial()
 	return(Material("Earth"));
 }
 
-public func BridgeTime() { return 100; } // Brückenbau für 100 Frames
+public func BridgeTime() { return 150; } // Brückenbau für 100 Frames
 
 public func IsMovingClonkBridge() { return true; } // Wenn true, bewegt sich der Clonk mit dem Brückenbau
 

@@ -1,175 +1,264 @@
-/*-- Fisch --*/
+/*-- Fish --*/
 
 #strict 2
-#include ANIM
+#include AIBA // A.I. Base
 
-local Bait; // Verfolgter Köder
+local fullness, threatObj;
 
-public func IsPossessible() { return 1; }
+local stuckTimer;
+local stuckX, stuckY;
+
+local swimmingTimer;
+local schoolTarget;
+
 func GetAnimalPlacementMaterial() { return Material("Water"); }
+func IsFish() { return 1; }
 
-/* Initialisierung */
 
-protected func Initialize() { if(GetAction() == "Idle") return(Birth()); }
-
-/* TimerCall mit KI-Steuerung */
-
-private func Activity() 
-{
-	// Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-	if (GetEffect("PossessionSpell", this())) return 0;
-
-	if (GetAction() == "Walk") WalkDir();
+func Initialize() { 
+	_inherited();
 	
-	// Schwimmt gerade zu einem Köder
-	if (Bait) {
-		// Köder taugt nix mehr...
-		if (GetAction(Bait) != "Bait") {
-			Bait = 0;
-		// ...ansonsten weiter verfolgen und nicht ablenken lassen
+	if(GetAction() == "Idle") {
+		return InitFish();
+	}
+}
+
+/*func FxActivityTimer() {
+	_inherited();
+	Message("%s", this, activity);
+}*/
+
+func ActivityInit() { 
+	fullness = RandomX(0, 50);
+	AddActivities(["Fleeing", "Sleep", "Feed", "Swim"]);
+}
+
+func ShouldExecuteFleeing() {
+	// Don't flee if cant flee
+	if (Contained() || !InLiquid())  {
+		return 0;
+	}
+	
+	// Flee from danger
+	for (var threat in FindObjects(
+		Find_Distance(200),
+		Find_Category(C4D_Living | C4D_Object | C4D_Vehicle | C4D_Structure),
+		Find_Not(Find_Category(C4D_Background | C4D_Parallax)), 
+		Find_Not(Find_ID(FXU1)), // Air bubble
+		Find_Or(Find_Func("IsClonk"), Find_Not(Find_OCF(OCF_Alive))), // Only avoid clonks or inanimate objects
+		Find_NoContainer(),  // Not conatined
+		Find_OCF(OCF_InLiquid), // In water
+		Sort_Distance()
+	)) {
+		// Bedrohung bewegt sich nicht?
+		if (Abs(GetXDir(threat)) + Abs(GetYDir(threat)) < 4 && GetAction(threat) != "Swim") continue;
+		// Kontakt zum Boden?
+		if (GetContact(threat, -1, 8)) continue;
+		// Keine unsichtbaren Objekte
+		if (GetVisibility(threat)) continue;
+		
+		threatObj = threat;
+		fleeThreat(threat);
+		
+		SetPhysical("Swim", 150000, 2);
+		
+		return 1;
+	}
+
+	return 0;
+}
+
+func fleeThreat(threat) {
+	var attempts = 0;
+	var fleex, fleey, bestdistance;
+	
+	var xdirection = GetX() - GetX(threat);
+	var ydirection = GetY() - GetY(threat);
+	
+	if (ydirection == 0) {
+		ydirection = Random(2)*2 - 1;
+	} else {
+		ydirection = ydirection / Abs(ydirection);
+	} 
+	if (xdirection == 0) {
+		xdirection = Random(2)*2 - 1;
+	} else {
+		xdirection = xdirection / Abs(xdirection);
+	}
+	
+	while (attempts++ < 4) {
+		var x = RandomX(20, 200) * xdirection;
+		var y = RandomX(20, 200) * ydirection;
+		var distance = Distance(GetX()+x, GetY()+y, GetX(threat), GetY(threat));
+		
+		if (GBackLiquid(x,y) && PathFree(GetX(), GetY(), x, y) && distance > bestdistance) {
+			fleex = x;
+			fleey = y;
+			bestdistance = distance;
+		}
+	}
+	
+	if (!bestdistance) {
+		fleex = RandomX(-100, 100);
+		fleey = RandomX(-100, 100);
+	}
+	
+	SetCommand(this(), "MoveTo", 0, GetX() + fleex, GetY() + fleey, 0, false);
+}
+
+func ContinueExecuteFleeing() {
+	var threat = GetCommand(this, 1);
+	
+	if (!threat || ObjectDistance(threat) > 200 || Contained() || gotStuck()) {
+		SetPhysical("Swim", 65000, 2);
+		return 0;
+	}
+	
+	fleeThreat(threat);
+	return 1;
+}
+
+
+
+func ShouldExecuteSleep() {
+	return IsNight();
+}
+
+func ContinueExecuteSleep() {
+	SetComDir(COMD_Down);
+	SetCommand(this, "None");
+	return IsNight();
+}
+
+
+func ShouldExecuteSchooling() {
+	if (buildSchool()) {
+		SetCommand(this, "None");
+		return 1;
+	}
+	return 0;
+}
+
+func ContinueExecuteSchooling() {
+	//Message("schooling", this);
+	if (GetCommand() != "MoveTo" || ObjectDistance(schoolTarget) > 20) {
+		if (buildSchool()) {
+			return 1;
 		} else {
+			SetPhysical("Swim", 65000, 2);
+			return 0;
+		}
+	}
+	if (gotStuck()) {
+		SetPhysical("Swim", 65000, 2);
+		return 0;
+	}
+	return 1;
+	
+}
+
+
+func buildSchool() {
+	for (var pFish in FindObjects(Find_Exclude(this), Find_ID(FISH), Find_Distance(300), Sort_Distance())) {
+		if (Local(0) == pFish->Local(0) && LocalN("activity", pFish) != "Schooling") {
+			if (ObjectDistance(pFish) > 15) {
+				SetCommand(
+					this,
+					"MoveTo", 
+					0,
+					GetX(pFish) + RandomX(10,20) * Random(2)*2-1, 
+					GetY(pFish) + RandomX(10,20) * Random(2)*2-1,
+					0,
+					true
+				);
+				schoolTarget = pFish;
+				SetPhysical("Swim", 75000, 2);
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	}
+	return 0;
+}
+
+
+func ShouldExecuteFeed() {
+	if (Random(2) && fullness > 0) fullness--;
+	if (fullness<= 0) {
+		var bestfood;
+		for (var food in FindObjects(Sort_Distance(), Find_Distance(200), Find_Func("FishFoodQuality"), Find_OCF(OCF_InLiquid))) {
+			if (!bestfood || food->FishFoodQuality() > bestfood->FishFoodQuality()) {
+				if (Random(3)) {
+					bestfood = food;
+				}
+			}
+		}
+		if (bestfood && Random(100) < bestfood->FishFoodQuality()) {
+			SetCommand(this(), "Follow", bestfood);
 			return 1;
 		}
 	}
-		
-	var pBait;
-	// Nur wenn der Fisch ausgewachsen ist
-	if (GetCon()==100 && !Random(5)) {
-		 // Ein Köder in der Nähe?
-		 if (pBait = FindObject( 0, -250,-250,500,500, OCF_InLiquid, "Bait")) {
-			 // Je nach Köderqualität...
-			if (Random(100) < pBait->~IsBait()) {
-				 // ...hinschwimmen
-				 SetCommand(this(), "Follow", pBait);
-				 // Und Köder merken
-				 Bait = pBait;
-			}
-		}
-	}
-	// Fortpflanzung (sollte eigentlich laichen...)
-	if (!Random(ReproductionRate())) {
-		Reproduction();
-	}
-	
-	// Vor Bedrohungen flüchten
-	var found_threat;
-	if (!Contained() && InLiquid())  {
-		// Keine Regelobjekte, Luftblasen etc.
-		for (var threat in FindObjects(Find_Distance(100),
-			Find_Category(C4D_Living | C4D_Object | C4D_Vehicle | C4D_Structure),
-			Find_Not(Find_Category(C4D_Background | C4D_Parallax)), Find_Not(Find_ID(FXU1)),
-			// Keine toten Clonks
-			Find_Or(Find_Not(Find_Func("IsClonk")), Find_OCF(OCF_Alive)),
-			Sort_Distance()))
-		{
-			// Bedrohung bewegt sich nicht?
-			if (Inside(GetXDir(threat), -2, +2) && Inside(GetYDir(threat), -3, +3)) continue;
-			// Kontakt zum Boden?
-			if (GetContact(threat, -1, 8)) continue;
-			// Bedrohung nicht im Wasser oder in einem Container -> Nächstes Objekt
-			if (!InLiquid(threat) || Contained(threat)) continue;
-			// Keine unsichtbaren Objekte
-			if (GetVisibility(threat)) continue;
-			// Sind ziemlich naiv und schwimmen nicht vor anderen Tieren weg
-			if (!GetAlive(threat) || threat->~IsClonk()) {
-				found_threat = true;
-				var xdist = GetX(threat) - GetX();
-				var ydist = GetY(threat) - GetY();
-				var axdist = Abs(xdist);
-				var aydist = Abs(ydist);
-				var xsign = xdist / axdist;
-				var ysign = ydist / aydist;
-				var fleex = GetX() - xsign * (1500 / BoundBy(axdist, 20, 80)); // 20..80 -> 70..15
-				var fleey = GetY() - ysign * (1000 / BoundBy(aydist, 20, 80)); // 20..80 -> 50..10
-				SetCommand(this(), "MoveTo", 0, fleex, fleey, 0, true);
-			}
-		}
-	}
-	
-	// Bewegung zum Fischturm (hat hoehere Prioritaet als Gefahren) (Tiefsee)
-	var fish_tower = FindObject(FSTW, -250, -250, 500, 500, OCF_Fullcon );
-	// nicht das U-Boot steuern wenn darin befindlich :D
-	if(!Contained()) 
-		// Fischturm gefunden
-		if(fish_tower)
-		{
-			SetCommand(this(), "MoveTo", 0, GetX(fish_tower) - 150 + Random(300), GetY(fish_tower) - 150 + Random(300) );
-			found_threat = true;
-		}
+	return 0;
+}
 
-	// Wenn keine Bedrohung mehr oder nicht im Wasser aufhören zu fliehen
-	if (!InLiquid() || Contained() || (!found_threat && GetCommand() == "MoveTo")) 
+func ContinueExecuteFeed() {
+	if (GetCommand(this, 1) && ObjectDistance(GetCommand(this, 1)) < 10) {
+		fullness+= RandomX(5, 15);
+	} 
+	
+	if (!GetCommand() || gotStuck() || !Random(20)) {
 		SetCommand(this(), "None");
+		return 0;
+	}
 	
-	// Schwimmverhalten
-	if (!GBackLiquid(0, -8) && GetAction() != "Walk") return(SetComDir(COMD_Down));
-	if (Random(2)) return 1;
-	if (GetAction() != "Swim") return 1;
-	if (!Random(10)) return(SetComDir(COMD_Up));
-	if (!Random(10)) return(SetComDir(COMD_Down));
-
-	// Umdrehen
-	if (Random(2)) return(TurnRight());
-	return(TurnLeft());
+	
+	return fullness < 50 || !GetCommand();
 }
 
-private func WalkDir() {
-	SetComDir(COMD_Left);
-	if (Random(2)) SetComDir(COMD_Right);
+
+func ShouldExecuteSwim() {
+	SetCommand(this, "None");
+	swimmingTimer = 0;
 	return 1;
 }
 
-/* Kontakte */
+func ContinueExecuteSwim() {
+	if (!GetCommand()) {
+		// Don't Scratch the Lake surface
+		if (GetMaterial(0,-2) == -1) {
+			SetCommand(this, "MoveTo", 0, RandomX(0, LandscapeWidth()), GetY() + RandomX(3, LandscapeHeight()/10), 0, 1);
+		} else {
+			SetCommand(this, "MoveTo", 0, RandomX(0, LandscapeWidth()), GetY() + RandomX(-LandscapeHeight()/10, LandscapeHeight()/10), 0, 1);
+		}
+	}
+	
+	if ((GBackSolid(10, -5)  || GBackSolid(-10, -5) || GBackSolid(10, 5)  || GBackSolid(-10, 5)) && swimmingTimer > 1) return 0;
 
-protected func ContactLeft() {
-	// Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-	if (GetEffect("PossessionSpell", this())) return 0;
-
-	return TurnRight();
+	if (GetMaterial(0,-2) == -1 && GetCommand(this, 3) < GetY()) {
+		return 0;
+	}
+	
+	swimmingTimer++;
+	
+	return !gotStuck();
 }
 
-protected func ContactRight() {
-	// Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-	if (GetEffect("PossessionSpell", this())) return 0;
 
-	return TurnLeft();
+func gotStuck() {
+	/* Stuck in one spot prevention */
+	if (stuckX == GetX() && stuckY == GetY()) {
+		if (stuckTimer++ > 1) {
+			stuckTimer = 0;
+			return 1;
+		}
+	}
+	stuckX = GetX();
+	stuckY = GetY();
+	return 0;
 }
 
-protected func ContactTop() {
-	// Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-	if (GetEffect("PossessionSpell", this())) return 0;
 
-	SetComDir(COMD_Down);
-	return 1;
-}
-
-protected func ContactBottom() {
-	// Die KI-Steuerung wird bei Besessenheit nicht gebraucht
-	if (GetEffect("PossessionSpell", this())) return 0;
-
-	if (GetAction() != "Walk") SetComDir(COMD_Up);
-	if (Random(10)) SetComDir(COMD_Right);
-	if (Random(10)) SetComDir(COMD_Left);
-	return 1;
-}
-
-/* Aktionen */
-
-private func TurnRight() {
-	if (Stuck() || (GetAction() != "Walk" && GetAction() != "Swim")) return 0;
-	if (GetXDir() < 0) SetXDir(0);
-	SetDir(DIR_Right);
-	SetComDir(COMD_Right);
-	return 1;
-}
-
-private func TurnLeft() {
-	if (Stuck() || (GetAction() != "Walk" && GetAction() != "Swim")) return 0;
-	if (GetXDir() > 0) SetXDir(0);
-	SetDir(DIR_Left);
-	SetComDir(COMD_Left);
-	return 1;
-}
 
 public func Entrance(container)  {
 	// Damit der Fisch nicht aus U-Booten flieht und so.
@@ -177,22 +266,9 @@ public func Entrance(container)  {
 }
 
 
-/* Einwirkungen */
-
-public func Activate(object pClonk) {
-	[$TxtEmbowel$|Image=KNFE]
-	if (pClonk)
-		{
-		// Aquaclonks (und damit Hydroclonks) können Fische direkt essen
-		if (pClonk->~IsAquaClonk()) return(Eat(pClonk));
-		// Andere versuchen zu zerlegen (lebende Fische im Inventar dürften ohnehin selten sein)
-		return(ObjectSetAction(pClonk, "Embowel", this()));
-		}
-	return 1;
-}
 
 public func Eat(object pByObject) {
-	pByObject->~Feed(50);
+	pByObject->~Feed(GetCon()/2);
 	RemoveObject();
 	return 1;
 }
@@ -210,130 +286,12 @@ protected func Death() {
 	return 1;
 }
 
-/* Vermehrung */
-
-private func SpecialReprodCond() {
-	return(GetAction() == "Swim");
-}
-
-public func Birth() {
+public func InitFish() {
 	var pEnv;
-	if (pEnv=FindObject(CLFS)) pEnv->CLFS::Colorize(this());
-	else SetColorDw(RGB(255,255,255));
+	if (pEnv=FindObject(CLFS)) {
+		pEnv->CLFS::Colorize(this);
+	} else {
+		SetColorDw(RGB(255,255,255));
+	}
 	SetAction("Swim");
-	SetComDir(COMD_Left);
-	if(Random(2)) SetComDir(COMD_Right);
 }
-
-public func RejectEntrance(pContainer) {
-	// Aquaclonks/Hydroclonks können ungeachtet der Regel immer einsammeln
-	// (In Tiefsee sind Fische die einzige Möglichkeit, Energie aufzuladen!)
-	if (pContainer->~IsAquaClonk()) return 0;
-	// Fischtürme sollten auch immer funktionieren
-	if (pContainer->~IsFishTower()) return 0;
-	// ANIM-Definition (Einsammelbare Tiere)
-	return(_inherited(pContainer, ...));
-}
-
-/* Steuerung durch Besessenheit */
-
-protected func ControlCommand(szCommand, pTarget, iTx, iTy) {
-	// Bewegungskommando
-	if (szCommand == "MoveTo") {
-		return(SetCommand(this(),szCommand, pTarget, iTx, iTy));
-	}
-	return 0;
-}
-
-protected func ContainedLeft(object caller) {
-	[$TxtMovement$]
-	SetCommand(this(),"None");
-	if(!GetPlrJumpAndRunControl(caller->GetController()))
-		TurnLeft();
-	return 1;
-}
-
-protected func ContainedRight(object caller) {
-	[$TxtMovement$]
-	SetCommand(this(),"None");
-	if(!GetPlrJumpAndRunControl(caller->GetController()))
-		TurnRight();
-	return 1;
-}
-
-protected func ContainedUp(object caller) {
-	[$TxtMovement$]
-	SetCommand(this(),"None");
-	if(!GetPlrJumpAndRunControl(caller->GetController()))
-		SetComDir(COMD_Up);
-	return 1;
-}
-
-protected func ContainedDown(object caller) {
-	[$TxtMovement$]
-	SetCommand(this(),"None");
-	if(Contained()) return SetCommand(this, "Exit");
-	if(!GetPlrJumpAndRunControl(caller->GetController()))
-		SetComDir(COMD_Down);
-	return 1;
-}
-
-/* JumpAndRun-Steuerung */
-
-private func ClearDir(bool fX) {
-	if(fX && GetXDir()) {
-		if(GetXDir() > 0) SetXDir(Max(GetXDir() - 2, 0));
-		else SetXDir(Min(GetXDir() + 2, 0));
-	}
-	if(!fX && GetYDir()) {
-		if(GetYDir() > 0) SetYDir(Max(GetYDir() - 2, 0));
-		else SetYDir(Min(GetYDir() + 2, 0));
-	}
-}
-
-public func ContainedUpdate(object self, int comdir) {
-	SetComDir(comdir);
-	ClearScheduleCall(this(), "ClearDir");
-	if(comdir == COMD_Down || comdir == COMD_Up) ScheduleCall(this(), "ClearDir", 1, (Abs(GetXDir())+1)/2, true);
-	if(comdir == COMD_Left || comdir == COMD_Right) ScheduleCall(this(), "ClearDir", 1, (Abs(GetYDir())+1)/2, false);
-
-	return 1;
-}
-
-protected func ContainedThrow() {
-	[$TxtDrop$]
-	var iEffectNumber, pSorcerer;
-	if (iEffectNumber = GetEffect("PossessionSpell", this())) {
-		if (pSorcerer = EffectVar(0, this(), iEffectNumber)) {
-			if (pSorcerer->Contents()) pSorcerer->Contents()->Exit(0,0,6);
-			AddEffect("IntCollectionDelay", this(), 1, 70);
-		}
-	}
-	return 1;
-}
-
-protected func ContainedDigDouble() {
-	[$TxtLeave$]
-	RemoveEffect("PossessionSpell", this());
-	return 1;
-}
-
-/* Aufwertungszauberkombo: Mit Fisch wird der Clonk zum Aquaclonk */
-public func GetRevaluationCombo(object pClonk) { return(ACLK); }
-
-
-/* Zerlegen nach Clonktyp */
-
-protected func GetCustomComponents(object pClonk) {
-	if (pClonk) {
-		// Jedem seine Extrawürste
-		if (pClonk->~IsTrapper() || pClonk->~IsIndian()) return ([FSHM, FSHM, FSHB]);
-		if (pClonk->~IsInuk()) return([MEAT, FAT1, FSHB]);
-		//if (pClonk->~IsJungleClonk()) return([MEAT, FAT1, FSHB]); // Jungelclonk kann (noch) nicht zerlegen
-	}
-}
-
-
-/* Kranke Tiere (Arktis) */
-
-public func Sick() { ChangeDef(QFSH);	Birth(); }

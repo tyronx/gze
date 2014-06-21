@@ -23,6 +23,12 @@ func GrowBerry() {
 	if (collected) return(0);
 	
 	growth++;
+	
+	// Spoil quicker in dropped & in water
+	if (GBackLiquid() && GetCategory() == 16) {
+		growth += 2;
+	}
+	
 	SetGrowthStage();
 }
 

@@ -9,7 +9,21 @@ func Initialize() {
 	PlaceObjects2(LOAM, 100, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Loam"));
 	PlaceObjects2(ORE1, 150, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Ore"));
 
+	ScriptGo(1);
+	
 	return(1);
+}
+
+func Script1() {
+	if (IsNight() && LocalN("currentplaylist", FindObject(MUMA)) == "peaceful") {
+		FindObject(MUMA)->SetPlaylist(Format("peaceful-nightloop%d", Random(2)+1));
+	}
+	if (!IsNight() && LocalN("currentplaylist", FindObject(MUMA)) != "peaceful") {
+		FindObject(MUMA)->SetPlaylist("peaceful");
+	}
+}
+func Script2() {
+	goto(1);
 }
 
 func InitializePlayer(player) {
@@ -25,7 +39,7 @@ func InitializePlayer(player) {
 	
 	// Place player and hut there
 	var hut = CreateConstruction(HUT2, spawnpoint[0], spawnpoint[1],player,100,1);
-	SetPosition(spawnpoint[0], spawnpoint[1]-8, GetCrew(player,0));
+	SetPosition(spawnpoint[0] - 5, spawnpoint[1]-8, GetCrew(player,0));
 	
 	// Amboss drüberklatschen
 	hut->CreateObject(ANVL, 17, 23);

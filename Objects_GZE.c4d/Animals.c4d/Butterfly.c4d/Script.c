@@ -1,11 +1,8 @@
-/*-- Schmetterling --*/
+/*-- Butterfly --*/
 
 #strict 2
 
-/*-- Engine-Calls --*/
-
-func GetActivities() { return ["Sleep", "Feed", "Glide", "Fly"]; }
-local activity;
+#include AIBA // AI Base
 
 local flowerObj;
 local feedCooldown;
@@ -13,6 +10,32 @@ local sleepCooldown;
 local stuckTimer;
 local stuckX, stuckY;
 
+
+func Initialize() {
+	if (Random(2)) {
+		SetGraphics("EmeraldSwallowtail");
+	} else {
+		if (!Random(3)) {
+			SetGraphics("Charaxes");
+		}
+	}
+	return _inherited();
+}
+
+func ActivityInit() {
+	AddActivities(["Sleep", "Feed", "Glide", "Fly"]);
+}
+
+func FxActivityTimer() {
+	_inherited();
+	
+	if (GetXDir() > 0 && !GetDir()) {
+		SetDir(1);
+	}
+	if (GetXDir() < 0 && GetDir()) {
+		SetDir(0);
+	}
+}
 
 func ShouldExecuteSleep() {
 	if (sleepCooldown > 0 && sleepCooldown-- > 0) return 0;
@@ -62,27 +85,30 @@ func ContinueExecuteSleep() {
 func ShouldExecuteFeed() {
 	if (feedCooldown > 0 && feedCooldown-- > 0) return 0;
 	
-	for (var objplant in FindObjects(Find_Distance(30), Find_Category(C4D_SelectVegetation()))) {
-		if (objplant->~GetVegetationIsFlower() && objplant != flowerObj) {
-			SetCommand (this(), "Follow", objplant);
-			flowerObj = objplant;
-			return 1;
-		}
+	var objplant = FindObject2(
+		Find_Distance(30), 
+		Find_Func("GetVegetationIsFlower"), 
+		Find_Category(C4D_SelectVegetation()),
+		Find_Exclude(flowerObj)
+	);
+	if (objplant) {
+		SetCommand(this(), "Follow", objplant);
+		flowerObj = objplant;
+		return 1;
 	}
 	return 0;
 }
 
 func ContinueExecuteFeed() {
-
 	if (!flowerObj) return 0;
 	
 	if (GetAction() == "Sit") {
-		if (!Random(5)) {
+		if (!Random(4)) {
 			SetAction("Feeding");
 		}
 		feedCooldown++;
 		
-		if (feedCooldown > 4 && !Random(4)) {
+		if (feedCooldown > 5 && !Random(5)) {
 			return 0;
 		}
 	}
@@ -99,9 +125,17 @@ func ContinueExecuteFeed() {
 		return 0;
 	}
 	
-	if (!Random(100)) {
-		return 0;
+	/* Stuck in one spot prevention */
+	if (stuckX == GetX() && stuckY == GetY()) {
+		if (stuckTimer++ > 3) {
+			stuckTimer = 0;
+			SetCommand(this(), "None");
+			return 0;
+		}
 	}
+	stuckX = GetX();
+	stuckY = GetY();
+
 	
 	return 1;
 }
@@ -136,8 +170,14 @@ func ContinueExecuteFly() {
 	if (!GetCommand() || (GetCommand() != "MoveTo" && GetCommand() != "Follow") || (GetCommand() == "Follow" && GetCommand(this, 1) == flowerObj)) {
 		SetCommand(this(), "None");
 		if (Random(2)) {
-			for (var objplant in FindObjects(Find_Distance(300), Sort_Distance(), Find_Category(C4D_SelectVegetation()))) {
-				if (objplant->~GetVegetationIsFlower() && Random(2) && objplant != flowerObj) {
+			for (var objplant in FindObjects(
+				Find_Distance(300), 
+				Sort_Distance(), 
+				Find_Category(C4D_SelectVegetation()), 
+				Find_Func("GetVegetationIsFlower"),
+				Find_Exclude(flowerObj)
+			)) {
+				if (Random(2)) {
 					SetCommand (this(), "MoveTo", objplant);
 				}
 			}
@@ -150,6 +190,7 @@ func ContinueExecuteFly() {
 		}
 	}
 	
+	/* Stuck in one spot prevention */
 	if (stuckX == GetX() && stuckY == GetY()) {
 		if (stuckTimer++ > 3) {
 			stuckTimer = 0;
@@ -164,59 +205,14 @@ func ContinueExecuteFly() {
 }
 
 
-// Initialisierung
-protected func Initialize() {
-	if (!Random(3)) {
-		SetGraphics("Charaxes");
-	}
-	SetAction("Fly");
-	Activity();
-	return;
-}
-
-// TimerCall
-protected func Activity() {
-	if (activity) {
-		if (!ObjectCall(this(), Format("ContinueExecute%s", activity))) {
-			activity = 0;
-		}
-	}
-	
-	for (strActivity in GetActivities()) {
-		//Activities are sorted by priority. So if a higher priority activity is running, do not check on others
-		if (activity == strActivity) break;
-		
-		if (ObjectCall(this(), Format("ShouldExecute%s", strActivity))) {
-			activity = strActivity;
-			break;
-		}
-	}
-	return;
-}
   
 protected func Death() {
 	FadeOut();
 }
 
-
-
-
-func ContactLeft() {
-	Contact();
-}
-func ContactBottom() {
-	Contact();
-}
-func ContactTop() {
-	Contact();
-}
-func ContactRight() {
-	Contact();
-}
-func Contact() {
+func Contact(direction) {
 	if (activity == "Glide") {
 		activity = "Fly";
 		ShouldExecuteFly();
 	}
 }
-

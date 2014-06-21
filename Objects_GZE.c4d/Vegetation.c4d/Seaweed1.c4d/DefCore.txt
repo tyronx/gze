@@ -3,7 +3,7 @@ id=SWD1
 Version=4,9,8
 Name=Seaweed
 Category=C4D_Vehicle|C4D_SelectVegetation
-MaxUserSelect=10
+MaxUserSelect=30
 TimerCall=CheckEnvironment
 Width=16
 Height=20
@@ -17,3 +17,8 @@ Components=SWD1=1
 Picture=0,0,16,20
 Placement=1
 Chop=1
+StretchGrowth=1
+IncompleteActivity=1
+Oversize=1
+ColorByOwner=1
+AllowPictureStack=APS_Color
