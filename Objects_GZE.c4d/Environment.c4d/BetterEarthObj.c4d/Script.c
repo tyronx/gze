@@ -42,7 +42,7 @@ public func RemoveEnginePlacedEarthObj() {
 	}
 }
 
-/* Places the whole Vegetation again with the help of global fund PlaceVegetation2 */
+/* Places the whole Vegetation again with the help of global function PlaceObjects2 */
 public func PlaceEarthObjects() {
 	var idx = 0;
 	var objid, relativequantity;
@@ -64,7 +64,7 @@ public func PlaceEarthObjects() {
 		var objbalance = DefinitionCall(objid, "GetEarthObjPlacementBalance");
 		if (!objbalance) objbalance = 100;
 		
-		// (  Plant-Specific Multiplicater  *  types of plants  *  Global Multiplicator) / total sum of all selected obj
+		// (  EarthObj-Specific Multiplicater  *  types of plants  *  Global Multiplicator) / total sum of all selected obj
 		var quantity =  (objbalance * quantitytypes * InEarthObjectsMultiplier() * relativequantity) / (100*totalquantity); 
 		
 		

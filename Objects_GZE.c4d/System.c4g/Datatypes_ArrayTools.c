@@ -1,5 +1,6 @@
 #strict 2
 
+// Searches for given element and returns the elements position in the array. Returns -1 if not found.
 global func ArrayIndexOf(array &arr, elem1) {
 	var type = GetType(elem1);
 	var idx = 0;
@@ -42,12 +43,13 @@ global func ArraySlice(array &arr, int index) {
 	return val;
 }
 
+// Insert and element into an array at given position
 global func ArrayInsert(array &arr, elem, int index) {
 	SetLength(arr, GetLength(arr)+1);
-	var i = index;
-	var len = GetLength(arr);
-	while (i++ < len) {
-		arr[i+1] = arr[i];
+	var i = GetLength(arr)-1;
+	while (i > index) {
+		arr[i] = arr[i-1];
+		i--;
 	}
 	arr[index] = elem;
 }
