@@ -3,7 +3,8 @@
 #strict
 
 func Initialize() {
-	ScheduleCall(this(), "LateInitialize", 1);
+	// Init after 2 Frames because after 1 Frame the BetterAnimals Env Object does its Magic
+	ScheduleCall(this(), "LateInitialize", 2);
 }
 
 func LateInitialize() {

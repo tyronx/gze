@@ -1,4 +1,8 @@
 /* A.I. Task based Control */
+
+// TODO:
+// - AIBase improvements: Activity Callbacks on Contact and ContainedLeft/Right/etc.
+
 #strict 2
 
 local activity;

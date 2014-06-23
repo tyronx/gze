@@ -64,7 +64,6 @@ func RemoveAmbient(string name) {
 
 
 func FxAmbientTimer() {
-	//Log("ambient check");
 	checkPlayerCount();
 	updatePlayerStati();
 	playAmbient();
@@ -89,12 +88,10 @@ func updatePlayerStati() {
 	
 	while (clonk = GetCursor(plr++)) {
 		playerid = GetPlayerByIndex(GetOwner(clonk));
-		//Log("%v", enviromentconditions);
 		
 		for (envnum = 0; envnum < GetLength(enviromentconditions); envnum++) {
-			//Log("%d %d", envnum, GetLength(enviromentconditions));
 			found = 1;
-			//Log("envnum %d", envnum);
+
 			for (var prop in enviromentconditions[envnum]) {
 				var tmp = ExplodeString("_", prop);
 				type = tmp[0];
@@ -118,7 +115,6 @@ func updatePlayerStati() {
 				}
 				
 				if (type == "inMat") {
-					//Log("%s %s", MaterialName(GetMaterial(clonk->GetX(), clonk->GetY())), target);
 					found = found && GetMaterial(clonk->GetX(), clonk->GetY()) == Material(target);
 				}
 				
@@ -168,7 +164,6 @@ func updatePlayerProp(playerid, envnum, increase) {
 private func playAmbient() {
 	var lastplayerid = GetPlayerByIndex(GetPlayerCount(C4PT_User)-1, C4PT_User);
 	var plrnum = 0;
-	//Log("%v", Local(plrid));
 	
 	for (var plrid = 0; plrid <= lastplayerid; plrid++) {
 		if (Local(plrid)) {
@@ -183,13 +178,6 @@ private func playAmbient() {
 			plrnum++;
 		}
 	}
-	
-	/*if (IsNight()) {
-		if (!Random(20)) Sound("Cicada*",1);
-		if (!Random(30)) Sound("Owl", 1);
-	} else {
-		if (!Random(8)) Sound("BirdSong*",1);
-	}*/
 }
 
 private func playSound(sound, ambid, plrid, plrnum, volume, loop) {
@@ -240,8 +228,7 @@ private func playSound(sound, ambid, plrid, plrnum, volume, loop) {
 	}
 }
 
-//Sound("WaterCave", true, this(), 100, 1, 0, -1)
-//Sound("WaterCave", true, this(), 100, 1, 0, -1)
+
 private func stopSound(ambid, plrid, plrnum) {
 	if (Local(plrid)[1][ambid]) {
 		//Log("sound %v stopped for player %d (%v)", sounds[ambid], plrnum+1, Local(plrid)[1][ambid]);
