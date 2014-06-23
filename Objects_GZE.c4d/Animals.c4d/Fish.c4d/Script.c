@@ -44,12 +44,13 @@ func ShouldExecuteFleeing() {
 		Find_Distance(200),
 		Find_Category(C4D_Living | C4D_Object | C4D_Vehicle | C4D_Structure),
 		Find_Not(Find_Category(C4D_Background | C4D_Parallax)), 
-		Find_Not(Find_ID(FXU1)), // Air bubble
 		Find_Or(Find_Func("IsClonk"), Find_Not(Find_OCF(OCF_Alive))), // Only avoid clonks or inanimate objects
 		Find_NoContainer(),  // Not conatined
 		Find_OCF(OCF_InLiquid), // In water
 		Sort_Distance()
 	)) {
+		// Don't escape small objects up to 3x3 (e.g. air bubble)
+		if (GetDefWidth(GetID(threat)) + GetDefHeight(GetID(threat)) < 10) continue;
 		// Bedrohung bewegt sich nicht?
 		if (Abs(GetXDir(threat)) + Abs(GetYDir(threat)) < 4 && GetAction(threat) != "Swim") continue;
 		// Kontakt zum Boden?
