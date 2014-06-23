@@ -114,7 +114,6 @@ global func PlaceAnimals2(id objectid, int quantity, array rect, int placement, 
 			// We got the right liquid for liquid placement
 			valid = valid || (placement == 1 && ((placementmat>=0 && materialatpos == placementmat) || (placementmat==-1 && GBackLiquid(rndx, rndy))));
 			
-			//Log("%d %d", placement, materialatpos);
 			if (valid) {
 				// Search upwards/downwards again to see how much free vertical space we have
 				var rndy_spacecheck = rndy, testverticalspace = minverticalspace;
@@ -136,8 +135,6 @@ global func PlaceAnimals2(id objectid, int quantity, array rect, int placement, 
 					if (havecons) {
 						pAnimal->SetCon(BoundBy(RandomX(cons[0], cons[1]), 1, 100));
 					}
-					//Log("%v %d %d", obj, rndx, rndy);
-					//obj->~PlacedByScript();
 					quantity--;
 					placed++;
 				}

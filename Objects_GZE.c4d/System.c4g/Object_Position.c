@@ -13,11 +13,6 @@ global func SetR2(int iR, int iX, int iY, object pObj) {
 	
 	SetPosition(GetX(pObj)+dx+iX, GetY(pObj)+dy+iY,pObj);
 }
-/*
-	var wdt = GetDefWidth(GetID(pObj));
-	var hgt = GetDefHeight(GetID(pObj));
-*/
-
 
 global func GetFloorY(object pObj) {
 	return GetY(pObj) + (GetCon(pObj)*GetDefHeight(GetID(pObj)))/200;

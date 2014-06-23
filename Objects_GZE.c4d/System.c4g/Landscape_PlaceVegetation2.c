@@ -31,7 +31,6 @@ global func GetMatSoil(iMaterial) {
  * - Places 20 hanging vines inside underground water sources
  */
 global func PlaceVegetation2(id objectid, int quantity, array rect, int materialsoil, bool underground, int liquid, bool hanging, array cons, array autorotates) {
-	//Log("PlaceVegetation2 called for objid %v", objectid);
 	var yDirection = -1;
 	if (hanging) yDirection = 1;
 	
@@ -69,33 +68,26 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 		rndy_diff = vegetationRootDepth;
 		realy_diff = GetDefHeight(objectid) / 2;
 	}
-	//Log("PlaceVegetation2 start loop with x,y,wdt,hgt,ydir: %d,%d,%d,%d,%d", x, y, wdt, hgt, yDirection);
+
 	while (quantity > 0 && attempts++ < 50000) {
 		rndx = x + Random(wdt);
 		rndy = y + Random(hgt);
 		
-	//	if (attempts % 10000 == 0) Log("attempts %d", attempts);
 		
 		// Okay, we found the correct material, lets try place it somewhere below that material if free
 		if (isMaterialSoil(rndx, rndy, materialsoil)) {
 			// Search upwards/downwards for free area
 			valid = 0; 
 			
-			//var testi = 0;
 			while (isMaterialSoil(rndx, rndy, materialsoil) && rndy < y+hgt && rndy > y)  {
 				rndy+= yDirection;
-				/*if (testi++ > 5000) {
-					Log("odd errror, loop seems infinite. Vars are rndy: %d, y: %d, hgt: %d, ydir: %d",rndy,y,hgt,yDirection);
-					return;
-				}*/
 				
 				if (GetMaterial(rndx, rndy) == freemat) {
 					valid = 1;
 					break;
 				}
-				
-
 			}
+			
 			// Has to be either in liquid or free of liquid
 			valid = valid && ((liquid && GBackLiquid(rndx, rndy)) || (!liquid && !GBackLiquid(rndx, rndy)));
 			
@@ -103,15 +95,9 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 				// Search upwards/downwards again to see how much free vertical space we have
 				var rndy_spacecheck = rndy, testverticalspace = minverticalspace;
 				
-				//var testi = 0;
 				while (GetMaterial(rndx, rndy_spacecheck) == freemat && testverticalspace > 0) {
 					rndy_spacecheck+= yDirection;
 					testverticalspace--;
-					
-					/*if (testi++ > 5000) {
-						Log("odd errror, loop seems infinite. Vars are rndy: %d, y: %d, hgt: %d, ydir: %d",rndy,y,hgt,yDirection);
-						return;
-					}*/
 				}
 				
 				// Ok, enough vertical space
@@ -139,7 +125,7 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 								obj->SetR2(BoundBy((Angle(-2, lefty, 2, righty)-90)/4, autorotates[0], autorotates[1]), 0, bot_dy - vegetationRootDepth);
 							}
 						}
-						//obj->~PlacedByScript();
+
 						quantity--;
 						placed++;
 					}
