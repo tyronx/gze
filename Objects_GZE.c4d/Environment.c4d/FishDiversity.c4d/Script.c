@@ -24,7 +24,7 @@ func LateInitialize() {
 	
 	while (types-- > 0) {
 		ArrayPush(fishColor, HSL(Random(256),255,100+Random(60)));
-		ArrayPush(fishSize, Min(100, RandomX(40, 120)));
+		ArrayPush(fishSize, Min(100, RandomX(40, 110)));
 		ArrayPush(schooling, Random(2));
 	}
 	

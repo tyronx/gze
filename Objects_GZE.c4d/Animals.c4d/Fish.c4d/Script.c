@@ -30,7 +30,39 @@ func Initialize() {
 
 func ActivityInit() { 
 	fullness = RandomX(0, 50);
-	AddActivities(["Fleeing", "Sleep", "Feed", "Swim"]);
+	AddActivities(["SeekWater", "Fleeing", "Sleep", "Feed", "Swim"]);
+}
+
+func ShouldExecuteSeekWater() {
+	var attempts = 0;
+	var posx, posy, bestdistance = -1;
+
+	while (!InLiquid() && attempts++ < 10) {
+		var x = RandomX(20, 200) * (Random(2)*2-1);
+		var y = RandomX(20, 200) * (Random(2)*2-1);
+		var distance = Distance(GetX()+x, GetY()+y, GetX(), GetY());
+		
+		if (GBackLiquid(x,y) && (bestdistance == -1 || distance < bestdistance)) {
+			posx = x;
+			posy = y;
+			bestdistance = distance;
+		}
+
+	}
+	
+	if (bestdistance != -1) {
+		SetCommand(this, "MoveTo", 0, GetX() + posx, GetY() + posy);
+	}
+	
+	return 0;
+}
+
+func ContinueExecuteSeekWater() {
+	if (InLiquid() || gotStuck()) {
+		SetCommand(this, "None");
+		return 0;
+	}
+	return 1;
 }
 
 func ShouldExecuteFleeing() {
@@ -162,7 +194,7 @@ func ContinueExecuteSchooling() {
 func buildSchool() {
 	for (var pFish in FindObjects(Find_Exclude(this), Find_ID(FISH), Find_Distance(300), Sort_Distance())) {
 		if (Local(0) == pFish->Local(0) && LocalN("activity", pFish) != "Schooling") {
-			if (ObjectDistance(pFish) > 15) {
+			if (ObjectDistance(pFish) > 20 - 10 * (100-GetCon())) {
 				SetCommand(
 					this,
 					"MoveTo", 
@@ -226,16 +258,28 @@ func ShouldExecuteSwim() {
 
 func ContinueExecuteSwim() {
 	if (!GetCommand()) {
-		// Don't Scratch the Lake surface
+		var x = RandomX(0, LandscapeWidth());
+		var y = GetY() + RandomX(-LandscapeHeight()/10, LandscapeHeight()/10);
+		
+		// If at Lake surface, swim a bit downwards
 		if (GetMaterial(0,-2) == -1) {
-			SetCommand(this, "MoveTo", 0, RandomX(0, LandscapeWidth()), GetY() + RandomX(3, LandscapeHeight()/10), 0, 1);
-		} else {
-			SetCommand(this, "MoveTo", 0, RandomX(0, LandscapeWidth()), GetY() + RandomX(-LandscapeHeight()/10, LandscapeHeight()/10), 0, 1);
+			y = GetY() + RandomX(3, LandscapeHeight()/10);
 		}
+		// If nearby left border, swim right 
+		if (GBackSolid(-5, 0) && !GBackSolid(5, 0)) {
+			x = GetX() + Random(LandscapeWidth());
+		}
+		// If nearby right border, swim left 
+		if (GBackSolid(5, 0) && !GBackSolid(-5, 0)) {
+			x = GetX() - Random(LandscapeWidth());
+		}
+		
+		SetCommand(this, "MoveTo", 0, x, y, 0, 1);
 	}
 	
+	// When close to the lake border and swam at least 2 sconds, then find a new spot to swim to
 	if ((GBackSolid(10, -5)  || GBackSolid(-10, -5) || GBackSolid(10, 5)  || GBackSolid(-10, 5)) && swimmingTimer > 1) return 0;
-
+	// Don't Scratch the Lake surface
 	if (GetMaterial(0,-2) == -1 && GetCommand(this, 3) < GetY()) {
 		return 0;
 	}
