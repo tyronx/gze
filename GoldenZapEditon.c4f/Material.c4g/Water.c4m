@@ -1,7 +1,7 @@
 [Material]
 Name=Water
 Color=7,35,140,7,35,140,7,35,140
-Alpha=80,80,80,0,0,0
+Alpha=60,60,60,0,0,0
 ColorAnimation=1
 Density=25
 Instable=1

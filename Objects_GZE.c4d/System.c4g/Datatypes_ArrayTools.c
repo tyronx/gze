@@ -90,8 +90,10 @@ global func ImplodeArray(string concatenator, array parts) {
 	var str = "", i=0;
 	
 	for (var part in parts) {
+		if (i++ > 0) {
+			str = Format("%s%s", str, concatenator);
+		}
 		str = Format("%s%s", str, part);
-		if (i++ > 0) str = Format("%s%s", str, concatenator);
 	}
 	return str;
 }

@@ -9,12 +9,12 @@ func Initialize() {
 	PlaceObjects2(LOAM, 100, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Loam"));
 	PlaceObjects2(ORE1, 150, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Ore"));
 
-	ScriptGo(1);
+	//ScriptGo(1);
 	
 	return(1);
 }
 
-func Script1() {
+/*func Script1() {
 	if (IsNight() && LocalN("currentplaylist", FindObject(MUMA)) == "peaceful") {
 		FindObject(MUMA)->SetPlaylist(Format("peaceful-nightloop%d", Random(2)+1));
 	}
@@ -24,7 +24,7 @@ func Script1() {
 }
 func Script2() {
 	goto(1);
-}
+}*/
 
 func InitializePlayer(player) {
 	var x = 20 + Random(LandscapeWidth() - 40);
