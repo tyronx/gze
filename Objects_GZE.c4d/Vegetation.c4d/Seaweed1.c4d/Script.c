@@ -3,14 +3,27 @@
 #strict 2
 #include TREE
 
+// The deeper the Seagrass, the less green it becomes
 func Construction() {
-	var dwRGB = HSL(RandomX(38,80),RandomX(150,180),RandomX(120,150));
+	var y = 0;
+	// Why is this happening?
+	if (GetCon() == 0) SetCon(100);
+	
+	while (GetMaterial(0, y) != -1 && y > -300) {
+		y -= 30;
+	}
+	
+	var dwRGB = HSL(
+		BoundBy(80 + (3*y)/10, 35, 80), 
+		BoundBy(180 + y/10, 150, 180),
+		BoundBy(150 + y/10, 120, 150)
+	);
+	
 	SetColorDw(dwRGB);
-
 }
 
 protected func CheckEnvironment() {
-	if (!Random(12 + (100-GetCon())/2)) {
+	if (!Random(17 + (100-GetCon())/2)) {
 		CreateObject(FXU1, 0, -3, -1);
 	}
 	if (GBackLiquid() && GetAction() == "Dry") {

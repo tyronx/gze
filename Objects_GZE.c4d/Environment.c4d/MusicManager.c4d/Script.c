@@ -31,12 +31,20 @@ func Initialize() {
 	
 	AddDefaultPlaylists();
 	
+	if (GameCall("MusicTheme")) {
+		SetPlaylist(GameCall("MusicTheme"));
+		RemoveObject();
+		return;
+	}
+	
 	// First trigger to be added = lowest priority
 	// Last added trigger = highest priority
 	// Music with higher priority stops music with lower priority
 	AddTrigger("peaceful", ["IsNight_0"], 100, 0, 0);
 	AddTrigger("peacefulnightloops", ["IsNight_1"], 100, 0, 1);
 	AddTrigger("hell", ["nearbyMat_DuroLava", "minPosY_85"], 100, 0, 0);
+	
+	
 	
 	AddEffect("Detect", this, 1, 40, this);
 }
@@ -103,7 +111,12 @@ func RemoveTrigger(string name) {
 	}
 }
 
-
+// Plays a playlist, overridding completely all triggers
+func SetPlaylist(name) {
+	var index = ArrayIndexOf(playlistnames, name);
+	var playlist = playlists[index];
+	SetPlayList(ImplodeArray(";", playlist));
+}
 
 func CreatePlaylist(playlistname, songs) {
 	if (!songs) songs = [];
@@ -304,6 +317,8 @@ func setPlayListForPlayer(plrnum, playlist) {
 		SetPlayList(playlist);
 	}
 }
+
+
 
 /*
 func SetShuffle(mode) {

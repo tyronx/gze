@@ -8,8 +8,8 @@ func Initialize() {
 	return(1);
 }
 
-func Script1() {
-	FindObject(MUMA)->SetPlaylist("hell");
+func MusicTheme() {
+	return "hell";
 }
 
 func InitializePlayer(player) {
