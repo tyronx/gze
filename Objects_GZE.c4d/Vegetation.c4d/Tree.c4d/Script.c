@@ -6,14 +6,17 @@ local MotionThreshold;
 local MotionOffset;
 // Chopdown time now based by amount of chops applied to tree
 local chops;
+local zapNest;
 
 /* Überladbare Konstanten */
 
-private func ReproductionAreaSize() { return 400; } // Größe des Bereichs, in dem neue Bäume dieser Art entstehen können
-private func ReproductionRate()     { return 500; } // Die Chance, dass in einem Timerintervall eine Vermehrung stattfindet
-private func MaxTreeCount()         { return 40; } // Maximale Baumanzahl im Umkreis
-
-private func TreeStrength() { return 150; } // Dicke des Stammes
+func ReproductionAreaSize() { return 400; } // Größe des Bereichs, in dem neue Bäume dieser Art entstehen können
+func ReproductionRate()     { return 500; } // Die Chance, dass in einem Timerintervall eine Vermehrung stattfindet
+func MaxTreeCount()         { return 40; } // Maximale Baumanzahl im Umkreis
+func TreeStrength() { return 150; } // Dicke des Stammes
+func CanHouseZapNest() { return 0; }
+func CreateZapNestVertex() { return 0; }
+func ZapNestVertexAttach() { return 4; }
 
 public func GetVegetationSoil() { 
 	// Failsafe in case grass material is not available
@@ -32,50 +35,68 @@ public func GetVegetationCons() { return [5, 200]; }
 /* Initialisierung */
 
 protected func Construction() {
-  // Bewegungsschwelle
-  MotionThreshold = Random(10);
-  // Aktionszeitoffset
-  MotionOffset = Random(GetActMapVal("Length", "Breeze"));
-  // Verzögerte Initialisierung: Schlägt SetAction fehl, ist es ein alter Baum ohne Animation. Motion-Variablen werden ignoriert.
-  if (SetAction("Initialize"))
-    {
-    // Ausrichtung
-    SetDir(Random(2));
-    }
-  return 0;
+	// Bewegungsschwelle
+	MotionThreshold = Random(10);
+	// Aktionszeitoffset
+	MotionOffset = Random(GetActMapVal("Length", "Breeze"));
+	// Verzögerte Initialisierung: Schlägt SetAction fehl, ist es ein alter Baum ohne Animation. Motion-Variablen werden ignoriert.
+	if (SetAction("Initialize")) {
+		// Ausrichtung
+		SetDir(Random(2));
+	}
+	if (CanHouseZapNest()) {
+		ScheduleCall(this(), "PutZapnest", 2);
+		
+	}
+	return 0;
 }
-  
+	
 private func Initializing() {
-  // Bis zum Aktionszeitoffset gewartet: los geht's
-  if (GetPhase() == MotionOffset) 
-    SetAction("Still");
-  // Noch warten
-  return 1;  
+	// Bis zum Aktionszeitoffset gewartet: los geht's
+	if (GetPhase() == MotionOffset) {
+		SetAction("Still");
+	}
+	// Noch warten
+	return 1;  
+}
+
+
+public func PutZapnest() {
+	if (GetCon() != 100 || GetR() != 0) return(0);
+	
+	if (!Random(10) && GetCon()>50 && !FindObject2(Find_ID(ZAPT), Find_InRect(-40,-40,80,80))) {
+		zapNest = CreateObject(ZAPT);
+		
+		CreateZapNestVertex();
+
+		zapNest->SetAction("HangOnTree", this());
+		zapNest->SetActionData(ZapNestVertexAttach());
+	}
 }
 
 /* Bewegung (Wind) */  
-  
+	
 private func Still() {
-  if (Abs(GetWind()) > 49 + MotionThreshold) SetAction("Breeze");
+	if (Abs(GetWind()) > 49 + MotionThreshold) SetAction("Breeze");
 }
-    
+		
 private func Breeze() {
-  if (Abs(GetWind()) < 50 + MotionThreshold) SetAction("Still");
+	if (Abs(GetWind()) < 50 + MotionThreshold) SetAction("Still");
 }
 
-   
+	 
 /* Kontext */
 
 public func ContextChop(pClonk) {
-  [$TxtChop$|Image=CXCP|Condition=IsStanding]
-  AddCommand(pClonk, "Chop", this());
-  return 1;
+	[$TxtChop$|Image=CXCP|Condition=IsStanding]
+	AddCommand(pClonk, "Chop", this());
+	return 1;
 }
 
 /* Fortpflanzung */
 
 private func Seed() {
-  return 0;
+	return 0;
 }
 
 public func Reproduction() {
@@ -89,7 +110,7 @@ public func Reproduction() {
 	// Kein Platz ;'(
 	return 0;
 }
-    
+		
 /* Schaden */    
 
 protected func Damage() {
@@ -106,6 +127,10 @@ protected func Damage() {
 }
 
 public func ChopDown() {
+	if (zapNest) {
+		zapNest->SetAction("Idle");
+	}
+	
 	ScheduleCall(this(), "TurnToWood", 60);
 	// Bereits gefällt
 	if (!IsStanding()) return 0;
@@ -113,7 +138,7 @@ public func ChopDown() {
 	SetAction("Idle");
 	SetCategory(C4D_Vehicle);
 	// Aus der Erde lösen
-	while (Stuck() && (++Var(0) < 6))
+	while (Stuck() && (++Var(0) < 6)) {}
 	SetPosition(GetX(), GetY() - 1, this());
 	// Umfallen
 	SetRDir(+10); if (Random(2)) SetRDir(-10);
