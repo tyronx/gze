@@ -29,7 +29,7 @@ private func ControlElevator(string szCommand, object pObject)
   // Objekte an dieser Position überprüfen
   while (pElev = FindObject(0, +1,+1,0,0, OCF_Grab, 0,0, NoContainer(), pElev))
     // Im Fahrstuhlkorb
-    if(pElev->~IsElevator())
+    if(pElev->~IsElevator()  || pElev->~IsVehicleHolder())
       // Steuerung an Fahrstuhl weiterleiten
       return(ObjectCall(pElev,szCommand,pObject));
   return(0);

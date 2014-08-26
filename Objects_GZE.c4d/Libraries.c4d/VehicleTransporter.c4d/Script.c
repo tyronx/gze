@@ -28,10 +28,11 @@ func FxActivityTimer() {
 
 
 func GrabVehicles() {
+	var grabarea = VehicleGrabArea(), holdarea = VehicleHoldingArea();
 	// Find Vehicles in the Grab Area but outside the holding area, push these into the holding area
 	for (var pVehicle in FindObjects(
-		Find_InRect2(VehicleGrabArea()),
-		Find_Not(Find_InRect2(VehicleHoldingArea())),
+		Find_InRect(grabarea[0], grabarea[1], grabarea[2], grabarea[3]),
+		Find_Not(Find_InRect(holdarea[0], holdarea[1], holdarea[2], holdarea[3])),
 		Find_Category(C4D_Vehicle),
 		Find_OCF(OCF_Grab),
 		Find_NoContainer(),
@@ -69,25 +70,25 @@ func GrabVehicle(obj) {
 	var holdingarea = VehicleHoldingArea();
 	var holdingareabounds = [GetX() + holdingarea[0], GetY() + holdingarea[1], GetX() + holdingarea[0] + holdingarea[2], GetY() + holdingarea[1] + holdingarea[3]];
 	
-	var offsetx = BoundBy(
-		GetX(obj), 
+	var x = GetX(); /*BoundBy(
+		GetX(obj) - GetX(), 
 		// todo: replace GetObjWidth() with outermost vertex positions
 		holdingareabounds[0] + GetObjWidth(obj)/2,		// most left possible
 		holdingareabounds[2] - GetObjWidth(obj)/2			// most right possible
-	);
-	var offsety = (GetObjHeight(this()) - GetObjHeight(obj)) / 2 - 1;
+	);*/
+	var y = GetY() + (GetObjHeight(this()) - GetObjHeight(obj)) / 2 - 1;
 	
 	obj->SetSpeed(0, GetYDir() / 20); 
 	obj->SetRDir(0);
 	obj->SetR(0);
-	obj->SetPosition(GetX() + offsetx, GetY() + offsety);
+	obj->SetPosition(x, y);
 }
 
 
 func ChangeClonkGrabs() {
-	var clonk;
+	var clonk, area = VehicleHoldingArea();
 	
-	for (var pClonk in FindObjects(Find_InRect2(VehicleHoldingArea()), Find_OCF(OCF_Living | OCF_NotContained), Find_Action("Push"))) {
+	for (var pClonk in FindObjects(Find_InRect(area[0], area[1], area[2], area[3]), Find_OCF(OCF_Living | OCF_NotContained), Find_Action("Push"))) {
 		var target = GetActionTarget(0, pClonk);
 		
 		// Do we got a clonk nearby, grabbing a transportable vehicle?
@@ -121,7 +122,7 @@ func IsClonkIdle(pClonk) {
 
 func IsVehicleNearby(pVehicle) {
 	return
-		IsOnlyInGrabArea(pVehicle)
+		IsInHoldingArea(pVehicle)
 		&& Inside(GetXDir(pVehicle), -2, +2)
 		&& FitsInTransporter(pVehicle);
 }
@@ -129,8 +130,8 @@ func IsVehicleNearby(pVehicle) {
 // Also checks if the path between middle of obj to the middle of the grabbing area is free
 func IsInArea(pObj, rect) {
 	return 
-		Inside(GetX(pObj), rect[0], rect[0] + rect[2])
-		&& Inside(GetX(pObj), rect[1], rect[1] + rect[3])
+		Inside(GetX(pObj)-GetX(), rect[0], rect[0] + rect[2])
+		&& Inside(GetY(pObj)-GetY(), rect[1], rect[1] + rect[3])
 		&& PathFree(GetX() + rect[0] + rect[2]/2, GetY() + rect[1] + rect[3] / 2, GetX(pObj), GetY(pObj));
 }
 func IsInHoldingArea(pObj) {
@@ -153,6 +154,8 @@ func ControlDown(pObj) { return Control("ControlDown", pObj); }
 func ControlDig(pObj) { return Control("ControlDig", pObj); }
 func ControlDigDouble(pObj) { return Control("ControlDigDouble", pObj); }
 func ControlThrow(pObj) { return Control("ControlThrow", pObj); }
+func ControlDownSingle(pObj) { return Control("ControlDownSingle", pObj); }
+
 
 func Control(type, pObj) {
 	if (CanRelayControl(type, pObj)) {
@@ -163,11 +166,13 @@ func Control(type, pObj) {
 
 
 func HeldVehicles(vehicle) {
+	var area = VehicleHoldingArea();
 	return FindObjects(
-		Find_InRect2(VehicleHoldingArea()), 
+		Find_InRect(area[0], area[1], area[2], area[3]), 
 		Find_OCF(OCF_Grab), 
 		Find_NoContainer(), 
-		Find_Category(C4D_Vehicle)
+		Find_Category(C4D_Vehicle),
+		Find_Not(Find_ID(GetID()))
 	);
 }
 
@@ -186,6 +191,7 @@ func RelayControl(controltype, pClonk, silent) {
 		var getput = GetDefGrabPutGet(GetID(vehicle));
 		// Kommando per Script überladen?
 		if (PrivateCall(vehicle, controltype, pClonk)) return true;
+		
 		// Will etwas aus dem Fahrzeug rausnehmen?
 		if (ContentsCount(0, pClonk) == 0 && getput & 2)  {
 			SetCommand(pClonk, "Get", vehicle, 0,0, 0, 1);
@@ -194,7 +200,7 @@ func RelayControl(controltype, pClonk, silent) {
 			if (getput & 1)  {
 				SetCommand(pClonk, "Put", vehicle);
 				AppendCommand(pClonk, "Grab", this());
-			}      
+			}
 		}
 
 		return 1;

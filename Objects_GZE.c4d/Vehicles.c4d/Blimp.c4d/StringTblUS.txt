@@ -2,3 +2,4 @@ TxtAscend=Ascend
 TxtDescend=Descend
 TxtTurnright=Turn right
 TxtTurnleft=Turn left
+TxtPutGet=Put/Get

@@ -1,5 +1,11 @@
 #strict 2
 
+global func InsideRect(array pos, array rect) {
+	return 
+		Inside(pos[0], rect[0], rect[0] + rect[2]) 
+		&& Inside(pos[1], rect[1], rect[1] + rect[3]);
+}
+
 global func MovePosition(int x, int y, object pObj) {
 	SetPosition(GetX(pObj) + x, GetY(pObj) + y, pObj);
 }
