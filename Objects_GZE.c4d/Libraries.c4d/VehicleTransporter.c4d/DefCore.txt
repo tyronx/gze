@@ -1,0 +1,6 @@
+[DefCore]
+id=VETR
+Version=4,9,8
+Name=Vehicle Transporter
+Category=C4D_StaticBack
+Picture=0,0,24,26

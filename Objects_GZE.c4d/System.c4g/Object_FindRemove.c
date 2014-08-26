@@ -9,3 +9,11 @@ global func RemoveObjects() {
 	}
 	return cnt;
 }
+
+
+global func Find_InRect2(rect) { 
+	return [C4FO_Func, "Find_InRect2Check", rect]; 
+}
+global func Find_InRect2Check(rect) { 
+	return InsideRect([GetX(), GetY()], rect);
+}
