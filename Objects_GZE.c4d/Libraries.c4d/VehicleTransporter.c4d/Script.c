@@ -2,9 +2,12 @@
 
 #strict 2
 
-// Needs to be relative Coordinates x,y,wdt,hgt  
+// Area from which the Vehicle will be grabbed and placed into the holding area (works like grid snap in photoshop)
+// The Values describe a rectangle with relative x,y position and wdt,hgt
 func VehicleGrabArea() { return [-15, -10, 30, 20]; }
+// Area in which the Vehicle can be held while being transported
 func VehicleHoldingArea() { return [-8,-10,16,30]; }
+// Determines when Control should be relayed onto the transported vehicle. E.g. when Blimp is in idle mode, all commands can be relayed
 func IsVehicleTransporter() { return 1; }
 
 // Example func to determine when to relay clonk controls to the held vehicle
@@ -15,7 +18,7 @@ func CanRelayControl(controltype, pClonk) {
 	return 1; 
 }
 
-
+// Make sure this gets called
 func Initialize() {
 	AddEffect("Activity", this, 1, 1, this);
 }
@@ -32,12 +35,17 @@ func GrabVehicles() {
 	// Find Vehicles in the Grab Area but outside the holding area, push these into the holding area
 	for (var pVehicle in FindObjects(
 		Find_InRect(grabarea[0], grabarea[1], grabarea[2], grabarea[3]),
-		Find_Not(Find_InRect(holdarea[0], holdarea[1], holdarea[2], holdarea[3])),
 		Find_Category(C4D_Vehicle),
 		Find_OCF(OCF_Grab),
 		Find_NoContainer(),
+		Find_Not(Find_ID(GetID()))
 	)) {
-	
+		//Log("%v", GetR(pVehicle));
+		if (
+				InsideRect([GetX(pVehicle)-GetX(), GetY(pVehicle)-GetY()], holdarea) 
+				&& GetR(pVehicle)==0
+		) continue;
+		
 		if (FitsInTransporter(pVehicle)
 			&& Inside(GetXDir(pVehicle, 100), -1, +1)
 			&& !pVehicle->~IsVehicleTransporter()
@@ -67,6 +75,8 @@ func FitsInTransporter(pObject) {
 
 
 func GrabVehicle(obj) {
+	if (Stuck()) return 0;
+	
 	var holdingarea = VehicleHoldingArea();
 	var holdingareabounds = [GetX() + holdingarea[0], GetY() + holdingarea[1], GetX() + holdingarea[0] + holdingarea[2], GetY() + holdingarea[1] + holdingarea[3]];
 	
@@ -76,7 +86,7 @@ func GrabVehicle(obj) {
 		holdingareabounds[0] + GetObjWidth(obj)/2,		// most left possible
 		holdingareabounds[2] - GetObjWidth(obj)/2			// most right possible
 	);*/
-	var y = GetY() + (GetObjHeight(this()) - GetObjHeight(obj)) / 2 - 1;
+	var y = GetY() + holdingarea[1] + holdingarea[3] - GetDefHeight(GetID(obj)) / 2 - 1;
 	
 	obj->SetSpeed(0, GetYDir() / 20); 
 	obj->SetRDir(0);
@@ -180,7 +190,7 @@ func RelayControl(controltype, pClonk, silent) {
 	// Gets first Vehicle
 	var vehicles = HeldVehicles();
 	
-	if (!vehicles) {
+	if (GetLength(vehicles) == 0) {
 		if (!silent) Sound("Click");
 		return 0;
 	}
@@ -206,8 +216,10 @@ func RelayControl(controltype, pClonk, silent) {
 		return 1;
 	}
 
+	
 	if (!PrivateCall(vehicle, controltype, pClonk))  {
 		var comd;
+		
 		if (controltype == "ControlLeft") comd = COMD_Left;
 		if (controltype == "ControlRight") comd = COMD_Right;
 		if (comd) SetComDir(comd, pClonk);
