@@ -96,27 +96,30 @@ func GrabVehicle(obj) {
 
 
 func ChangeClonkGrabs() {
-	var clonk, area = VehicleHoldingArea();
+	var clonk, area = VehicleGrabArea();
 	
 	for (var pClonk in FindObjects(Find_InRect(area[0], area[1], area[2], area[3]), Find_OCF(OCF_Living | OCF_NotContained), Find_Action("Push"))) {
 		var target = GetActionTarget(0, pClonk);
 		
 		// Do we got a clonk nearby, grabbing a transportable vehicle?
-		if (IsClonkIdle(pClonk) && target && !target->~IsVehicleTransporter()) {
+		if (IsClonkIdle(pClonk) && target) {
+			// Grab nearby vehicles
+			if (IsVehicleNearby(target) && !target->~IsVehicleTransporter()) {
+			//	GrabVehicle(target);
+			}
 			
-			// Already grabbing but far out, put Clonk closer to middle
-			if (target == this && Abs(GetX(pClonk) - GetX()) > 8) {
+			// change clonk grabs back to vehicle
+			if (IsInHoldingArea(pClonk) && target != this) {
+				SetCommand(pClonk, "Grab", this());
+				continue;
+			} 
+			// tell clonk to move into grab area
+			if (target == this && IsOnlyInGrabArea(pClonk)) {
 				SetCommand(pClonk, "UnGrab");
 				AppendCommand(pClonk, "MoveTo", 0, BoundBy(clonk->GetX(), GetX()-5, GetX()+5), GetY());
 				AppendCommand(pClonk, "Grab", this);
-				continue;
 			}
 			
-			// Not yet grabbing and Close enough => Grab Elev and Center the Vehicle-To-Be-Transported
-			if (IsVehicleNearby(target)) {
-				GrabVehicle(target);
-				SetCommand(pClonk, "Grab", this());
-			}
 		}
 	}
 }
@@ -134,6 +137,7 @@ func IsVehicleNearby(pVehicle) {
 	return
 		IsInHoldingArea(pVehicle)
 		&& Inside(GetXDir(pVehicle), -2, +2)
+		&& Inside(GetXDir(), -2, +2)
 		&& FitsInTransporter(pVehicle);
 }
 
@@ -200,7 +204,7 @@ func RelayControl(controltype, pClonk, silent) {
 	if (controltype == "ControlThrow")  {
 		var getput = GetDefGrabPutGet(GetID(vehicle));
 		// Kommando per Script überladen?
-		if (PrivateCall(vehicle, controltype, pClonk)) return true;
+		if (PrivateCall(vehicle, controltype, pClonk)) return 1;
 		
 		// Will etwas aus dem Fahrzeug rausnehmen?
 		if (ContentsCount(0, pClonk) == 0 && getput & 2)  {
@@ -219,7 +223,6 @@ func RelayControl(controltype, pClonk, silent) {
 	
 	if (!PrivateCall(vehicle, controltype, pClonk))  {
 		var comd;
-		
 		if (controltype == "ControlLeft") comd = COMD_Left;
 		if (controltype == "ControlRight") comd = COMD_Right;
 		if (comd) SetComDir(comd, pClonk);

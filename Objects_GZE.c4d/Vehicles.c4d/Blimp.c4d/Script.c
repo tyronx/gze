@@ -224,11 +224,8 @@ protected func ControlRight(object controller) {      // rechts
 		SetAction("FloatPropel");
 		DoDirection(COMD_Right);
 		}
-	 } else {
-		return 1;
-	}
-	return 0;
-
+	} 
+	return 1;
 }
 
 protected func ControlLeft(object controller) {       // links
@@ -243,10 +240,8 @@ protected func ControlLeft(object controller) {       // links
 		SetAction("FloatPropel");
 		DoDirection(COMD_Left);
 		}
-	} else {
-		return 1;
-	}
-	return 0;
+	} 
+	return 1;
 }
 
 protected func ControlCommand(string szCommand,object pTarget,int iX,int iY) {
