@@ -45,7 +45,7 @@ func GrabVehicles() {
 				InsideRect([GetX(pVehicle)-GetX(), GetY(pVehicle)-GetY()], holdarea) 
 				&& GetR(pVehicle)==0
 		) continue;
-		
+			
 		if (FitsInTransporter(pVehicle)
 			&& Inside(GetXDir(pVehicle, 100), -1, +1)
 			&& !pVehicle->~IsVehicleTransporter()
@@ -58,19 +58,11 @@ func GrabVehicles() {
 }
 
 func FitsInTransporter(pObject) {
-	// Alle (ungedrehten) Vertices des Objekts prüfen
-	var vertexCount = pObject->GetVertexNum();
 	var holdingarea = VehicleHoldingArea();
-	var holdingareasize = [holdingarea[2] - holdingarea[0], holdingarea[3] - holdingarea[1]];
 	
-	for (var i = 0; i < vertexCount; i++)  {
-		var vertexX = pObject->GetVertex(i, 0); 
-		var vertexY = pObject->GetVertex(i, 1);
-		// Passt nicht
-		if (!Inside(vertexX, -holdingareasize[0]/2, holdingareasize[0]/2) || !Inside(vertexY, -holdingareasize[1]/2, holdingareasize[1]/2)) return(0);
-	}
-	// Passt
-	return(1);  
+	return 
+		GetDefWidth(GetID(pObject)) <= holdingarea[2] - holdingarea[0];
+		//&& GetDefHeight(GetID(pObject)) <= holdingarea[3] - holdingarea[1];
 }
 
 
@@ -100,14 +92,14 @@ func ChangeClonkGrabs() {
 	
 	for (var pClonk in FindObjects(Find_InRect(area[0], area[1], area[2], area[3]), Find_OCF(OCF_Living | OCF_NotContained), Find_Action("Push"))) {
 		var target = GetActionTarget(0, pClonk);
-		
+	
 		// Do we got a clonk nearby, grabbing a transportable vehicle?
 		if (IsClonkIdle(pClonk) && target) {
 			// Grab nearby vehicles
-			if (IsVehicleNearby(target) && !target->~IsVehicleTransporter()) {
-			//	GrabVehicle(target);
+			if (!target->~IsVehicleTransporter() && IsVehicleNearby(target)) {
+				GrabVehicle(target);
 			}
-			
+				
 			// change clonk grabs back to vehicle
 			if (IsInHoldingArea(pClonk) && target != this) {
 				SetCommand(pClonk, "Grab", this());
@@ -116,7 +108,7 @@ func ChangeClonkGrabs() {
 			// tell clonk to move into grab area
 			if (target == this && IsOnlyInGrabArea(pClonk)) {
 				SetCommand(pClonk, "UnGrab");
-				AppendCommand(pClonk, "MoveTo", 0, BoundBy(clonk->GetX(), GetX()-5, GetX()+5), GetY());
+				AppendCommand(pClonk, "MoveTo", 0, BoundBy(pClonk->GetX(), GetX()-5, GetX()+5), GetY());
 				AppendCommand(pClonk, "Grab", this);
 			}
 			
@@ -135,9 +127,10 @@ func IsClonkIdle(pClonk) {
 
 func IsVehicleNearby(pVehicle) {
 	return
-		IsInHoldingArea(pVehicle)
+		IsInGrabArea(pVehicle)
 		&& Inside(GetXDir(pVehicle), -2, +2)
 		&& Inside(GetXDir(), -2, +2)
+		&& Inside(GetYDir(), -2, +2)
 		&& FitsInTransporter(pVehicle);
 }
 
@@ -219,7 +212,6 @@ func RelayControl(controltype, pClonk, silent) {
 
 		return 1;
 	}
-
 	
 	if (!PrivateCall(vehicle, controltype, pClonk))  {
 		var comd;

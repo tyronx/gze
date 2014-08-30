@@ -6,8 +6,7 @@ local iPhase, iFiringPlayer;
 
 /* Initialisierung */
 
-protected func Initialize()
-{
+protected func Initialize() {
   SetAction("Ready");
   SetDir(Random(2));
   iFiringPlayer = NO_OWNER;
@@ -15,29 +14,25 @@ protected func Initialize()
 
 /* Prozesse */
 
-private func HaltPushers()
-{
+private func HaltPushers() {
   var pClonk;
   // Alle Clonks die das Katapult anfassen, sollen stoppen
   while(pClonk=FindObject(0,0,0,0,0,0,"Push",this(),0,pClonk))
     SetComDir(COMD_Stop(),pClonk);
 }
 
-private func FireSound() 
-{ 
+private func FireSound() {
   Sound("Catapult"); 
 }
 
-private func Charging()
-{
+private func Charging() {
   if (GetPhase()<iPhase) return(0);
   // genug geladen
   SetAction("Ready");
   SetPhase(iPhase);
 }
 
-public func Fire(bool fAuto)
-{ 
+public func Fire(bool fAuto) { 
   iFiringPlayer = GetController();
   SetAction("Fire");
   SetPhase(7-iPhase);
@@ -48,8 +43,7 @@ public func Fire(bool fAuto)
   return(1);
 }
 
-private func Projectile()
-{
+private func Projectile() {
   // what if contents got destroyed between animation start and this call?
   // actually, this is funny. let's keep it as an easter egg ;)
   var pProjectile=Contents();
@@ -77,8 +71,7 @@ private func Projectile()
     SetPlrView(GetOwner(GetActionTarget(1)), pProjectile);
 }
 
-private func FireAt(int iTX)
-{
+private func FireAt(int iTX) {
   var iX,iY,iXDir,iYDir,iDist=-1,iFavPhase;
   // Nicht bereit
   if(GetAction() ne "Ready" || !GetPhase()) return(0);
@@ -97,29 +90,24 @@ protected func Collection() { Sound("Connect"); }
 
 /* Steuerung */
 
-public func ControlCommand(string szCommand, object pTarget, int iX, int iY)
-{
+public func ControlCommand(string szCommand, object pTarget, int iX, int iY) {
   // Feuern mit der Maus
   if (szCommand eq "MoveTo")
-    if (Distance(GetX(), GetY(), iX, iY) > 50)
-    {
+    if (Distance(GetX(), GetY(), iX, iY) > 50) {
       // Nicht geladen: nur Kommando abfangen
-      if (!ContentsCount())
-      {
+      if (!ContentsCount()) {
         Sound("Click");
         return(1);
       }
       // Geladen: feuern
-      else
-      {
+      else {
         HaltPushers();
         return(FireAt(iX,iY));
       }
     }
 }
 
-public func ControlThrow() // Feuern / Inhalt
-{
+public func ControlThrow() { // Feuern / Inhalt
   [$TxtFire$|Image=CAT1:1]
   // Nicht bereit: Clonk kann nichts machen
   if (GetAction() ne "Ready") return(1);
@@ -131,8 +119,7 @@ public func ControlThrow() // Feuern / Inhalt
   return(Fire());
 }
 
-public func ControlConf(int conf)
-{
+public func ControlConf(int conf) {
   if(AimStdConf(conf))
   {
     iPhase = GetPhase();
@@ -140,29 +127,24 @@ public func ControlConf(int conf)
   }
 }
 
-public func ControlDig(object clonk) // Katapult mehr spannen (weiter Schießen)
-{
+public func ControlDig(object clonk) { // Katapult mehr spannen (weiter Schießen)
   [$TxtAim1$|Method=Classic|Image=CAT1:0]
   AimDown(clonk, 8, "ControlConf");
 }
 
-public func ControlDown(object clonk)
-{
+public func ControlDown(object clonk) {
   [$TxtAim1$|Method=JumpAndRun|Image=CAT1:0]
 }
 
-public func ControlUp(object clonk) // Katapult weniger spannen (kürzer Schießen)
-{
+public func ControlUp(object clonk) { // Katapult weniger spannen (kürzer Schießen)
   [$TxtAim2$|Image=CAT1:2]
   AimUp(clonk, 8, "ControlConf");
 }
 
-public func ControlUpdate(object clonk, int comdir)
-{
+public func ControlUpdate(object clonk, int comdir) {
   AimUpdate(clonk, comdir, 8, "ControlConf");
 }
 
-public func ControlDownSingle() // Sicht zurücksetzen
-{
+public func ControlDownSingle() { // Sicht zurücksetzen
   [$TxtResetview$|Method=None]
 }
