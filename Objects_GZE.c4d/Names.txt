@@ -1,2 +1,2 @@
-DE:GZE v0.2.5
-US:GZE v0.2.5
+DE:GZE v0.3
+US:GZE v0.3

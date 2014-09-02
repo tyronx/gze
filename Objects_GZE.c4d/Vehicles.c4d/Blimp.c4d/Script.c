@@ -6,7 +6,6 @@
 local turn_end_dir, nopilottimer;
 
 // Needs to be relative Coordinates x,y,wdt,hgt  
-func IsVehicleTransporter() { return 1; }
 func VehicleGrabArea() { return [-22, -10, 44, 40]; }
 func VehicleHoldingArea() { return [-16, 0,32,30]; }
 

@@ -101,7 +101,7 @@ func ChangeClonkGrabs() {
 			}
 				
 			// change clonk grabs back to vehicle
-			if (IsInHoldingArea(pClonk) && target != this) {
+			if (IsInHoldingArea(pClonk) && target != this && !target->~IsVehicleTransporter()) {
 				SetCommand(pClonk, "Grab", this());
 				continue;
 			} 
