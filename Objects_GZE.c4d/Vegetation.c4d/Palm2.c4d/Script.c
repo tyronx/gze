@@ -9,6 +9,8 @@ private func TreeStrength() { return 100; }
 public func GetVegetationSoil() { return "Sand"; }
 public func GetVegetationRotates() { return [-45, 45]; }
 
+public func CanCastLeaves(){ return false; }
+
 /* Überladungen für zusätzliche Sturm-Animation */  
 
 private func Breeze() {

@@ -115,7 +115,7 @@ public func Reproduction() {
 		
 /* Schaden */    
 
-protected func Damage() {
+protected func Damage(int iChange, int iByPlayer) {
 	for(var pClonk in FindObjects (Find_OCF(OCF_CrewMember))) {
 		if (pClonk->GetCommand(0, 1) == this()) {
 			chops++;
@@ -124,6 +124,9 @@ protected func Damage() {
 	if (chops > 6 + Random(5)) {
 		ChopDown();
 	}
+	
+	//Log("tree damaged for %d", iChange);
+	Shake(iChange/3);
 	
 	if(!Random(3)) CastLeafParticles();
 
@@ -204,3 +207,50 @@ public func IsTree() { return 1; }
 public func IsStanding() { return(~GetCategory() & C4D_Vehicle); }
 
 public func IsDeadTree() { return false; } // Überladen von toten Bäumen
+
+/* Rütteln und Schütteln */
+
+public func Shake(int strength)
+{
+	AddEffect("Shake", this, 50, 1, this, 0, strength);
+}
+
+public func FxShakeStart(object target, int nr, int temp, int strength)
+{
+	EffectVar(0, target, nr) = BoundBy(strength, 0, 7);
+	EffectVar(1, target, nr) = GetR(target); // original rotation
+	EffectVar(2, target, nr) = 9-EffectVar(0, target, nr);
+}
+
+public func FxShakeTimer(object target, int nr, int time)
+{
+	if (!(target->IsStanding())) return -1;
+
+	var strength = EffectVar(0, target, nr);
+
+	if (strength <= 0) return -1;
+	
+	var rot0 = EffectVar(1, target, nr);
+	target->SetR(rot0 + Cos(time*EffectVar(2, target, nr)*5, strength));
+	
+	if (!(time%5) && (strength > 0)) EffectVar(0, target, nr)--;
+}
+
+public func FxShakeEffect(string name)
+{
+	if(name == "Shake") return -2;
+}
+
+public func FxShakeAdd(object target, int nr, string name, int timer, int strength)
+{
+	EffectVar(0, target, nr) = BoundBy(EffectVar(0, target, nr) + strength, 0, 7);
+	EffectVar(2, target, nr) = 9-EffectVar(0, target, nr);
+}
+
+public func FxShakeStop(object target, int nr, int iReason, bool fTemp)
+{
+ 	if (!fTemp)
+ 	{
+ 		target->SetR(EffectVar(1, target, nr));
+ 	}
+}
