@@ -41,7 +41,6 @@ global func ColorSetAlpha(int rgba, int alpha) {
 global func ColorSetHue(int rgba, int hue) {
 	var hsla = RGB2HSL(rgba);
 	hsla = SetByte(hsla, hue, 1);
-	
 	return HSL2RGB(hsla);
 }
 global func ColorSetSaturation(int rgba, int saturation) {
@@ -51,10 +50,7 @@ global func ColorSetSaturation(int rgba, int saturation) {
 }
 global func ColorSetLightness(int rgba, int lightness) {
 	var hsla = RGB2HSL(rgba);
-	//Log("  %v  vs   %v", IntToBytes(rgba), IntToBytes(SetByte(hsla, lightness, 3)));
-	Log("ColorSetLightness: %v  vs   %v", IntToBytes(hsla), IntToBytes(HSL2RGB(hsla)));
 	hsla = SetByte(hsla, lightness, 3);
-	
 	return HSL2RGB(hsla);
 }
 

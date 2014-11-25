@@ -49,7 +49,7 @@ public func Activate(int _iLevel) {
 	//                       b = a / iTime
 	EffectVar(1,this(),eff) = (4*10*iLevel) / (10*iLifeTime);
 	EffectVar(2,this(),eff) = (100*EffectVar(1,this(),eff)) / iLifeTime;
-	//Log("a: %d b: %d time: %d",EffectVar(1,this(),eff),EffectVar(1,this(),eff), iLifeTime);
+	
 	return(1);
 }
 
@@ -60,9 +60,10 @@ func FxQuakeEffectTimer(object pTarget, int iEffectNumber, int iTime) {
 		iPlr=GetPlayerByIndex(i);
 		// Schütteleffekt ist am Anfang und Ende des Erdbebens schwächer
 		iLevel=(a*iTime-(b*iTime**2)/100)/10;
+		
 		// Schütteleffekt verringert sich je nach Entfernung, max. Stärke 50
 		iLevel=Min(50, (300*iLevel)/Max(300,Distance(GetX(GetCursor(iPlr)),GetY(GetCursor(iPlr)),GetX(),GetY())));
-		SetViewOffset(iPlr, Sin(iTime*100,iLevel), Cos(iTime*100,iLevel));
+		SetViewOffset(iPlr, Sin(iTime*100,iLevel), 0); // Cos(iTime*100,iLevel));
 	}
 	
 	if((a*iTime-(b*iTime**2)/100)/10<0) {

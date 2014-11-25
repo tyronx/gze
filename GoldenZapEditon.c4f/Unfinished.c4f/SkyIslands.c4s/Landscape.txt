@@ -1,0 +1,24 @@
+/* GZE Skylands */
+
+
+map SkyLands {
+
+
+  overlay Islands { mat=Earth; tex=Smooth; algo=rndchecker; a=4; turbulence=5000; loosebounds=1; zoomX=-50; zoomY=-50;
+
+    overlay { mat=Grass; tex=Grassy; algo=border; a=1; b=1; };
+    
+    overlay Ore { mat=Ore; tex=Rough; algo=rndchecker; a=6; turbulence=2000; zoomX=-100; zoomY=-100; };
+    Ore { mat=Water; tex=Liquid; 
+      overlay { mat=Earth; tex=Smooth; algo=border; a=2; b=2; };
+    };
+	Ore { mat=Loam; };
+    Ore { mat=Rock; };
+    Ore { mat=Gold; };
+    Ore { mat=Coal; tex=Swirl; };
+    Ore { mat=Sulphur; tex=Swirl; a=12; };
+  };
+  
+};
+  
+  

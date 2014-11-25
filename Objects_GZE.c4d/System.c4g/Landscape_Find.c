@@ -3,11 +3,11 @@
 // Useful function for placing objects on surfaces
 
 /* Moves vertically up or down (default) the landscape to find a solid pixel */
-// stepping parameter is optional
+// always global coordinates, stepping parameter is optional
 // e.g. GetYSolid(LandscapeWidth()/2) - finds the Y Coordinate of the first solid pixel in the middle of the landscape
 global func GetYSolid(int x, int y, int stepping) {
 	if (!stepping) stepping = 1;
-	while (!GBackSolid(x,y)) {
+	while (!GBackSolid(x - GetX(),y - GetY())) {
 		y+=stepping;
 		if (y>=LandscapeHeight() || y <= 0) {
 			return (-1);
@@ -17,12 +17,12 @@ global func GetYSolid(int x, int y, int stepping) {
 }
 
 /* Moves vertically up (default) or down the landscape to find a non solid pixel */
-// stepping parameter is optional
+// always global coordinates, stepping parameter is optional
 global func GetYFree(int x, int y, int stepping) {
 	if (!stepping) stepping = -1;
-	while (GBackSolid(x,y)) {
+	while (GBackSolid(x - GetX(),y - GetY())) {
 		y+=stepping;
-		if (y>=LandscapeHeight() && y <= 0) {
+		if (y>=LandscapeHeight() || y <= 0) {
 			return(-1);
 		}
 	}

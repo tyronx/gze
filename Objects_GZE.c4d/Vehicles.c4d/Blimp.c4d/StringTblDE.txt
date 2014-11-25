@@ -1,0 +1,5 @@
+TxtAscend=Aufsteigen
+TxtDescend=Landen
+TxtTurnright=Rechts
+TxtTurnleft=Links
+TxtPutGet=Ablegen/Nehmen

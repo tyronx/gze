@@ -13,4 +13,3 @@ Mass=8
 Components=ILOA=1
 Picture=6,0,35,35
 Collectible=1
-Fragile=1

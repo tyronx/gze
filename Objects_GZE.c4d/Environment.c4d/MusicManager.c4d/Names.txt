@@ -1,0 +1,2 @@
+DE:Musik Manager
+US:Music Manager

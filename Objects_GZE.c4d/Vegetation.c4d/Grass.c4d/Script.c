@@ -3,11 +3,16 @@
 #strict 2
 
 global func FireflyFrequency() { return 4; } 
+func GrassColor() { return HSL(80, 180, 160); }
 
 local spawned_fireflies;
 
+func Construction() {
+	SetColorDw(GrassColor());
+}
+
 public func UpdateTime(hours, hoursOld) {
-	if(IsNight() && !spawned_fireflies) {
+	if (IsNight() && !spawned_fireflies) {
 
 		spawned_fireflies = true; // nicht alle Gräser müssen Glühwürmchen erstellen!
 
@@ -23,8 +28,7 @@ public func UpdateTime(hours, hoursOld) {
 
 		}
 	}
-	else if (IsDay() && spawned_fireflies)
-	{
+	else if (IsDay() && spawned_fireflies) {
 		spawned_fireflies = false;
 	}
 }

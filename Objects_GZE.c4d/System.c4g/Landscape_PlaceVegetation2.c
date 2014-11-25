@@ -68,14 +68,17 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 		rndy_diff = vegetationRootDepth;
 		realy_diff = GetDefHeight(objectid) / 2;
 	}
+
 	while (quantity > 0 && attempts++ < 50000) {
 		rndx = x + Random(wdt);
 		rndy = y + Random(hgt);
+		
 		
 		// Okay, we found the correct material, lets try place it somewhere below that material if free
 		if (isMaterialSoil(rndx, rndy, materialsoil)) {
 			// Search upwards/downwards for free area
 			valid = 0; 
+			
 			while (isMaterialSoil(rndx, rndy, materialsoil) && rndy < y+hgt && rndy > y)  {
 				rndy+= yDirection;
 				
@@ -84,6 +87,7 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 					break;
 				}
 			}
+			
 			// Has to be either in liquid or free of liquid
 			valid = valid && ((liquid && GBackLiquid(rndx, rndy)) || (!liquid && !GBackLiquid(rndx, rndy)));
 			
@@ -121,7 +125,7 @@ global func PlaceVegetation2(id objectid, int quantity, array rect, int material
 								obj->SetR2(BoundBy((Angle(-2, lefty, 2, righty)-90)/4, autorotates[0], autorotates[1]), 0, bot_dy - vegetationRootDepth);
 							}
 						}
-						//obj->~PlacedByScript();
+
 						quantity--;
 						placed++;
 					}

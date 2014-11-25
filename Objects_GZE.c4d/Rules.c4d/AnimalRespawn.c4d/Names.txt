@@ -1,0 +1,2 @@
+DE:Tierrespawning
+US:Animal respawning

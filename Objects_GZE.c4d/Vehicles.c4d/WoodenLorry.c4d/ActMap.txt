@@ -1,0 +1,8 @@
+[Action]
+Name=WheelTurn
+Directions=2
+FlipDir=1
+Length=3
+Delay=3
+Facet=0,0,24,20
+NextAction=WheelTurn

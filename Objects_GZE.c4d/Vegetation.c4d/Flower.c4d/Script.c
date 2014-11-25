@@ -5,7 +5,8 @@
 
 protected func Initialize(obj) { 
 	SetAction("Flower");
-	SetPhase(Random(3));
+	SetPhase(Random(4));
+	SetDir(Random(2));
 	MoveBehindTrees();
 }
 
