@@ -1,3 +1,0 @@
-MsgRestart=%s starts again.
-Left=West
-Right=East

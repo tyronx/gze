@@ -1,6 +1,6 @@
 /*-- Kochtopf --*/
 
-#strict
+#strict 2
 
 local pFire;
 
@@ -12,7 +12,7 @@ protected func Initialize() { pFire = CreateObject(CPFR, +2, +25); }
 
 private func CheckContents()
 {
-  if(GetAction(FindObject(CPFR,-50,0,100,100)) eq "Burn")
+  if(GetAction(FindObject(CPFR,-50,0,100,100)) == "Burn")
     if(Contents()) 
       if(IsHot())
         for(var i=0;i<ContentsCount();++i)
@@ -29,4 +29,10 @@ protected func Collection() { Sound("Clonk"); }
 protected func Hit() { Sound("ClonkHit*"); }
 
 /* Campfeuer brennt */
-protected func IsHot() { if(!pFire) return(); return(GetAction(pFire) eq "Burn"); }
+protected func IsHot() 
+{
+  if(!pFire) 
+    return; 
+	
+  return(GetAction(pFire) == "Burn"); 
+}

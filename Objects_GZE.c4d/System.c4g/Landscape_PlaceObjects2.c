@@ -1,4 +1,4 @@
-#strict
+#strict 2
 
 /* 
  * Better EarthObj Placement. Besides many new parameters it also does the following:
@@ -23,7 +23,7 @@
 global func PlaceObjects2(id objectid, int quantity, array rect, array inmaterials, int nearbymaterial) {
 	var x = rect[0], y = rect[1], wdt = rect[2], hgt = rect[3];
 	
-	var haveinmaterials = GetType(inmaterials) == C4V_Array();
+	var haveinmaterials = GetType(inmaterials) == C4V_Array;
 	
 	
 	// Failsafe
@@ -36,7 +36,7 @@ global func PlaceObjects2(id objectid, int quantity, array rect, array inmateria
 	
 		
 	if (nearbymaterial) {
-		while (quantity > 0 && attempts++ < 10000) {
+		while (quantity > 0 && attempts++ < 20000) {
 			rndx = x + Random(wdt);
 			rndy = y + Random(hgt);
 			
@@ -79,7 +79,7 @@ global func PlaceObjects2(id objectid, int quantity, array rect, array inmateria
 	} else {
 	
 		
-		while (quantity > 0 && attempts++ < 10000) {
+		while (quantity > 0 && attempts++ < 20000) {
 			rndx = x + Random(wdt);
 			rndy = y + Random(hgt);
 			
@@ -101,14 +101,15 @@ global func PlaceObjects2(id objectid, int quantity, array rect, array inmateria
 			if (valid) {
 				obj = CreateObject(objectid, rndx, rndy + objhgt / 2, -1);
 				obj->SetR(Random(360));
+				
+				if (Stuck(obj)) {
+					placed++;
+					quantity--;
+				} else {
+					RemoveObject(obj);
+				}
 			}
 			
-			if (Stuck(obj)) {
-				placed++;
-				quantity--;
-			} else {
-				RemoveObject(obj);
-			}
 		}
 	}
 	return placed;

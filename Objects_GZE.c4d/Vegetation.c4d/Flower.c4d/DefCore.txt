@@ -1,14 +1,13 @@
 [DefCore]
-id=PLNT
+id=FLWR
 Version=4,9,8
-Name=Pflanze
+Name=Blume
 Category=C4D_StaticBack|C4D_SelectVegetation
 MaxUserSelect=100
 Width=30
 Height=20
 Offset=-15,-10
-Picture=0,0,90,20
-TopFace=0,0,30,20,0,0
+Picture=0,0,30,20
 Vertices=1
 VertexY=10
 Mass=1

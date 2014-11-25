@@ -41,7 +41,7 @@ map Tyron {
 
       // Underground - Resources
       overlay SmallOre { algo=random; a=40; y=60; tex=Rough; mat=Ore; turbulence=1000; zoomX=100; zoomY=100; };
-      SmallOre { mat=Flint; tex=Sponge; a=80; y=50; hgt=30; };
+      SmallOre { mat=Flint; tex=Sponge; a=65; y=50; hgt=30; };
           
       SmallOre { mat=Rock; a=80; };
       SmallOre { mat=Coal; tex=Coal; y=30; };

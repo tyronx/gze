@@ -1,6 +1,6 @@
 /*-- Backofen --*/
 
-#strict
+#strict 2
 
 /* Steuerung */
 

@@ -1,6 +1,6 @@
 /*-- Schild --*/
 
-#strict
+#strict 2
 
 /* Status */
 public func IsShield()

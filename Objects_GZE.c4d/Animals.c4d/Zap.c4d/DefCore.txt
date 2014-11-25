@@ -14,6 +14,7 @@ Picture=12,0,64,64
 ContactIncinerate=1
 BlastIncinerate=1
 NoFight=1
+Pathfinder=2
 
 [Physical]
-Float=1000
+Float=200

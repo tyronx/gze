@@ -1,14 +1,23 @@
 /*-- Grass --*/
 
-#strict
+#strict 2
 
-global func FireflyFrequency() { return 8; } 
+global func FireflyFrequency() { return 4; } 
+func GrassColor() { return HSL(80, 180, 160); }
+
+local spawned_fireflies;
+
+func Construction() {
+	SetColorDw(GrassColor());
+}
 
 public func UpdateTime(hours, hoursOld) {
-	if(IsDusk()) {
+	if (IsNight() && !spawned_fireflies) {
+
+		spawned_fireflies = true; // nicht alle Gräser müssen Glühwürmchen erstellen!
 
 		if( GetTemperature()>10 && !Random(FireflyFrequency())) {
-			var count = RandomX(2,5);
+			var count = RandomX(1, 2);
 			var dist = 30;
 
 			for(var i = 0; i < count; i++) {
@@ -16,11 +25,13 @@ public func UpdateTime(hours, hoursOld) {
 				firefly->LocalN("startPositionX") = GetX();
 				firefly->LocalN("startPositionY") = GetY() - 15;
 			}
+
 		}
 	}
+	else if (IsDay() && spawned_fireflies) {
+		spawned_fireflies = false;
+	}
 }
-
-
 
 protected func Initialize() { 
 	// Zufällige Form	
@@ -35,10 +46,10 @@ protected func Initialize() {
 }
 
 private func MoveBehindTrees() {
-	var obj;
-	while (obj = FindObject(0, 1,1, 0,0, OCF_Chop(), 0,0, NoContainer(), obj)) {
-		if (obj->~IsTree() && (obj->GetCategory() & C4D_StaticBack)) {
-			SetObjectOrder(obj, this(), 1); 
+	for (var obj in FindObjects(Find_OCF(OCF_Chop), Find_NoContainer(), Find_Category(C4D_StaticBack), Find_AtPoint())) {
+		if (obj->~IsTree()) {
+			//Log("put %v behind tree", GetID());
+			SetObjectOrder(obj, this, 1); 
 		}
 	}
 }

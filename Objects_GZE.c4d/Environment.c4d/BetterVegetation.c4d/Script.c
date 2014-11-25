@@ -8,6 +8,8 @@ local vegetationlevel;
 protected func Initialize() {
 	SetPosition(0,0);
 	
+	Log("Replacing Vegetation");
+	
 	SetVegetationLevel();
 	RemoveEnginePlacedVegetation();
 	RepopulateVegetation();
@@ -58,6 +60,8 @@ public func RepopulateVegetation() {
 	while (GetScenarioVal ("Vegetation", "Landscape", idx) != 0) {
 		vegeid = GetScenarioVal ("Vegetation", "Landscape", idx++);
 		relativequantity = GetScenarioVal ("Vegetation", "Landscape", idx++);
+		
+		//Log("placing %v", vegeid);
 		
 		var vegebalance = DefinitionCall(vegeid, "GetVegetationPlacementBalance");
 		if (!vegebalance) vegebalance = 100;

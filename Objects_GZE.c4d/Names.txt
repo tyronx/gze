@@ -1,2 +1,2 @@
-DE:Ritter
-US:Knights
+DE:GZE v0.3
+US:GZE v0.3

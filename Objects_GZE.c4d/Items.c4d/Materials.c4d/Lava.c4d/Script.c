@@ -1,6 +1,6 @@
 /*--- Lava ---*/
 
-#strict
+#strict 2
 
 local strMat;
 

@@ -1,6 +1,6 @@
 /*-- Holzfaß --*/
 
-#strict
+#strict 2
 #include BARL
 
 protected func EmptyBarrelID() { return(WDBR); }
@@ -36,7 +36,6 @@ protected func Hit()
   BarrelEject();
   return(1);
 }
-
 
 /* Entzündung */
 

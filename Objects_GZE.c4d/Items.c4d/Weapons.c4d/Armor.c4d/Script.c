@@ -1,6 +1,6 @@
 /*-- Rüstung --*/
 
-#strict
+#strict 2
 
 /* Status */
 public func IsArmor()

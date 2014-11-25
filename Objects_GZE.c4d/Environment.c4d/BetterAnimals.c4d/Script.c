@@ -8,7 +8,9 @@ local animalplacementlevel;
 protected func Initialize() {
 	SetPosition(0,0);
 	
-	SetEarthObjectsLevel();
+	Log("Replacing Animals");
+	
+	SetAnimalPlacementLevel();
 	RemoveEnginePlacedAnimals();
 	PlaceAnimals();
 }
@@ -18,7 +20,7 @@ public func AnimalsMultiplier() {
 	return ((animalplacementlevel * Sqrt(LandscapeWidth() * LandscapeHeight())) / 2000);
 }
 
-private func SetEarthObjectsLevel() {
+private func SetAnimalPlacementLevel() {
 	animalplacementlevel = 8;
 }
 
@@ -61,7 +63,7 @@ public func PlaceAnimals() {
 		var placement = GetDefPlacement(objid);
 		// Script defined placement overrides Defcore value
 		if (DefinitionCall(objid, "GetAnimalPlacement")) placement = DefinitionCall(objid, "GetAnimalPlacement");
-		//if (objid == WIPF) Log("%d %d", placement, DefinitionCall(objid, "GetAnimalPlacement"));
+
 		var y = (LandscapeHeight()*DefinitionCall(objid, "GetAnimalPlacementLineTop"))/100;
 		
 		var hgt = (LandscapeHeight()*DefinitionCall(objid, "GetAnimalPlacementLineBottom"))/100 - y;

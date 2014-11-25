@@ -1,4 +1,14 @@
-#strict
+#strict 2
+
+global func InsideRect(array pos, array rect) {
+	return 
+		Inside(pos[0], rect[0], rect[0] + rect[2]) 
+		&& Inside(pos[1], rect[1], rect[1] + rect[3]);
+}
+
+global func MovePosition(int x, int y, object pObj) {
+	SetPosition(GetX(pObj) + x, GetY(pObj) + y, pObj);
+}
 
 /* Sets the Rotation using iX, iY as rotation center */
 global func SetR2(int iR, int iX, int iY, object pObj) {
@@ -9,11 +19,6 @@ global func SetR2(int iR, int iX, int iY, object pObj) {
 	
 	SetPosition(GetX(pObj)+dx+iX, GetY(pObj)+dy+iY,pObj);
 }
-/*
-	var wdt = GetDefWidth(GetID(pObj));
-	var hgt = GetDefHeight(GetID(pObj));
-*/
-
 
 global func GetFloorY(object pObj) {
 	return GetY(pObj) + (GetCon(pObj)*GetDefHeight(GetID(pObj)))/200;
