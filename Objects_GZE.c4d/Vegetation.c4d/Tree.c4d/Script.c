@@ -17,7 +17,7 @@ func TreeStrength() { return 150; } // Dicke des Stammes
 func CanHouseZapNest() { return 0; }
 func CreateZapNestVertex() { return 0; }
 func ZapNestVertexAttach() { return 4; }
-func CanBeChoppedInHalf() { return false; }
+
 func CanCastLeaves(){ return false; }
 
 public func GetVegetationSoil() { 
@@ -145,15 +145,6 @@ public func ChopDown() {
 	SetAction("Idle");
 	SetCategory(C4D_Vehicle);
 	
-	// Weitere Effekte
-	if (CanBeChoppedInHalf())
-	{
-		SetAction("Chopped");
-		
-		var dummy = CreateObject(TRD_, 0, 0, NO_OWNER);
-		dummy->BeTreeStump(this);
-	}
-
 	// Aus der Erde lösen
 	while (Stuck() && (++Var(0) < 6)) // {} // is this intentional??
 	SetPosition(GetX(), GetY() - 1, this);
