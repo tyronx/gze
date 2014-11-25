@@ -17,6 +17,8 @@ func TreeStrength() { return 150; } // Dicke des Stammes
 func CanHouseZapNest() { return 0; }
 func CreateZapNestVertex() { return 0; }
 func ZapNestVertexAttach() { return 4; }
+func CanBeChoppedInHalf() { return false; }
+func CanCastLeaves(){ return false; }
 
 public func GetVegetationSoil() { 
 	// Failsafe in case grass material is not available
@@ -122,6 +124,8 @@ protected func Damage() {
 	if (chops > 6 + Random(5)) {
 		ChopDown();
 	}
+	
+	if(!Random(3)) CastLeafParticles();
 
 	return (0);
 }
@@ -131,20 +135,36 @@ public func ChopDown() {
 		zapNest->SetAction("Idle");
 	}
 	
-	ScheduleCall(this(), "TurnToWood", 60);
+	ScheduleCall(this, "CastLeafParticles", 5, 2);
+	ScheduleCall(this, "TurnToWood", 60);
+	
 	// Bereits gefällt
 	if (!IsStanding()) return 0;
+	
 	// Kategorie ändern
 	SetAction("Idle");
 	SetCategory(C4D_Vehicle);
+	
+	// Weitere Effekte
+	if (CanBeChoppedInHalf())
+	{
+		SetAction("Chopped");
+		
+		var dummy = CreateObject(TRD_, 0, 0, NO_OWNER);
+		dummy->BeTreeStump(this);
+	}
+
 	// Aus der Erde lösen
-	while (Stuck() && (++Var(0) < 6)) {}
-	SetPosition(GetX(), GetY() - 1, this());
+	while (Stuck() && (++Var(0) < 6)) // {} // is this intentional??
+	SetPosition(GetX(), GetY() - 1, this);
 	// Umfallen
-	SetRDir(+10); if (Random(2)) SetRDir(-10);
+	if (Random(2))
+		SetRDir(-10);
+	else
+		SetRDir(+10);
 	// Geräusch
 	if (GetCon() > 50) Sound("TreeDown*");
-	// Fertig
+	// fertig
 	return 1;
 }
 
@@ -165,6 +185,25 @@ public func TurnToWood() {
 	RemoveObject();
 }
 
+
+public func CastLeafParticles()
+{
+	if (OnFire() || !CanCastLeaves()) return;
+
+	var def = GetID();
+	var amount = Random(GetCon()/20) + 1;
+
+	for(var i=0; i<amount; i++)
+	{
+		var x = GetDefOffset(def, 0) + Random(GetDefWidth(def)-20) +10;
+		var y = GetDefOffset(def, 1) + Random(GetDefHeight(def)-GetDefFireTop(def));
+
+		var rgb = RGB(0,110,0);
+		if (Random(2)) rgb = RGB(64,150,64);
+
+		CreateParticle("Leaves", x, y, 0, 1, RandomX(15, 25), rgb);
+	}
+}
 
 
 /* Status */

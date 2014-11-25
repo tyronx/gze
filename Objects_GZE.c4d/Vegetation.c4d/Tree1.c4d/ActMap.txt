@@ -72,4 +72,12 @@ FacetBase=0
 NextAction=Breeze
 StartCall=Breeze
 
-
+[Action]
+Name=Chopped
+Directions=2
+FlipDir=1
+Length=1
+Delay=0
+Facet=0,0,73,73
+FacetBase=0
+NextAction=Hold
