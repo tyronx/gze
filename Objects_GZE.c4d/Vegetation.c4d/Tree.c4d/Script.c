@@ -17,6 +17,7 @@ func TreeStrength() { return 150; } // Dicke des Stammes
 func CanHouseZapNest() { return 0; }
 func CreateZapNestVertex() { return 0; }
 func ZapNestVertexAttach() { return 4; }
+func TreeType() { return "evergreen"; } // deciduous or evergreen (decides whether to drop leaves or not)
 
 public func GetVegetationSoil() { 
 	// Failsafe in case grass material is not available
@@ -111,6 +112,15 @@ public func Reproduction() {
 	return 0;
 }
 		
+
+// Called when Clonk hits the tree with his Axe during chop
+public func AxeHit(pClonk) {
+	Sound("Chop*");
+	pClonk->CastParticles("Dust",Random(3)+1,6,-8+16*pClonk->GetDir(),1,10,12);
+	Shake(1);
+	if(!Random(3)) CastLeafParticles();
+}
+
 /* Schaden */    
 
 protected func Damage() {
@@ -163,6 +173,79 @@ public func TurnToWood() {
 	CreateObjectLine(treematerial, quantity, [x1, y1, x2, y2]);
 	
 	RemoveObject();
+}
+
+
+public func CastLeafParticles() {
+	if (OnFire() || TreeType() != "deciduous") {
+		return 0;
+	}
+
+	var def = GetID();
+	var amount = Random(GetCon()/20) + 1;
+
+	for (var i=0; i < amount; i++) {
+		var x = GetDefOffset(def, 0) + Random(GetDefWidth(def) - 20) +10;
+		var y = GetDefOffset(def, 1) + Random(GetDefHeight(def) - GetDefFireTop(def));
+
+		var rgb = RGB(0,110,0);
+		if (Random(2)) {
+			rgb = RGB(64,150,64);
+		}
+
+		CreateParticle("Leaves", x, y, 0, 1, RandomX(15, 25), rgb);
+	}
+}
+
+
+
+/* Rütteln und Schütteln */
+
+public func Shake(int strength) {
+	RemoveEffect("Shake", this);
+	AddEffect("Shake", this, 50, 1, this, 0, strength);
+}
+
+public func FxShakeStart(object target, int nr, int temp, int strength) {
+	EffectVar(0, target, nr) = BoundBy(strength, 0, 7);
+	EffectVar(1, target, nr) = GetR(target); // original rotation
+	EffectVar(2, target, nr) = 9-EffectVar(0, target, nr);
+}
+
+public func FxShakeTimer(object target, int nr, int time) {
+	if (!(target->IsStanding())) {
+		return -1;
+	}
+
+	var strength = EffectVar(0, target, nr);
+
+	if (strength <= 0) {
+		return -1;
+	}
+	
+	var rot0 = EffectVar(1, target, nr);
+	target->RelSetR(rot0 + Cos(time*EffectVar(2, target, nr)*6, strength), 0, (3*GetDefHeight(GetID())/4));
+	
+	if (!(time%4) && (strength > 0)) {
+		EffectVar(0, target, nr)--;
+	}
+}
+
+public func FxShakeEffect(string name) {
+	if (name == "Shake") {
+		return -2;
+	}
+}
+
+public func FxShakeAdd(object target, int nr, string name, int timer, int strength) {
+	EffectVar(0, target, nr) = BoundBy(EffectVar(0, target, nr) + strength, 0, 7);
+	EffectVar(2, target, nr) = 9-EffectVar(0, target, nr);
+}
+
+public func FxShakeStop(object target, int nr, int iReason, bool fTemp) {
+ 	if (!fTemp) {
+ 		target->SetR(EffectVar(1, target, nr));
+ 	}
 }
 
 

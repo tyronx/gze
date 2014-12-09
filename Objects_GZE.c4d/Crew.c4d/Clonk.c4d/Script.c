@@ -13,9 +13,11 @@ local pAimedSpellOrigin;        // Objekt, das einen Zielzauber initiiert hat. A
 
 protected func Initialize() {
 	// Clonks mit Magiephysikal aus fehlerhaften Szenarien korrigieren
-	if (GetID () == CLNK) 
-		if (GetPhysical ("Magic", 1))
+	if (GetID () == CLNK) {
+		if (GetPhysical ("Magic", 1)) {
 			SetPhysical ("Magic", 0, 1);
+		}
+	}
 	SetAction("Walk");
 	SetDir(Random(2));
 	// Broadcast für Spielregeln
@@ -420,12 +422,9 @@ private func Punching() {
 }
 	
 private func Chopping() {
-	// Erster Schlag kein Sound. Clonk holt noch aus.
-	if (!GetActTime()) {
-		return 0; 
+	if (GetActTime() > 0) {
+		GetActionTarget()->~AxeHit(this);
 	}
-	Sound("Chop*");
-	CastParticles("Dust",Random(3)+1,6,-8+16*GetDir(),1,10,12);
 	return 1;
 }
 	

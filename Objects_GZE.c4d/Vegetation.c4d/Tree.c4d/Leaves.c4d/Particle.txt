@@ -1,0 +1,14 @@
+[Particle]
+Name=Leaves
+MaxCount=100
+MinLifetime=300
+MaxLifetime=500
+InitFn=StdInit
+ExecFn=StdExec
+DrawFn=Std
+CollisionFn=Die
+Face=0,0,5,5,-2,-2
+Delay=3
+Repeats=1000
+GravityAcc=20
+VertexCount=1
