@@ -1,1 +1,1 @@
-Adds more diversity to fish populations
+Adds more diversity to fish populations and adds schooling behavior

@@ -35,7 +35,7 @@ func LateInitialize() {
 		pFish->SetColorDw(fishColor[type]);
 		pFish->SetCon(fishSize[type]);
 		if (schooling[type]) {
-			pFish->AddActivity("Schooling", 2);
+			pFish->AddActivity("Schooling", 3);
 		}
 		Local(0, pFish) = type;
 		i++;

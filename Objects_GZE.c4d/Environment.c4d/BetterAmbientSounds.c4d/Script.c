@@ -24,8 +24,8 @@ protected func Initialize() {
 	loops = [];
 	
 	AddAmbient("wind", ["inMat_Sky"], "RealWind", 100, "script_Abs(GetWind()/10)*10", 1);
-	AddAmbient("caves", ["inMat_Tunnel"], "Cave*", 5);
-	AddAmbient("cavesandwater", ["inMat_Tunnel", "nearbyMat_Water"], "WaterCave", 100);
+	AddAmbient("caves", ["inMat_Tunnel", "notNearbyMat_Sky"], "Cave*", 5);
+	AddAmbient("cavesandwater", ["inMat_Tunnel", "nearbyMat_Water", "notNearbyMat_Sky"], "WaterCave", 100);
 	AddAmbient("highwinds", ["inMat_Sky", "maxPosY_10"], "HighWinds", 100);
 	AddAmbient("lavabubble", ["nearbyMat_DuroLava"], "LavaBubble", 100);
 	AddAmbient("beaches", ["nearbyMat_Water", "nearbyMat_Sand", "inMat_Sky"], "ShoreWaves", 100);
@@ -118,7 +118,7 @@ func updatePlayerStati() {
 					found = found && GetMaterial(clonk->GetX(), clonk->GetY()) == Material(target);
 				}
 				
-				if (type == "nearbyMat") {
+				if (type == "nearbyMat" || type == "notNearbyMat") {
 					var haveMat = 0;
 					for (var attempt = 0; attempt < 80; attempt++) {
 						if (GetMaterial(clonk->GetX()+RandomX(-100, 100), clonk->GetY()+RandomX(-100, 100)) == Material(target)) {
@@ -126,8 +126,10 @@ func updatePlayerStati() {
 							break;
 						}
 					}
-					found = found && haveMat;
+					
+					found = found && ((type == "nearbyMat" && haveMat) || (type == "notNearbyMat" && !haveMat));
 				}
+				
 				
 				if (type == "nearbyDefcall") {
 					var haveCall = 0;

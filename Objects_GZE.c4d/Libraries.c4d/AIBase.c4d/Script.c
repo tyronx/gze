@@ -13,6 +13,7 @@ local activities;
  *
  * ShouldExecuteXX can be used to initialize the activity. A return value of 1 will start this activity
  * ContinueExecuteXX can be used for controlling that activity. A return value of 0 will stop this activity
+ * (optional) FinishExecuteXX is called when an activity ends
  *
  */
 
@@ -56,6 +57,7 @@ func FxActivityStart() {
 func FxActivityTimer() {
 	if (activity) {
 		if (!ObjectCall(this, Format("ContinueExecute%s", activity))) {
+			ObjectCall(this, Format("FinishExecute%s", activity));
 			activity = 0;
 		}
 	}
@@ -65,7 +67,9 @@ func FxActivityTimer() {
 		//Activities are sorted by priority. So if a higher priority activity is running, do not check on others
 		if (activity == strActivity) break;
 		
+		// should execute a higher priority task? Then replace with current activity
 		if (ObjectCall(this, Format("ShouldExecute%s", strActivity))) {
+			ObjectCall(this, Format("FinishExecute%s", activity));
 			activity = strActivity;
 			
 			break;

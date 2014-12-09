@@ -160,7 +160,14 @@ func ShouldExecuteSleep() {
 func ContinueExecuteSleep() {
 	SetComDir(COMD_Down);
 	SetCommand(this, "None");
+	if (GetAction() != "Sleep" && GetContact(0, -1)) {
+		SetAction("Sleep");
+	}
 	return IsNight();
+}
+
+func FinishExecuteSleep() {
+	SetAction("Swim");
 }
 
 
