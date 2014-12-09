@@ -72,7 +72,7 @@ func FxAmbientTimer() {
 func checkPlayerCount() {
 	var playerid;
 	for (var i = 0; i < GetPlayerCount(C4PT_User); i++) {
-		playerid= GetPlayerByIndex(i, C4PT_User);
+		playerid = GetPlayerByIndex(i, C4PT_User);
 		if (!Local(playerid)) {
 			Local(playerid) = CreateArray(2);
 			Local(playerid)[0] = CreateArray(GetLength(enviromentconditions));
