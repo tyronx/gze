@@ -59,7 +59,7 @@ private func Initializing() {
 		SetAction("Still");
 	}
 	// Noch warten
-	return 1;  
+	return 1;
 }
 
 
@@ -76,17 +76,21 @@ public func PutZapnest() {
 	}
 }
 
-/* Bewegung (Wind) */  
+/* Bewegung (Wind) */
 	
 private func Still() {
 	if (Abs(GetWind()) > 49 + MotionThreshold) SetAction("Breeze");
 }
 		
 private func Breeze() {
-	if (Abs(GetWind()) < 50 + MotionThreshold) SetAction("Still");
+	if (Abs(GetWind()) < 50 + MotionThreshold && !GetEffect("Shake", this)) SetAction("Still");
+	if (Abs(GetWind()) > 74 + MotionThreshold && GetActMapVal("Name", "Storm")) SetAction("Storm");
 }
 
-	 
+private func Storm() {
+	if (Abs(GetWind()) < 75 + MotionThreshold  && !GetEffect("Shake", this)) SetAction("Breeze");
+}
+ 
 /* Kontext */
 
 public func ContextChop(pClonk) {
@@ -120,13 +124,13 @@ public func AxeHit(pClonk) {
 	pClonk->CastParticles("Dust",Random(3)+1,6,-8+16*pClonk->GetDir(),1,10,12);
 	var strength = ShakeStrength();
 	if (!(pClonk->GetDir())) {
-	    strength *= -1;
+		strength *= -1;
 	}
 	Shake(strength);
 	if (!Random(3)) CastLeafParticles();
 }
 
-/* Schaden */    
+/* Schaden */
 
 protected func Damage() {
 	for(var pClonk in FindObjects (Find_OCF(OCF_CrewMember))) {
@@ -209,6 +213,13 @@ public func CastLeafParticles() {
 public func Shake(int strength) {
 	RemoveEffect("Shake", this);
 	AddEffect("Shake", this, 50, 1, this, 0, strength);
+	if (!(GetAction()=="Breeze" || GetAction()=="Storm")) {
+		if (GetActMapVal("Name", "Storm")) {
+			SetAction("Storm");
+		} else {
+			SetAction("Breeze");
+		}
+	}
 }
 
 public func FxShakeStart(object target, int nr, int temp, int strength) {
@@ -225,7 +236,11 @@ public func FxShakeTimer(object target, int nr, int time) {
 	var strength = EffectVar(0, target, nr);
 
 	if (strength == 0) {
-		return -1;
+		// let the effect linger on a little so that the "Breeze" animation still plays
+		EffectVar(3, target, nr)++;
+		if (EffectVar(3, target, nr) > 60) {
+			return -1;
+		}
 	}
 	
 	var rot0 = EffectVar(1, target, nr);
