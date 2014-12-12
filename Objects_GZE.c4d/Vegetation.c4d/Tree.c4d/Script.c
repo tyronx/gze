@@ -17,8 +17,7 @@ func TreeStrength() { return 150; } // Dicke des Stammes
 func CanHouseZapNest() { return 0; }
 func CreateZapNestVertex() { return 0; }
 func ZapNestVertexAttach() { return 4; }
-
-func CanCastLeaves(){ return false; }
+func TreeType() { return "evergreen"; } // deciduous or evergreen (decides whether to drop leaves or not)
 
 public func GetVegetationSoil() { 
 	// Failsafe in case grass material is not available
@@ -113,9 +112,18 @@ public func Reproduction() {
 	return 0;
 }
 		
+
+// Called when Clonk hits the tree with his Axe during chop
+public func AxeHit(pClonk) {
+	Sound("Chop*");
+	pClonk->CastParticles("Dust",Random(3)+1,6,-8+16*pClonk->GetDir(),1,10,12);
+	Shake(1);
+	if(!Random(3)) CastLeafParticles();
+}
+
 /* Schaden */    
 
-protected func Damage(int iChange, int iByPlayer) {
+protected func Damage() {
 	for(var pClonk in FindObjects (Find_OCF(OCF_CrewMember))) {
 		if (pClonk->GetCommand(0, 1) == this()) {
 			chops++;
@@ -124,11 +132,6 @@ protected func Damage(int iChange, int iByPlayer) {
 	if (chops > 6 + Random(5)) {
 		ChopDown();
 	}
-	
-	//Log("tree damaged for %d", iChange);
-	Shake(iChange/3);
-	
-	if(!Random(3)) CastLeafParticles();
 
 	return (0);
 }
@@ -138,27 +141,20 @@ public func ChopDown() {
 		zapNest->SetAction("Idle");
 	}
 	
-	ScheduleCall(this, "CastLeafParticles", 5, 2);
-	ScheduleCall(this, "TurnToWood", 60);
-	
+	ScheduleCall(this(), "TurnToWood", 60);
 	// Bereits gefällt
 	if (!IsStanding()) return 0;
-	
 	// Kategorie ändern
 	SetAction("Idle");
 	SetCategory(C4D_Vehicle);
-	
 	// Aus der Erde lösen
-	while (Stuck() && (++Var(0) < 6)) // {} // is this intentional??
-	SetPosition(GetX(), GetY() - 1, this);
+	while (Stuck() && (++Var(0) < 6)) {}
+	SetPosition(GetX(), GetY() - 1, this());
 	// Umfallen
-	if (Random(2))
-		SetRDir(-10);
-	else
-		SetRDir(+10);
+	SetRDir(+10); if (Random(2)) SetRDir(-10);
 	// Geräusch
 	if (GetCon() > 50) Sound("TreeDown*");
-	// fertig
+	// Fertig
 	return 1;
 }
 
@@ -180,24 +176,78 @@ public func TurnToWood() {
 }
 
 
-public func CastLeafParticles()
-{
-	if (OnFire() || !CanCastLeaves()) return;
+public func CastLeafParticles() {
+	if (OnFire() || TreeType() != "deciduous") {
+		return 0;
+	}
 
 	var def = GetID();
 	var amount = Random(GetCon()/20) + 1;
 
-	for(var i=0; i<amount; i++)
-	{
-		var x = GetDefOffset(def, 0) + Random(GetDefWidth(def)-20) +10;
-		var y = GetDefOffset(def, 1) + Random(GetDefHeight(def)-GetDefFireTop(def));
+	for (var i=0; i < amount; i++) {
+		var x = GetDefOffset(def, 0) + Random(GetDefWidth(def) - 20) +10;
+		var y = GetDefOffset(def, 1) + Random(GetDefHeight(def) - GetDefFireTop(def));
 
 		var rgb = RGB(0,110,0);
-		if (Random(2)) rgb = RGB(64,150,64);
+		if (Random(2)) {
+			rgb = RGB(64,150,64);
+		}
 
 		CreateParticle("Leaves", x, y, 0, 1, RandomX(15, 25), rgb);
 	}
 }
+
+
+
+/* Rütteln und Schütteln */
+
+public func Shake(int strength) {
+	RemoveEffect("Shake", this);
+	AddEffect("Shake", this, 50, 1, this, 0, strength);
+}
+
+public func FxShakeStart(object target, int nr, int temp, int strength) {
+	EffectVar(0, target, nr) = BoundBy(strength, 0, 7);
+	EffectVar(1, target, nr) = GetR(target); // original rotation
+	EffectVar(2, target, nr) = 9-EffectVar(0, target, nr);
+}
+
+public func FxShakeTimer(object target, int nr, int time) {
+	if (!(target->IsStanding())) {
+		return -1;
+	}
+
+	var strength = EffectVar(0, target, nr);
+
+	if (strength <= 0) {
+		return -1;
+	}
+	
+	var rot0 = EffectVar(1, target, nr);
+	target->RelSetR(rot0 + Cos(time*EffectVar(2, target, nr)*6, strength), 0, (3*GetDefHeight(GetID())/4));
+	
+	if (!(time%4) && (strength > 0)) {
+		EffectVar(0, target, nr)--;
+	}
+}
+
+public func FxShakeEffect(string name) {
+	if (name == "Shake") {
+		return -2;
+	}
+}
+
+public func FxShakeAdd(object target, int nr, string name, int timer, int strength) {
+	EffectVar(0, target, nr) = BoundBy(EffectVar(0, target, nr) + strength, 0, 7);
+	EffectVar(2, target, nr) = 9-EffectVar(0, target, nr);
+}
+
+public func FxShakeStop(object target, int nr, int iReason, bool fTemp) {
+ 	if (!fTemp) {
+ 		target->SetR(EffectVar(1, target, nr));
+ 	}
+}
+
 
 
 /* Status */
@@ -207,50 +257,3 @@ public func IsTree() { return 1; }
 public func IsStanding() { return(~GetCategory() & C4D_Vehicle); }
 
 public func IsDeadTree() { return false; } // Überladen von toten Bäumen
-
-/* Rütteln und Schütteln */
-
-public func Shake(int strength)
-{
-	AddEffect("Shake", this, 50, 1, this, 0, strength);
-}
-
-public func FxShakeStart(object target, int nr, int temp, int strength)
-{
-	EffectVar(0, target, nr) = BoundBy(strength, 0, 7);
-	EffectVar(1, target, nr) = GetR(target); // original rotation
-	EffectVar(2, target, nr) = 9-EffectVar(0, target, nr);
-}
-
-public func FxShakeTimer(object target, int nr, int time)
-{
-	if (!(target->IsStanding())) return -1;
-
-	var strength = EffectVar(0, target, nr);
-
-	if (strength <= 0) return -1;
-	
-	var rot0 = EffectVar(1, target, nr);
-	target->SetR(rot0 + Cos(time*EffectVar(2, target, nr)*5, strength));
-	
-	if (!(time%5) && (strength > 0)) EffectVar(0, target, nr)--;
-}
-
-public func FxShakeEffect(string name)
-{
-	if(name == "Shake") return -2;
-}
-
-public func FxShakeAdd(object target, int nr, string name, int timer, int strength)
-{
-	EffectVar(0, target, nr) = BoundBy(EffectVar(0, target, nr) + strength, 0, 7);
-	EffectVar(2, target, nr) = 9-EffectVar(0, target, nr);
-}
-
-public func FxShakeStop(object target, int nr, int iReason, bool fTemp)
-{
- 	if (!fTemp)
- 	{
- 		target->SetR(EffectVar(1, target, nr));
- 	}
-}

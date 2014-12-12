@@ -6,5 +6,4 @@
 
 func CanHouseZapNest() { return true; }
 func CreateZapNestVertex() { return AddVertex(-8+Random(16),13); }
-
-func CanCastLeaves(){ return true; }
+func TreeType() { return "deciduous"; }

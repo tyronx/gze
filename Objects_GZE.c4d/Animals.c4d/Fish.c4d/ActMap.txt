@@ -21,6 +21,18 @@ NextAction=Swim
 TurnAction=Turn
 
 [Action]
+Name=Sleep
+Procedure=FLOAT
+Directions=2
+FlipDir=1
+Length=20
+Delay=5
+Facet=0,12,16,12
+NextAction=Sleep
+TurnAction=Turn
+
+
+[Action]
 Name=Turn
 Procedure=SWIM
 Directions=2
