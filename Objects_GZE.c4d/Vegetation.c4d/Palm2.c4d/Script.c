@@ -9,7 +9,7 @@ private func TreeStrength() { return 100; }
 public func GetVegetationSoil() { return "Sand"; }
 public func GetVegetationRotates() { return [-45, 45]; }
 
-public func CanCastLeaves(){ return false; }
+public func ShakeStrength() { return 4; } // pretty shaky
 
 /* Überladungen für zusätzliche Sturm-Animation */  
 
