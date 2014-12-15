@@ -148,8 +148,9 @@ public func ChopDown() {
 	SetAction("Idle");
 	SetCategory(C4D_Vehicle);
 	// Aus der Erde lösen
-	while (Stuck() && (++Var(0) < 6)) {}
-	SetPosition(GetX(), GetY() - 1, this());
+	while (Stuck() && (++Var(0) < 6))  {
+		SetPosition(GetX(), GetY() - 1, this);
+	}
 	// Umfallen
 	SetRDir(+10); if (Random(2)) SetRDir(-10);
 	// Geräusch

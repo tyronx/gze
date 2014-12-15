@@ -1,6 +1,6 @@
 #strict 2
 
-//= [-50, -100, 100, 200]
+//example: HighlightRect([-50, -100, 100, 200])
 global func HighlightRect(rect) {
 	CreateObjectLine(DSPK, rect[2]/2, [
 		rect[0], 
