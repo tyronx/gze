@@ -18,6 +18,7 @@ func CanHouseZapNest() { return 0; }
 func CreateZapNestVertex() { return 0; }
 func ZapNestVertexAttach() { return 4; }
 func TreeType() { return "evergreen"; } // deciduous or evergreen (decides whether to drop leaves or not)
+func ShakeStrength() { return 3; } // decides how wiggly the tree is when shaking
 
 public func GetVegetationSoil() { 
 	// Failsafe in case grass material is not available
@@ -58,7 +59,7 @@ private func Initializing() {
 		SetAction("Still");
 	}
 	// Noch warten
-	return 1;  
+	return 1;
 }
 
 
@@ -75,17 +76,21 @@ public func PutZapnest() {
 	}
 }
 
-/* Bewegung (Wind) */  
+/* Bewegung (Wind) */
 	
 private func Still() {
 	if (Abs(GetWind()) > 49 + MotionThreshold) SetAction("Breeze");
 }
 		
 private func Breeze() {
-	if (Abs(GetWind()) < 50 + MotionThreshold) SetAction("Still");
+	if (Abs(GetWind()) < 50 + MotionThreshold && !GetEffect("Shake", this)) SetAction("Still");
+	if (Abs(GetWind()) > 74 + MotionThreshold && GetActMapVal("Name", "Storm")) SetAction("Storm");
 }
 
-	 
+private func Storm() {
+	if (Abs(GetWind()) < 75 + MotionThreshold  && !GetEffect("Shake", this)) SetAction("Breeze");
+}
+ 
 /* Kontext */
 
 public func ContextChop(pClonk) {
@@ -117,11 +122,15 @@ public func Reproduction() {
 public func AxeHit(pClonk) {
 	Sound("Chop*");
 	pClonk->CastParticles("Dust",Random(3)+1,6,-8+16*pClonk->GetDir(),1,10,12);
-	Shake(1);
-	if(!Random(3)) CastLeafParticles();
+	var strength = ShakeStrength();
+	if (!(pClonk->GetDir())) {
+		strength *= -1;
+	}
+	Shake(strength);
+	if (!Random(3)) CastLeafParticles();
 }
 
-/* Schaden */    
+/* Schaden */
 
 protected func Damage() {
 	for(var pClonk in FindObjects (Find_OCF(OCF_CrewMember))) {
@@ -205,12 +214,19 @@ public func CastLeafParticles() {
 public func Shake(int strength) {
 	RemoveEffect("Shake", this);
 	AddEffect("Shake", this, 50, 1, this, 0, strength);
+	if (!(GetAction()=="Breeze" || GetAction()=="Storm")) {
+		if (GetActMapVal("Name", "Storm")) {
+			SetAction("Storm");
+		} else {
+			SetAction("Breeze");
+		}
+	}
 }
 
 public func FxShakeStart(object target, int nr, int temp, int strength) {
-	EffectVar(0, target, nr) = BoundBy(strength, 0, 7);
+	EffectVar(0, target, nr) = BoundBy(strength, -7, 7);
 	EffectVar(1, target, nr) = GetR(target); // original rotation
-	EffectVar(2, target, nr) = 9-EffectVar(0, target, nr);
+	EffectVar(2, target, nr) = 9-Abs(EffectVar(0, target, nr));
 }
 
 public func FxShakeTimer(object target, int nr, int time) {
@@ -220,15 +236,19 @@ public func FxShakeTimer(object target, int nr, int time) {
 
 	var strength = EffectVar(0, target, nr);
 
-	if (strength <= 0) {
-		return -1;
+	if (strength == 0) {
+		// let the effect linger on a little so that the "Breeze" animation still plays
+		EffectVar(3, target, nr)++;
+		if (EffectVar(3, target, nr) > 60) {
+			return -1;
+		}
 	}
 	
 	var rot0 = EffectVar(1, target, nr);
-	target->RelSetR(rot0 + Cos(time*EffectVar(2, target, nr)*6, strength), 0, (3*GetDefHeight(GetID())/4));
+	target->RelSetR(rot0 + Cos(time*EffectVar(2, target, nr)*2, strength * target->GetCon())/100, 0, (3*GetDefHeight(target->GetID())*(target->GetCon())/400));
 	
-	if (!(time%4) && (strength > 0)) {
-		EffectVar(0, target, nr)--;
+	if (!(time%7) && (strength != 0)) {
+		EffectVar(0, target, nr) -= BoundBy(EffectVar(0, target, nr), -1, 1);
 	}
 }
 
@@ -239,8 +259,8 @@ public func FxShakeEffect(string name) {
 }
 
 public func FxShakeAdd(object target, int nr, string name, int timer, int strength) {
-	EffectVar(0, target, nr) = BoundBy(EffectVar(0, target, nr) + strength, 0, 7);
-	EffectVar(2, target, nr) = 9-EffectVar(0, target, nr);
+	EffectVar(0, target, nr) = BoundBy(EffectVar(0, target, nr) + strength, -7, 7);
+	EffectVar(2, target, nr) = 9-Abs(EffectVar(0, target, nr));
 }
 
 public func FxShakeStop(object target, int nr, int iReason, bool fTemp) {
