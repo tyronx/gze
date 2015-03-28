@@ -117,7 +117,7 @@ public func Reproduction() {
 public func AxeHit(pClonk) {
 	Sound("Chop*");
 	pClonk->CastParticles("Dust",Random(3)+1,6,-8+16*pClonk->GetDir(),1,10,12);
-	Shake(1);
+	Shake(100);
 	if(!Random(3)) CastLeafParticles();
 }
 
@@ -208,9 +208,9 @@ public func Shake(int strength) {
 }
 
 public func FxShakeStart(object target, int nr, int temp, int strength) {
-	EffectVar(0, target, nr) = BoundBy(strength, 0, 7);
-	EffectVar(1, target, nr) = GetR(target); // original rotation
-	EffectVar(2, target, nr) = 9-EffectVar(0, target, nr);
+	EffectVar(0, target, nr) = BoundBy(strength, 0, 1000);
+	// Remember original rotation
+	EffectVar(1, target, nr) = GetR(target); 
 }
 
 public func FxShakeTimer(object target, int nr, int time) {
@@ -220,16 +220,21 @@ public func FxShakeTimer(object target, int nr, int time) {
 
 	var strength = EffectVar(0, target, nr);
 
-	if (strength <= 0) {
+	if (strength <= 10) {
 		return -1;
 	}
 	
-	var rot0 = EffectVar(1, target, nr);
-	target->RelSetR(rot0 + Cos(time*EffectVar(2, target, nr)*6, strength), 0, (3*GetDefHeight(GetID())/4));
+	// Wobble around -1 till  1 degree
+	var wobbleAngle = (time/2) % 3 - 1;
 	
-	if (!(time%4) && (strength > 0)) {
-		EffectVar(0, target, nr)--;
+	var rot = EffectVar(1, target, nr)  + Sin(wobbleAngle, strength);
+	
+	if (time % 2) {
+		target->RelSetR(rot, 0, (3*GetDefHeight(GetID())/4));
 	}
+	
+	// Reduce by 10% each round
+	EffectVar(0, target, nr) -= EffectVar(0, target, nr) / 10;
 }
 
 public func FxShakeEffect(string name) {
