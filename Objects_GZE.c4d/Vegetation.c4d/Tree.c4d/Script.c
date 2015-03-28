@@ -18,6 +18,7 @@ func CanHouseZapNest() { return 0; }
 func CreateZapNestVertex() { return 0; }
 func ZapNestVertexAttach() { return 4; }
 func TreeType() { return "evergreen"; } // deciduous or evergreen (decides whether to drop leaves or not)
+func ShakeStrength() { return GetCon(); } // shaking strength when chooped
 
 public func GetVegetationSoil() { 
 	// Failsafe in case grass material is not available
@@ -117,7 +118,7 @@ public func Reproduction() {
 public func AxeHit(pClonk) {
 	Sound("Chop*");
 	pClonk->CastParticles("Dust",Random(3)+1,6,-8+16*pClonk->GetDir(),1,10,12);
-	Shake(100);
+	Shake(ShakeStrength());
 	if(!Random(3)) CastLeafParticles();
 }
 
@@ -208,33 +209,34 @@ public func Shake(int strength) {
 }
 
 public func FxShakeStart(object target, int nr, int temp, int strength) {
-	EffectVar(0, target, nr) = BoundBy(strength, 0, 1000);
-	// Remember original rotation
+	// Duration
+	EffectVar(0, target, nr) = strength / 10;
+	// Original rotation
 	EffectVar(1, target, nr) = GetR(target); 
+	// Max Angle
+	EffectVar(2, target, nr) = strength / 50;
 }
 
 public func FxShakeTimer(object target, int nr, int time) {
 	if (!(target->IsStanding())) {
 		return -1;
 	}
+	
+	// duration
+	if (EffectVar(0, target, nr)-- <= 0) return -1;
 
-	var strength = EffectVar(0, target, nr);
-
-	if (strength <= 10) {
-		return -1;
-	}
+	var maxangle = EffectVar(2, target, nr);
 	
 	// Wobble around -1 till  1 degree
-	var wobbleAngle = (time/2) % 3 - 1;
+	var wobbleAngle = (time/2) % (maxangle+1) - maxangle / 2;
 	
-	var rot = EffectVar(1, target, nr)  + Sin(wobbleAngle, strength);
+	var rot = EffectVar(1, target, nr)  + (time/2) % 3 - 1;
 	
-	if (time % 2) {
+	if (time % 2) { // Fixes weird offseting o.O
+		
 		target->RelSetR(rot, 0, (3*GetDefHeight(GetID())/4));
 	}
-	
-	// Reduce by 10% each round
-	EffectVar(0, target, nr) -= EffectVar(0, target, nr) / 10;
+
 }
 
 public func FxShakeEffect(string name) {
