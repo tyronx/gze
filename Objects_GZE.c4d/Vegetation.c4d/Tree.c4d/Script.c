@@ -83,7 +83,12 @@ private func Still() {
 }
 		
 private func Breeze() {
-	if (Abs(GetWind()) < 50 + MotionThreshold) SetAction("Still");
+	if (Abs(GetWind()) < 50 + MotionThreshold && !GetEffect("Shake", this)) SetAction("Still");
+	if (Abs(GetWind()) > 74 + MotionThreshold && GetActMapVal("Name", "Storm")) SetAction("Storm");
+}
+
+private func Storm() {
+	if (Abs(GetWind()) < 75 + MotionThreshold  && !GetEffect("Shake", this)) SetAction("Breeze");
 }
 
 	 

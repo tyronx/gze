@@ -31,6 +31,8 @@ private func SetEarthObjectsLevel() {
 
 
 public func RemoveEnginePlacedEarthObj() {
+	if (GetScenarioVal("NoInitialize", "Head")) return;
+	
 	var idx=0, objectid;
 	while (GetScenarioVal ("InEarth", "Landscape", idx) != 0) {
 		for (var obj in FindObjects(Find_ID(objectid = GetScenarioVal ("InEarth", "Landscape", idx)))) {

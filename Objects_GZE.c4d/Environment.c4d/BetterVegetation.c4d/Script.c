@@ -34,8 +34,10 @@ private func SetVegetationLevel() {
 
 /* Removes the joke of a vegetation from the whole landscape */
 public func RemoveEnginePlacedVegetation() {
+	if (GetScenarioVal("NoInitialize", "Head")) return;
+	
 	var idx=0;
-	while (GetScenarioVal ("Vegetation", "Landscape", idx) != 0) {
+	while (GetScenarioVal("Vegetation", "Landscape", idx) != 0) {
 		//Log("remove %v", GetScenarioVal ("Vegetation", "Landscape", idx));
 		RemoveObjects(Find_ID(GetScenarioVal ("Vegetation", "Landscape", idx)));
 		idx+=2;
@@ -61,7 +63,7 @@ public func RepopulateVegetation() {
 		vegeid = GetScenarioVal ("Vegetation", "Landscape", idx++);
 		relativequantity = GetScenarioVal ("Vegetation", "Landscape", idx++);
 		
-		//Log("placing %v", vegeid);
+		Log("placing %v", vegeid);
 		
 		var vegebalance = DefinitionCall(vegeid, "GetVegetationPlacementBalance");
 		if (!vegebalance) vegebalance = 100;
