@@ -1,6 +1,6 @@
 /*-- Baum --*/
 
-#strict
+#strict 2
 
 #include TRE1
 
