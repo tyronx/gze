@@ -1,7 +1,7 @@
 /*-- Fish --*/
 
 #strict 2
-#include AIBA // A.I. Base
+#include AYSC
 
 local fullness, threatObj;
 

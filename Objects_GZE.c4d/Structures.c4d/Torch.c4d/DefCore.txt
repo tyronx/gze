@@ -15,3 +15,6 @@ Mass=10
 Components=WOOD=1;METL=1
 Grab=2
 HorizontalFix=1
+
+[Physical]
+Float=100

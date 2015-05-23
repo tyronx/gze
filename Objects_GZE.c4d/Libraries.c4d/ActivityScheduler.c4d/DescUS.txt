@@ -1,0 +1,1 @@
+Allows the control of activities which begin or end depending on priority

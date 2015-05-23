@@ -1,2 +1,0 @@
-DE:KI Steuerung
-US:AI Control

@@ -2,7 +2,7 @@
 
 #strict 2
 
-#include AIBA // AI Base
+#include AYSC // AI Base
 
 local flowerObj;
 local feedCooldown;
@@ -154,7 +154,7 @@ func ContinueExecuteGlide() {
 	if (GetYDir() < 10) {
 		SetYDir(GetYDir() + 2);
 	}
-	if (Random(GetActTime()/15)) {
+	if (GetActTime() > 30 && Random(GetActTime()/25)) {
 		return 0;
 	}
 	return 1;

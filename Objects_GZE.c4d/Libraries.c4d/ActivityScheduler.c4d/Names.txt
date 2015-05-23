@@ -1,0 +1,2 @@
+DE:Aktivitäten-Steuerung
+US:Activity Scheduler

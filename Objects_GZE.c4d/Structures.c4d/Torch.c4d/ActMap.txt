@@ -1,6 +1,6 @@
 [Action]
 Name=Burning
-Procedure=NONE
+Procedure=FLOAT
 NextAction=Burning
 Delay=5
 Directions=2

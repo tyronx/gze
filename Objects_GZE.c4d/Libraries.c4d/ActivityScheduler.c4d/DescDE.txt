@@ -1,0 +1,1 @@
+Erlaubt die Steuerung von verschiedenen Aktivitäten die je nach Priorität beginnen oder enden

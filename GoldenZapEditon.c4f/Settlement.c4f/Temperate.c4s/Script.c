@@ -14,17 +14,6 @@ func Initialize() {
 	return(1);
 }
 
-/*func Script1() {
-	if (IsNight() && LocalN("currentplaylist", FindObject(MUMA)) == "peaceful") {
-		FindObject(MUMA)->SetPlaylist(Format("peaceful-nightloop%d", Random(2)+1));
-	}
-	if (!IsNight() && LocalN("currentplaylist", FindObject(MUMA)) != "peaceful") {
-		FindObject(MUMA)->SetPlaylist("peaceful");
-	}
-}
-func Script2() {
-	goto(1);
-}*/
 
 func InitializePlayer(player) {
 	var x = 20 + Random(LandscapeWidth() - 40);
@@ -45,6 +34,8 @@ func InitializePlayer(player) {
 	hut->CreateObject(ANVL, 17, 23);
 	hut->CreateContents(FLAG);
 }
+
+
 
 func findSpawnPoint(miny) {
 	var x,y;

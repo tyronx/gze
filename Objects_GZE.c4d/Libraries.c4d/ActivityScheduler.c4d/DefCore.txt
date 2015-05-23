@@ -1,6 +1,6 @@
 [DefCore]
-id=AIBA
+id=AYSC
 Version=4,9,8
-Name=AI Base
+Name=Activity Scheduler
 Category=C4D_StaticBack
 Picture=0,0,64,64
