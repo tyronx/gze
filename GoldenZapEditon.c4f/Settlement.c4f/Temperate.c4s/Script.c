@@ -9,8 +9,6 @@ func Initialize() {
 	PlaceObjects2(LOAM, 100, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Loam"));
 	PlaceObjects2(ORE1, 150, [0,0,LandscapeWidth(),LandscapeHeight()], 0, Material("Ore"));
 
-	//ScriptGo(1);
-	
 	return(1);
 }
 

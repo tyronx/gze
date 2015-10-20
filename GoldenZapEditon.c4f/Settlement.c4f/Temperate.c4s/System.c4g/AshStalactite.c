@@ -1,4 +1,4 @@
-/* In our scenario, stalacties shall be hanging from Ashes material */
+/* In our scenario, stalactites shall be hanging from Ashes material */
 
 #strict 2
 #appendto _STA

@@ -1,2 +1,2 @@
-DE:Golden Zap Edition v0.2.5
-US:Golden Zap Edition v0.2.5
+DE:Golden Zap Edition v0.3
+US:Golden Zap Edition v0.3
