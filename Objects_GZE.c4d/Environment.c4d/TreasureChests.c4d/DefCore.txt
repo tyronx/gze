@@ -1,7 +1,7 @@
 [DefCore]
-id=TDEC
+id=TRCH
 Version=4,9,8
-Name=GlintingMaterials
+Name=TreasureChests
 Category=C4D_StaticBack|C4D_Environment
 MaxUserSelect=10
 Width=1

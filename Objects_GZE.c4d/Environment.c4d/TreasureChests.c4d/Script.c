@@ -1,37 +1,8 @@
-/*-- Dekorator --*/
-
-// This enviroment object is still very imcomplete
-
 #strict 2
-
 
 protected func Initialize() {
 	SetPosition(0,0);
-	
-	//CreateObject(BRDS);
-	CreateObject(CLFS);
-	CreateObject(EGLN);
-//	CreateObject(OWL1);
-	CreateObject(STRS);
-	
-	
-	// create Stalactites
-//	PlaceVegetation2(_STA, 20, 0, LandscapeHeight() / 2, LandscapeWidth(), LandscapeHeight() / 2, Material("Granite"), 1, 0, 1);
-	
-	// create Underground mushrooms
-	//PlaceVegetation2(MUSH, 20, 0, 0, LandscapeWidth(), LandscapeHeight(), Material("Earth"), 1);
-	//Log("made shroomies");
-	// create vines
-//	PlaceVegetation2(VINE, 50, 0, 0, LandscapeWidth(), LandscapeHeight()/2, Material("Grass"), 0, 0, 1);
-	//Log("made vines");
-	// create bushes
-//	PlaceVegetation2(_VEG, 50, 0, 0, LandscapeWidth(), LandscapeHeight(), Material("Gras"), 0, 0, 0);
-//	Log("made bushes");
-	
-	//createUndergroundMushrooms();
-	
 	createTreasures(Max(1, LandscapeWidth() / 400));
-	
 	return(1);
 }
 
@@ -41,6 +12,7 @@ func createTreasures(quantity) {
 	var attempts = 5000;
 	var x,y,i = 0;
 	
+	var placed = 0;
 	
 	while (i++ < attempts && quantity > 0) {
 		x = 50 + Random(LandscapeWidth()-100);
@@ -51,14 +23,16 @@ func createTreasures(quantity) {
 			var chest = CreateObject(CHST, x, floor_y);
 			createTreasureContents(chest, 2  + (10*floor_y) / LandscapeHeight());
 			quantity--;
+			placed++;
 		}
-		
 	}
+	
+	Log("Placed %d Treasures", placed);
 }
 
 func createTreasureContents(obj, iterations) {
 	while (iterations-- > 0) {
-		// no switch-case :(
+		// Meh, no switch-case :(
 		var rnd = Random(19);
 		if (rnd == 0) obj->CreateContents(PTRC,0,RandomX(1,3));
 		if (rnd == 1) obj->CreateContents(CK5P,0,RandomX(1,3));
@@ -89,18 +63,3 @@ func createTreasureContents(obj, iterations) {
 		}
 	}
 }
-/*
-func createUndergroundMushrooms() {
-	var attempts = LandscapeWidth() / 10;
-	var x,y,i = 0;
-	
-	while (i++ < attempts) {
-		x = Random(LandscapeWidth());
-		y = Random(LandscapeHeight());
-		
-		if (GetMaterial(x,y) == Material("Tunnel")) {
-			CreateObject(MUSH, x, GetYGround(x, y)+7);
-		}
-		
-	}
-}*/
